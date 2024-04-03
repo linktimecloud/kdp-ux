@@ -1,0 +1,3 @@
+- Big data cluster quotas will all be set to `0' and no more applications can be installed
+- All installed applications will be uninstalled
+- After deactivation, you can perform "Enable" operation to restore the status of Big Data cluster to "Running", and the uninstalled applications will not be restored automatically.

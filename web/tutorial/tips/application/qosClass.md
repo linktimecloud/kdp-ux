@@ -1,0 +1,5 @@
+Kubernetes 在节点资源不足时使用服务质量类型来作出驱逐Pod决定。首先考虑使用量超过请求的BestEffort、Burstable类型Pod，资源使用量少于请求的Guaranteed、Burstable类型Pod最后。
+
+- Guaranteed：Pod中每个容器都必须指定CPU及内存请求和限制，并且请求量等于限制量
+- Burstable：Pod中至少一个容器指定CPU或内存的请求或限制
+- BestEffort：Pod中任意容器均未设置CPU或内存的请求或限制

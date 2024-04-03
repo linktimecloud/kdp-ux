@@ -1,0 +1,3 @@
+- Big data cluster quotas will all be set to `0' and no more applications can be installed
+- Installed applications are not affected.
+- After freezing, you can perform an "unfreeze" operation to restore the status of the big data cluster to "running".

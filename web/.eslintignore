@@ -1,0 +1,9 @@
+node_modules/
+public/
+*.md
+*.txt
+doc/
+db/
+manual/
+logs/
+upload/

@@ -1,0 +1,25 @@
+# Created by .ignore support plugin (hsz.mobi)
+*~
+\#*
+.DS_Store
+venv
+*.tgz
+
+# IDE
+.idea
+**/.idea
+.branching_points
+
+# Python
+bin/*.pyc
+common/bin/*.pyc
+*.pyc
+
+# Log
+logs/
+
+#soft symlinks
+/apps/
+/cluster/
+/common/
+/git-repo/

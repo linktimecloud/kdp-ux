@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+    <defs>
+        <pattern height="200" width="200" patternUnits="userSpaceOnUse" id="raduisImage">
+		  <path fill="#d9d9d9" fill-rule="evenodd" d="M100 0C45 0 0 45 0 100s45 100 100 100 100-45 100-100S155 0 100 0zm0 30c17 0 30 13 30 30s-13 30-30 30-30-13-30-30 13-30 30-30zm0 142c-25 0-47-13-60-32 0-20 40-31 60-31s60 11 60 31c-13 19-35 32-60 32z"/>
+		</pattern>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="#fff"></circle>
+    <circle cx="100" cy="100" r="100" fill="url(#raduisImage)"></circle>
+</svg>

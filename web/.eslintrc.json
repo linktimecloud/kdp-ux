@@ -1,0 +1,10 @@
+{
+  "extends": "standard",
+  "ignorePatterns": ["**/tests/**/*.js"],
+  "rules": {
+    "no-useless-catch": "off",
+    "prefer-regex-literals": "off",
+    "no-async-promise-executor": "off",
+    "no-prototype-builtins": "off"
+  }
+}

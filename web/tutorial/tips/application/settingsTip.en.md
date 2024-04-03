@@ -1,0 +1,3 @@
+- The parameter values filled in will be automatically added to the following「Advanced Configuration Mode」code segment
+- If you change the parameters in 「Advanced Configuration」 Mode, the configuration parameters here will not be updated
+- If both are changed at the same time, the advanced configuration mode parameter shall prevail.

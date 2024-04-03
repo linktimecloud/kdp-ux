@@ -1,0 +1,8 @@
+.DS_Store
+node_modules
+logs
+.nyc_output
+reporter
+coverage
+*.md
+.gitignore

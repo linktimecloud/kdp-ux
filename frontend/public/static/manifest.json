@@ -1,0 +1,27 @@
+{
+  "short_name": "BDOS",
+  "name": "BDOS",
+  "description": "大数据操作系统",
+  "start_url": "/?from=homescreen",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#4DBA87",
+  "icons": [
+    {
+      "src": "img/empty_logo_1x1.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "img/empty_logo_1x1.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "img/empty_logo_1x1.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

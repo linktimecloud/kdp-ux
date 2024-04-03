@@ -1,0 +1,1 @@
+BDOS defines common application configuration items and their default values

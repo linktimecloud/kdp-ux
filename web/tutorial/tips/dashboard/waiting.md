@@ -1,0 +1,1 @@
+容器并不处在 Running 或 Terminated 状态之一，它就处在 Waiting 状态。可查看等待原因

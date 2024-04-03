@@ -1,0 +1,9 @@
+{
+  "processors": ["@mapbox/stylelint-processor-arbitrary-tags"],
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended-scss"],
+  "rules": {
+    "no-empty-source": null,
+    "rule-empty-line-before": null
+  },
+  "ignoreFiles": ["**/*.{js,md}", "src/pages/monitoring/**"]
+}

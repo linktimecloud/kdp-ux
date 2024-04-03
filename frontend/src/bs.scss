@@ -1,0 +1,236 @@
+// Override Colors
+@import '~@/root.scss';
+$grid-breakpoints: (
+  xs: 0,
+  sm: 1024px,
+  md: 1280px,
+  lg: 1440px,
+  xl: 1600px
+);
+
+@media (min-width: 1600px) {
+  .col-xl-5ths {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+
+// Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+
+/*
+ * Rebuild Bootstrap Classnames
+ */
+* {
+  outline: 0 none !important;
+}
+
+h6,
+.h6 {
+  font-size: 0.9rem;
+}
+
+a {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  color: $blue;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// button
+.btn {
+  border-radius: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  white-space: nowrap;
+  i {
+    margin-right: 4px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  &:focus,
+  &:active {
+    outline: 0 none;
+    box-shadow: unset !important;
+  }
+  &:disabled,
+  &.disabled {
+    cursor: not-allowed;
+    &.readonly {
+      cursor: default;
+    }
+  }
+  &-primary,
+  &-secondary,
+  &-success,
+  &-danger,
+  &-warning,
+  &-info,
+  &-dark {
+    color: #fff;
+    &:hover,
+    &:active {
+      color: #fff;
+    }
+  }
+  &-outline-primary,
+  &-outline-secondary,
+  &-outline-success,
+  &-outline-danger,
+  &-outline-warning,
+  &-outline-info,
+  &-outline-dark {
+    &:not(:disabled):not(.disabled) {
+      &:hover,
+      &:active {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.btn-sm,
+.btn-group-sm > .btn,
+.input-group-sm > .btn {
+  padding: 0 15px;
+  line-height: 26px;
+}
+
+.btn-round {
+  border-radius: 15px;
+}
+
+.btn-xs,
+.btn-group-xs > .btn,
+.input-group-xs > .btn {
+  padding: 0 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.btn-group-xs {
+  .el-input--mini .el-input__inner {
+    height: 21px;
+    line-height: 21px;
+  }
+  .el-input__suffix .el-select__caret {
+    line-height: 20px;
+  }
+}
+
+.form-control:focus {
+  box-shadow: unset;
+}
+
+.input-group-xs {
+  .input-group-text {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.6rem;
+  }
+  .form-control {
+    padding: 0 0.4rem;
+    font-size: 0.6rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+  }
+}
+
+.form-row {
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.table-resizable th {
+  & > span,
+  & > div {
+    display: block;
+    resize: horizontal;
+    overflow: auto;
+  }
+}
+
+.form-horizontal {
+  margin-bottom: 15px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  .col-form-label {
+    text-align: right;
+    padding-right: 1rem;
+  }
+  .form-row {
+    margin-bottom: 15px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+.card {
+  border-color: $outline !important;
+  padding: 0 1.25rem;
+  .card-header {
+    font-size: 16px;
+    padding: 1rem;
+    &.clearfix {
+      line-height: 31px;
+    }
+  }
+
+  .card-header,
+  .card-footer {
+    border-color: $line;
+    background-color: transparent;
+  }
+
+  .card-body {
+    padding: 1.25rem 0 1rem 0;
+  }
+
+  &.with-controller {
+    .card-header {
+      line-height: 38px;
+      .btn-sm {
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+.badge {
+  padding: 0 12px;
+  font-size: 12px;
+  height: 20px;
+  line-height: 20px;
+  border: none;
+  border-radius: 4px;
+  background: #f1f6fd;
+  color: $primary_color;
+  font-weight: normal;
+  &-primary {
+    background: #f1f6fd;
+    color: $primary_color;
+  }
+  &-success {
+    background: rgba(103, 194, 58, 0.1);
+    color: $success_color;
+  }
+  &-warning {
+    background: #fef7ec;
+    color: $warning_color;
+  }
+  &-danger {
+    background: #fef4f4;
+    color: $error_color;
+  }
+}

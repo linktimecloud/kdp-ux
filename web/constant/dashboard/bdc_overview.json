@@ -1,0 +1,150 @@
+{
+  "description": "",
+  "panels": [
+    {
+      "title": "pvcNum",
+      "type": "stat",
+      "description": "pvcNumDesc",
+      "color": "green",
+      "isTipsLineIcon": true,
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(kube_persistentvolumeclaim_info{namespace=~\"$namespace\"})"
+        }
+      ]
+    },
+    {
+      "title": "podStatusStatis",
+      "type": "stat",
+      "description": "podStatusStatisDesc",
+      "isTipsLineIcon": true,
+      "color": "green",
+      "fontSize": "20px",
+      "gridPos": {
+        "h": 24,
+        "w": 8,
+        "x": 4,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum by (phase) (kube_pod_status_phase{phase=\"Failed\", namespace=~\"$namespace\"})",
+          "legendFormat": "{{phase}}",
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": 1
+              },
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum by (phase) (kube_pod_status_phase{phase=\"Pending\", namespace=~\"$namespace\"})",
+          "legendFormat": "{{phase}}"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum by (phase) (kube_pod_status_phase{phase=\"Running\", namespace=~\"$namespace\"})",
+          "legendFormat": "{{phase}}"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum by (phase) (kube_pod_status_phase{phase=\"Succeeded\", namespace=~\"$namespace\"})",
+          "legendFormat": "{{phase}}"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum by (phase) (kube_pod_status_phase{phase=\"Unknown\", namespace=~\"$namespace\"})",
+          "legendFormat": "{{phase}}"
+        }
+      ]
+    },
+    {
+      "title": "containerStatusStatis",
+      "type": "stat",
+      "description": "containerStatusStatisDesc",
+      "isTipsLineIcon": true,
+      "color": "green",
+      "fontSize": "20px",
+      "gridPos": {
+        "h":24,
+        "w": 8,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(kube_pod_container_status_terminated_reason{reason!=\"Completed\", namespace=~\"$namespace\"} !=0 ) or vector(0)",
+          "legendFormat": "abnormalTermination",
+          "labelTips": "DASHBOARD_ABNORMAL_TERMINATION",
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": 1
+              },
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(kube_pod_container_status_waiting{namespace=~\"$namespace\"} !=0 ) or vector(0)",
+          "legendFormat": "waiting",
+          "labelTips": "DASHBOARD_WAITING"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(kube_pod_container_status_running{namespace=~\"$namespace\"} !=0 ) or vector(0)",
+          "legendFormat": "running",
+          "labelTips": "DASHBOARD_RUNNING"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(kube_pod_container_status_terminated_reason{namespace=~\"$namespace\"} !=0 ) or vector(0)",
+          "legendFormat": "terminated",
+          "labelTips": "DASHBOARD_TERMINATED"
+        },
+        {
+          "datasourceType": "prometheus",
+          "expr": "count(rate(kube_pod_container_status_restarts_total{job=\"kube-state-metrics\", namespace=~\"$namespace\"}[5m]) * 60 * 5 > 0)",
+          "legendFormat": "cycleRestart",
+          "labelTips": "DASHBOARD_CYCLE_RESTART",
+          "thresholds": {
+            "steps": [
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": []
+  }
+}

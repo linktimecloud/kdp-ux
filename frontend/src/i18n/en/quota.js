@@ -1,0 +1,23 @@
+export default {
+  infinite: 'Infinite',
+  valueNotChanged: 'Quota value does not change, do not need to update',
+  name: 'Name',
+  type: 'Type',
+  used: 'Used',
+  requiredParam: 'Must fill in {name}',
+  add: 'Add Quota Type',
+  all: 'All',
+  information: 'Quota Information',
+  noInformation: 'No quota information',
+  failedMessage: 'Operation failed, please try again!',
+  limitsCPU: 'CPU limits',
+  limitsMemory: 'Memory limits',
+  requestCPU: 'CPU request',
+  requestMemory: 'Memory request',
+  requestStorage: 'Storage request',
+  invalidKeyTips: '{keys} quota value is not legal, please check and re-enter',
+  invalidFormTips: 'Form input is not legal, please check and retype',
+  removeTips: 'Are you sure you want to delete the quota of {name} security group?',
+  assignable: 'Assignable',
+  removeGroupQuotaTips: 'Please delete the big data cluster under the {name} security group first'
+}

@@ -1,0 +1,30 @@
+export default {
+  source: 'Source',
+  target: 'Target',
+  current: 'Current',
+  latest: 'Latest',
+  startCompare: 'Select different versions for comparison',
+  compareClusterVersion: 'Compare @:common.clusterConfig Version',
+  compareAppVersion: 'Compare historical version of app {name}',
+  compareGroupVersion: 'Compares historical version of security group {gname}',
+  tab: {
+    global: 'Global Config',
+    group: 'Security Group Configuration'
+  },
+  save: 'Save',
+  edit: 'Edit',
+  compare: 'Compare',
+  versionName: 'versionName',
+  history: 'history version',
+  historyVersion: 'System Configuration History',
+  submitUserName: 'submitUserName',
+  and: 'and',
+  checkedVersion: 'has checked {length} versions',
+  checkOneVersionMore: '(You need to select one version for comparison)',
+  comparison: 'Comparison',
+  compareVersion: 'compareVersion',
+  searchName: 'searchName',
+  defaultVersionWarn: 'Please select two versions to compare',
+  editTitle: ' Edit security group {gname} config',
+  editProcessing: 'Editing security group {gname} config...'
+}

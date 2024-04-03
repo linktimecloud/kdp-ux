@@ -1,0 +1,30 @@
+{
+  "unknown": "Unknow Error",
+  "pleaseResumitForm": "Please resubmit form，or $t(error.pleaseContactSystemAdmin)",
+  "notExists": "Not Exsits",
+  "apiInternalError": "API Internal Error",
+  "pleaseContactSystemAdmin": "Please contact system administrator",
+  "lackPermission": "You don't have permission",
+  "pleaseRequestPermission": "$t(error.pleaseContactSystemAdmin) to add permissions.",
+  "paramsError": "Parameters Error",
+  "pleaseCheckApiParams": "Please check the api parameters",
+  "recordExists": "Record already exists",
+  "recordNotExist": "Record $t(error.notExists)",
+  "platformRequestError": "Platform Request Error",
+  "pleaseCheckPlatformService": "Please check platform backend service",
+  "responseBodyEmpty": "Response body is empty",
+  "pleaseCheckServiceStatus": "Please check service status, or check api path, or check service logs",
+  "pleaseCheckSpecifiedServiceStatus": "Please check {{name}} service status, or check service logs",
+  "shellScriptError": "An error occurred when executing a shell script",
+  "jsonParseError": "JSON parse error",
+  "lokiDataError": "Loki data error",
+  "pleaseCheckLokiService": "Please check the original error and contact the logging system administrator",
+  "createProcessFailed": "Failed to create process",
+  "processNotExist": "Process does not exist",
+  "pleaseCheckProcessId": "Please check if pid is correct, or contact administrator",
+  "proxy": {
+    "pleaseCheckServicePath": "Please check if the service address is healthy.",
+    "requestUrlNotJson": "The data format returned by the request URL {{url}} is not JSON.",
+    "requestUrlEmpty": "The data returned by the request URL {{url}} is empty."
+  }
+}

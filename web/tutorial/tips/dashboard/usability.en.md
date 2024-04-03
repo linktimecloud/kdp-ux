@@ -1,0 +1,1 @@
+The proportion of time during the availability cycle that the container is in an available state

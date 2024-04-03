@@ -1,0 +1,1 @@
+The expected number of Pods set in the configuration(replicas)

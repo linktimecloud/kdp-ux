@@ -1,0 +1,1 @@
+{  "title": "BDOS Web UI API",  "url": "",  "name": "web",  "version": "4.0.0",  "description": "bdos web ui nodejs backend",  "sampleUrl": false,  "defaultVersion": "0.0.0",  "apidoc": "0.3.0",  "generator": {    "name": "apidoc",    "time": "2024-01-29T07:59:43.296Z",    "url": "http://apidocjs.com",    "version": "0.17.7"  }}

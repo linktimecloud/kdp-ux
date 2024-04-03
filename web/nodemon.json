@@ -1,0 +1,13 @@
+{
+  "restartable": "rs",
+  "ignore": ["upload/*", "tests/*", "doc/*", "logs/*"],
+  "verbose": true,
+  "execMap": {
+    "js": "node"
+  },
+  "watch": [],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js json"
+}

@@ -1,0 +1,1 @@
+CPU, Memory, Disk, I/O usage per Pod under main application load

@@ -1,0 +1,3 @@
+- All resource objects under the Big Data cluster will be deleted, including all application instances under the offload environment
+- The Big Data cluster will no longer be available for use
+- The operation is irreversible

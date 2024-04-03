@@ -1,0 +1,39 @@
+<script>
+import ReasonButton from '@/common/reasonButton'
+
+export default {
+  name: 'export-csv',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: true
+    },
+    cls: {
+      type: [String, Object],
+      default: ''
+    },
+    type: {
+      type: String,
+      default: 'default'
+    },
+    tip: {
+      type: String,
+      default: ''
+    }
+  },
+  components: {
+    ReasonButton
+  },
+  computed: {
+    reason () {
+      return this.disabled ? this.$t('common.exportCsvDisabledTip') : ''
+    }
+  }
+}
+</script>
+
+<template lang="pug">
+ReasonButton(:tip="tip || $t('common.exportCsvTip')", :type="type", :reason="reason", @click="$emit('exportCsv')")
+  i.remix.ri-file-upload-line
+  span {{ $t('files.exportCsv') }}
+</template>
