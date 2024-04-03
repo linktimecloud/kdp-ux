@@ -1,0 +1,99 @@
+@import './element.scss';
+@import './root.scss';
+
+#app,
+body {
+  width: 100%;
+  font: 14px/1.5 $font_family;
+  color: $font;
+  font-weight: normal;
+  &.is-en {
+    .el-button {
+      font-size: 12px !important;
+    }
+    .el-table {
+      font-size: 12px !important;
+    }
+  }
+}
+
+a,
+.blue {
+  text-decoration: none;
+  color: $blue;
+  transition: 0.4s;
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+  }
+}
+
+.global-loading-mask {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+xmp,
+pre,
+plaintext {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-success {
+  color: $success_color;
+}
+
+.text-danger {
+  color: $error_color;
+}
+
+.text-error {
+  color: $error_color;
+}
+
+.text-warning {
+  color: $warning_color;
+}
+
+.text-gray {
+  color: $font_gray;
+}
+
+.has-input-confirm-box {
+  .el-message-box__input {
+    padding-left: 34px;
+    .el-input {
+      width: 100%;
+    }
+  }
+}
+
+.text-high {
+  color: $font_high;
+}
+
+.after-line {
+  &::after {
+    content: '|';
+    width: 1px;
+    padding: 0 5px;
+    color: $outline;
+  }
+}
+
+.before-line {
+  &::before {
+    content: '|';
+    width: 1px;
+    padding: 0 5px;
+    color: $outline;
+  }
+}

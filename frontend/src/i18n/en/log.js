@@ -1,0 +1,20 @@
+export default {
+  keyHolder: 'Input keyword to filter',
+  process: 'Process',
+  content: 'Log',
+  limit: 'Show latest {limit} logs',
+  downloadAll: 'Download all logs',
+  request: 'Request',
+  logCounting: 'Log Volume',
+  logError: 'Error Log',
+  exportStdLog: 'Export From STD',
+  exportFileLog: 'Export From File',
+  stdout: 'Standard Output',
+  stderr: 'Standard Error',
+  file: 'Log File',
+  limitTip: 'Show up to 5000 logs',
+  rangeLimitTip: 'When no specific Pod instance or container name is selected, it is recommended to set the time range to a maximum of 1 hour. When a specific application Pod or container name is selected, it is recommended to set the time range to a maximum of 12 hours. Otherwise, the query may timeout and data cannot be retrieved.',
+  loghighlightRangeTip: 'When no specific Pod instance or container name is selected, it is recommended to set the time range to a maximum of 5 minutes. If a timeout occurs, please consider reducing the query time range or selecting a specific application Pod/container name.',
+  rangeOneHourTips: 'Please select the specific Pod instance or container name before extending the query time range.',
+  rangeTwelveHoursTips: 'Logs spanning more than 12 hours will result in long query times, please adjust the time range to ensure efficient queries.'
+}

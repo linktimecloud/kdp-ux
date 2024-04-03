@@ -1,0 +1,30 @@
+export default {
+  source: '源版本',
+  target: '目标版本',
+  current: '当前版本',
+  latest: '最新版本',
+  startCompare: '选择不同的版本进行对比',
+  compareClusterVersion: '比较@:common.clusterConfig历史版本',
+  compareAppVersion: '比较应用 {name} 配置的历史版本',
+  compareGroupVersion: '比较安全组 {gname} 配置的历史版本',
+  tab: {
+    global: '全局配置',
+    group: '安全组配置'
+  },
+  save: '保存配置',
+  edit: '编辑配置',
+  compare: '历史版本比对',
+  history: '历史版本',
+  versionName: '版本名称',
+  historyVersion: '系统配置历史版本',
+  submitUserName: '提交人',
+  and: '和',
+  checkOneVersionMore: '(还需选择1个版本进行对比)',
+  checkedVersion: '已选{length}个版本',
+  comparison: '版本比对',
+  compareVersion: '版本对比',
+  searchName: '搜索版本名称',
+  editTitle: '编辑安全组 {gname} 的配置',
+  defaultVersionWarn: '请选择两个版本进行对比',
+  editProcessing: '正在编辑安全组 {gname} 的配置...'
+}

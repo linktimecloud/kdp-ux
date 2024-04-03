@@ -1,0 +1,1 @@
+容器开始执行并且正常结束，terminated_reason == "Completed"

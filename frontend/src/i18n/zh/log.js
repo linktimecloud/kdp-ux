@@ -1,0 +1,20 @@
+export default {
+  keyHolder: '输入关键字以筛选',
+  process: '进程',
+  content: '日志',
+  limit: '显示最近 {limit} 条日志',
+  downloadAll: '下载全部日志',
+  request: '请求',
+  logCounting: '日志量',
+  logError: '错误日志',
+  exportStdLog: 'STD导出',
+  exportFileLog: '日志文件导出',
+  stdout: '标准输出',
+  stderr: '标准错误',
+  file: '日志文件',
+  limitTip: '日志显示最多5000条记录。',
+  rangeLimitTip: '在未选择具体Pod实例或容器名称时，建议时间区间最长1小时；选择具体Pod实例或容器名称时，建议时间区间最长12小时。否则查询容易出现超时问题，而无法查出数据。',
+  loghighlightRangeTip: '在未选择具体Pod实例或容器名称时，建议时间区间最长5分钟。若出现超时提示，请适当缩小查询时间区间或选择具体Pod实例/容器名称',
+  rangeOneHourTips: '请选择具体需查询的Pod实例或容器名称后，再适当延长查询时间区间。',
+  rangeTwelveHoursTips: '超过12小时的日志记录会导致检索时间过长，建议调整时间区间以保证查询效率。'
+}

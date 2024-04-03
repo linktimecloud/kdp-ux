@@ -1,0 +1,55 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "KDP-UX nodejs backend",
+  "private": true,
+  "scripts": {
+    "dev": "npx nodemon app.js",
+    "start": "node app.js",
+    "koa": "npx runkoa app.js",
+    "lint": "eslint .",
+    "doc": "npx apidoc -i controllers -o doc",
+    "test": "node ./tests/getToken.js && npx ava",
+    "cov": "npx nyc npx ava"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "config": "^1.31.0",
+    "i18next": "^22.4.15",
+    "jwt-simple": "^0.5.1",
+    "kcors": "^2.2.2",
+    "koa": "^2.13.1",
+    "koa-body": "^6.0.1",
+    "koa-compose": "^4.1.0",
+    "koa-compress": "^5.1.1",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^12.0.1",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.21",
+    "log4js": "^6.9.1",
+    "moment": "^2.29.1",
+    "mysql2": "^2.3.3",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^2.6.7",
+    "path": "^0.12.7",
+    "sequelize": "^6.32.1",
+    "sequelize-cli": "^6.6.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "apidoc": "^1.2.0",
+    "brace-expansion": "^2.0.1",
+    "eslint": "^8.48.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "minimatch": "^5.1.0",
+    "nodemon": "^3.0.1"
+  },
+  "apidoc": {
+    "title": "KDP-UX API",
+    "url": ""
+  }
+}

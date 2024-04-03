@@ -1,0 +1,172 @@
+{
+  "panels": [
+    {
+      "title": "bdcLifetime",
+      "description": "bdcLifetimeDesc",
+      "isTipsLineIcon": true,
+      "type": "stat",
+      "color": "green",
+      "unit": "s",
+      "format": "duration_time",
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(time() - kube_namespace_created{namespace=~\"$namespace\"})"
+        }
+      ]
+    },
+    {
+      "title": "cpuUsedFromRequestsRate",
+      "type": "stat",
+      "description": "cpuUsedFromRequestsRateDesc",
+      "isTipsLineIcon": true,
+      "color": "#fff",
+      "format": "percent",
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "thresholds": {
+        "steps": [
+          {
+            "value": 1,
+            "color": "red"
+          },
+          {
+            "value": 0.8,
+            "color": "orange"
+          },
+          {
+            "color": "green",
+            "value": null
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$namespace\"}) / sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"})"
+        }
+      ]
+    },
+    {
+      "title": "memUsedFromRequestsRate",
+      "type": "stat",
+      "description": "memUsedFromRequestsRateDesc",
+      "isTipsLineIcon": true,
+      "color": "#fff",
+      "format": "percent",
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "thresholds": {
+        "steps": [
+          {
+            "value": 2,
+            "color": "red"
+          },
+          {
+            "value": 1,
+            "color": "orange"
+          },
+          {
+            "color": "green",
+            "value": null
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\",container!=\"\", image!=\"\"}) / sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"})"
+        }
+      ]
+    },
+    {
+      "title": "cpuUsedFromLimitRate",
+      "type": "stat",
+      "description": "cpuUsedFromLimitRateDesc",
+      "isTipsLineIcon": true,
+      "color": "#fff",
+      "format": "percent",
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "thresholds": {
+        "steps": [
+          {
+            "value": 1,
+            "color": "red"
+          },
+          {
+            "value": 0.8,
+            "color": "orange"
+          },
+          {
+            "color": "green",
+            "value": null
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$namespace\"}) / sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"cpu\"})"
+        }
+      ]
+    },
+    {
+      "title": "memUsedFromLimitRate",
+      "type": "stat",
+      "description": "memUsedFromLimitRateDesc",
+      "isTipsLineIcon": true,
+      "color": "#fff",
+      "format": "percent",
+      "gridPos": {
+        "h": 24,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "thresholds": {
+        "steps": [
+          {
+            "value": 2,
+            "color": "red"
+          },
+          {
+            "value": 1,
+            "color": "orange"
+          },
+          {
+            "color": "green",
+            "value": null
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\",container!=\"\", image!=\"\"}) / sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$namespace\", resource=\"memory\"})"
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": []
+  }
+}

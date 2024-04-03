@@ -1,0 +1,1 @@
+Automatically Generated Usage Configurations for Installed Applications in Big Data Clusters

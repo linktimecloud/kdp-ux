@@ -1,0 +1,1 @@
+容器开始执行并且由于某些原因失败，terminated_reason != "Completed"

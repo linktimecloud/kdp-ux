@@ -1,0 +1,1 @@
+Normal: all Pods are successful or running. Exception: Waiting or failing if Pods exist

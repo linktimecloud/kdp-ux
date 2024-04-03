@@ -1,0 +1,106 @@
+{
+  "APP_PARAME_SETTINGS": {
+    "path": "application/parameSettings",
+    "type": "tooltip"
+  },
+  "APP_ADVANCED_SETTINGS": {
+    "path": "application/advancedSettings",
+    "type": "tooltip"
+  },
+  "APP_RUN_METRIC": {
+    "path": "application/runMetric",
+    "type": "tooltip"
+  },
+  "APP_CONTAINR_RUNNING_NUM": {
+    "path": "application/containerRunningNum",
+    "type": "tooltip"
+  },
+  "APP_CONTAINR_SPEC_NUM": {
+    "path": "application/containerSpecNum",
+    "type": "tooltip"
+  },
+  "APP_POD_STATUS": {
+    "path": "application/podStatus",
+    "type": "tooltip"
+  },
+  "APP_SYS_STATUS": {
+    "path": "application/systemAppStatus",
+    "type": "tooltip"
+  },
+  "DASHBOARD_LOG_ERROR": {
+    "path": "dashboard/logError",
+    "type": "tooltip"
+  },
+  "DASHBOARD_CONTAINER_RESOURCE": {
+    "path": "dashboard/containerResource",
+    "type": "tooltip"
+  },
+  "DASHBOARD_RUNNING_TIME": {
+    "path": "dashboard/runningTime",
+    "type": "tooltip"
+  },
+  "DASHBOARD_USABILITY": {
+    "path": "dashboard/usability",
+    "type": "tooltip"
+  },
+  "DASHBOARD_ABNORMAL_TERMINATION": {
+    "path": "dashboard/abnormalTermination",
+    "type": "tooltip"
+  },
+  "DASHBOARD_CYCLE_RESTART": {
+    "path": "dashboard/cycleRestart",
+    "type": "tooltip"
+  },
+  "DASHBOARD_RUNNING": {
+    "path": "dashboard/running",
+    "type": "tooltip"
+  },
+  "DASHBOARD_WAITING": {
+    "path": "dashboard/waiting",
+    "type": "tooltip"
+  },
+  "DASHBOARD_TERMINATED": {
+    "path": "dashboard/terminated",
+    "type": "tooltip"
+  },
+  "APPLICATION_CPU_USE_REQUEST_LIMIT": {
+    "path": "application/cpuUseRequestLimit",
+    "type": "tooltip"
+  },
+  "APPLICATION_MEMORY_USE_REQUEST_LIMIT": {
+    "path": "application/memoryUseRequestLimit",
+    "type": "tooltip"
+  },
+  "APPLICATION_POD_AFFINITY_TIP": {
+    "path": "application/podAffinityTip",
+    "type": "tooltip"
+  },
+  "APPLICATION_SETTINGS_TIP": {
+    "path": "application/settingsTip",
+    "type": "tooltip"
+  },
+  "CLUSTER_VERSION_NAME": {
+    "path": "cluster/versionName",
+    "type": "tooltip"
+  },
+  "QOS_CLASS_TIP": {
+    "path": "application/qosClass",
+    "type": "tooltip"
+  },
+  "CLUSTER_DELETE_BDC": {
+    "path": "cluster/deleteBDC",
+    "type": "tooltip"
+  },
+  "CLUSTER_DISABLE_BDC": {
+    "path": "cluster/disableBDC",
+    "type": "tooltip"
+  },
+  "CLUSTER_FREEZE_BDC": {
+    "path": "cluster/freezeBDC",
+    "type": "tooltip"
+  },
+  "APPLICATIONS_USED_SETTINGS": {
+    "path": "cluster/applicationUsedSettings",
+    "type": "tooltip"
+  }
+}

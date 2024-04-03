@@ -1,0 +1,30 @@
+{
+  "unknown": "未知错误",
+  "pleaseResumitForm": "请重新提交表单，或者联系系统管理员",
+  "notExists": "不存在",
+  "apiInternalError": "API内部错误",
+  "pleaseContactSystemAdmin": "请联系系统管理员",
+  "lackPermission": "操作权限不够",
+  "pleaseRequestPermission": "请联系管理员添加权限",
+  "paramsError": "参数错误",
+  "pleaseCheckApiParams": "请检查接口参数是否正确",
+  "recordExists": "记录已经存在",
+  "recordNotExist": "记录不存在",
+  "platformRequestError": "平台请求出错",
+  "pleaseCheckPlatformService": "请检查平台后台服务",
+  "responseBodyEmpty": "服务返回数据为空",
+  "pleaseCheckServiceStatus": "请检查服务状态，或者检查接口路径是否正确，或者查看服务日志",
+  "pleaseCheckSpecifiedServiceStatus": "请检查 {{name}} 服务状态，或者查看服务日志",
+  "shellScriptError": "Shell脚本出错",
+  "jsonParseError": "JSON.parse 解析数据出错",
+  "lokiDataError": "Loki 返回数据出错 {{resText}}",
+  "pleaseCheckLokiService": "请查看原始错误并联系日志系统管理员",
+  "createProcessFailed": "创建进程失败",
+  "processNotExist": "进程不存在",
+  "pleaseCheckProcessId": "请检查pid是否正确，或联系系统管理员",
+  "proxy": {
+    "pleaseCheckServicePath": "请检查服务地址状态是否健康",
+    "requestUrlNotJson": "请求地址{{url}}返回数据格式不为 JSON",
+    "requestUrlEmpty": "请求地址{{url}}返回数据为空"
+  }
+}

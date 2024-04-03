@@ -1,0 +1,1 @@
+Container starts executing and terminated normally, terminated reason == "Completed"

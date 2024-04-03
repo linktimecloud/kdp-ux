@@ -1,0 +1,150 @@
+{
+  "description": "",
+  "panels": [
+    {
+      "title": "cpuUsed",
+      "headCompact": true,
+      "type": "timeserise-line",
+      "gridPos": {
+        "h": 24,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "chartGrid": {
+        "top": "10px",
+        "right": "15px",
+        "bottom": "15px",
+        "left": "15px"
+      },
+      "legend": {
+        "show": false
+      },
+      "tooltip": {
+        "backgroundColor": "#fff",
+        "borderColor": "#fff",
+        "textStyle": {
+          "color": "#262626"
+        },
+        "axisPointer": {
+          "lineStyle": {
+            "color": "#8c8c8c"
+          }
+        }
+      },
+      "yAxisOverrides": [
+        {
+          "position": "left",
+          "splitLine": {
+            "lineStyle": {
+              "type": "dashed"
+            },
+            "show": true
+          },
+          "nameTextStyle": {
+            "padding": [0, 0, 0, -12]
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=~\"$namespace\"}[5m]))",
+          "legendFormat": "usage",
+          "stepFormat": "auto",
+          "chartOptions": {
+            "type": "line",
+            "stack": "Total",
+            "showSymbol": false,
+            "smooth": true,
+            "areaStyle": {
+              "color": "#2fbfa0",
+              "opacity": 0.2
+            },
+            "lineStyle": {
+              "color": "#2fbfa0"
+            },
+            "itemStyle": {
+              "color": "#2fbfa0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "memUsed",
+      "headCompact": true,
+      "type": "timeserise-line",
+      "gridPos": {
+        "h": 24,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "chartGrid": {
+        "top": "10px",
+        "right": "15px",
+        "bottom": "15px",
+        "left": "15px"
+      },
+      "legend": {
+        "show": false
+      },
+      "tooltip": {
+        "backgroundColor": "#fff",
+        "borderColor": "#fff",
+        "textStyle": {
+          "color": "#262626"
+        },
+        "axisPointer": {
+          "lineStyle": {
+            "color": "#8c8c8c"
+          }
+        }
+      },
+      "yAxisOverrides": [
+        {
+          "position": "left",
+          "format": "bytes",
+          "splitLine": {
+            "lineStyle": {
+              "type": "dashed"
+            },
+            "show": true
+          },
+          "nameTextStyle": {
+            "padding": [0, 0, 0, -12]
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "expr": "sum(container_memory_usage_bytes{namespace=~\"$namespace\"})",
+          "stepFormat": "auto",
+          "legendFormat": "usage",
+          "format": "bytes",
+          "chartOptions": {
+            "type": "line",
+            "stack": "Total",
+            "showSymbol": false,
+            "smooth": true,
+            "areaStyle": {
+              "color": "#416aff",
+              "opacity": 0.2
+            },
+            "lineStyle": {
+              "color": "#416aff"
+            },
+            "itemStyle": {
+              "color": "#416aff"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": []
+  }
+}

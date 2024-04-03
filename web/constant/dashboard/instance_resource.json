@@ -1,0 +1,159 @@
+{
+  "panels": [
+    {
+      "title": "cpuUsed",
+      "type": "timeserise-line",
+      "headCompact": true,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "legend": {
+        "show": true,
+        "type": "scroll"
+      },
+      "yAxisOverrides": [
+        {
+          "name": "",
+          "position": "left",
+          "min": 0,
+          "max": 3
+        }
+      ],
+      "chartGrid": {
+        "bottom": "40px"
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "stepFormat": "auto",
+          "chartOptions": {
+            "type": "line",
+            "symbol": "none"
+          },
+          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$namespace\", pod=~\"$pod\"}) by (pod)",
+          "legendFormat": "variablePod"
+        }
+      ]
+    },
+    {
+      "title": "memUsed",
+      "type": "timeserise-line",
+      "headCompact": true,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "legend": {
+        "show": true,
+        "type": "scroll"
+      },
+      "yAxisOverrides": [
+        {
+          "name": "",
+          "position": "left",
+          "format": "bytes"
+        }
+      ],
+      "chartGrid": {
+        "bottom": "40px"
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "stepFormat": "auto",
+          "chartOptions": {
+            "type": "line",
+            "symbol": "none"
+          },
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$pod\"}) by (pod)",
+          "legendFormat": "variablePod",
+          "format": "bytes"
+        }
+      ]
+    },
+    {
+      "title": "networkInflow",
+      "type": "timeserise-line",
+      "headCompact": true,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "legend": {
+        "show": true,
+        "type": "scroll"
+      },
+      "yAxisOverrides": [
+        {
+          "name": "",
+          "position": "left",
+          "format": "bytes"
+        }
+      ],
+      "chartGrid": {
+        "bottom": "40px"
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "stepFormat": "auto",
+          "chartOptions": {
+            "type": "line",
+            "symbol": "none"
+          },
+          "expr": "sum(irate(container_network_receive_bytes_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", pod=~\"$pod\"}[$__interval])) by (pod)",
+          "legendFormat": "variablePod",
+          "format": "bytes"
+        }
+      ]
+    },
+    {
+      "title": "networkOutflow",
+      "type": "timeserise-line",
+      "headCompact": true,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "legend": {
+        "show": true,
+        "type": "scroll"
+      },
+      "yAxisOverrides": [
+        {
+          "name": "",
+          "position": "left",
+          "format": "bytes"
+        }
+      ],
+      "chartGrid": {
+        "bottom": "40px"
+      },
+      "targets": [
+        {
+          "datasourceType": "prometheus",
+          "stepFormat": "auto",
+          "chartOptions": {
+            "type": "line",
+            "symbol": "none"
+          },
+          "expr": "sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", pod=~\"$pod\"}[$__interval])) by (pod)",
+          "legendFormat": "variablePod",
+          "format": "bytes"
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": []
+  }
+}

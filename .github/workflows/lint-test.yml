@@ -1,0 +1,43 @@
+name: Run Unit Tests of Web App
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - "release*"
+
+jobs:
+  lint-web:
+    runs-on: ubuntu-latest
+    container: node:16
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install and lint
+        working-directory: web
+        run: |
+          npm install || exit 1
+          npm run lint || exit 1
+          echo "Lint finished!"
+
+  lint-test-frontend:
+    runs-on: ubuntu-latest
+    container: node:16
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install and test
+        working-directory: frontend
+        env:
+          NODE_ENV: test
+        run: |
+          yarn --immutable || exit 1
+          npm run lint || exit 1
+          npm run lint:scss || exit 1
+          npm run unit:coverage || exit 1
+          echo "Test finished!"

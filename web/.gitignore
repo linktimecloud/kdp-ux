@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+npm-debug.log
+latest.log
+pid
+*~
+\#*
+.\#*
+logs/
+.nyc_output/
+reporter/
+coverage/
+upload/
+public/
+mysql.sh
+npm-upgrade.sh
+db.sql
