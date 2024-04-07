@@ -12,7 +12,7 @@ on:
       - release-*
 
 env:
-  VERSION: "v1.0.0"
+  VERSION: "v1.0.0-240407"
   APP_NAME: "linktimecloud/kdp-ux"
   DOCKER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
   DOCKER_USERNAME: ${{ secrets.REG_USER }}
@@ -37,17 +37,13 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
 
-      - name: Get Short SHA
-        id: slug
-        run: echo "SHA_VALUE=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}-${{ steps.slug.outputs.SHA_VALUE }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}
           platforms: linux/amd64,linux/arm64
 
       - name: Build successful
-        run: echo "Docker image name is ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}-${{ steps.slug.outputs.SHA_VALUE }}"
+        run: echo "Docker image name is ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}"
