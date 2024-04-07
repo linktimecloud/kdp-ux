@@ -77,8 +77,8 @@ export default {
 </script>
 
 <template lang="pug">
-.catalog-apps-list.has-border-table.rounded(v-loading="processing")
-  el-table.rounded.border-none(:data="data", border)
+.catalog-apps-list.rounded(v-loading="processing")
+  el-table.rounded(:data="data", border)
     el-table-column(
       v-for="({ prop, label }) in columns",
       :key="prop",

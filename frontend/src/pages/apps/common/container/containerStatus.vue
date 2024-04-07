@@ -44,8 +44,8 @@ export default {
         .flex.ml-3.items-center
           .status-color.mr-1(:style="getStyle(item)")
           span {{ getLabel(item) }}
-    .container-box.flex.items-center.cursor-pointer.flex-wrap(slot="reference", @click="$emit('clickStatus')")
-      div(v-for="item in containers", :key="item.name")
+    template.container-box.flex.items-center.cursor-pointer.flex-wrap(#reference, @click="$emit('clickStatus')")
+      .flex.items-center(v-for="item in containers", :key="item.name")
         .status-color.mr-1.mb-1(
           :key="item.name",
           :style="getStyle(item)",

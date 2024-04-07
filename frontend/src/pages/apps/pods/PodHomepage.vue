@@ -1,144 +1,124 @@
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { get, isEmpty } from 'lodash'
+import i18n from '@/i18n'
 
 import Dashboard from '@/common/dashboard/DashboardPanels.vue'
 import PodDeleteButton from '@/common/apps/Operate/PodDeleteButton.vue'
 import ShowYaml from '@/common/apps/Operate/ShowYaml.vue'
-
 import AppConfigInfo from '@/common/apps/AppConfigInfo.vue'
-import ContainerList from '@/pages/apps/common/container/list.vue'
+import ContainerList from '@/pages/apps/common/container/ContainerList.vue'
 import PageHeader from '@/components/header/PageHeader.vue'
 import ContainerLog from '@/pages/apps/common/container/containerLog.vue'
 
 import { ONE_HOUR_AS_MS } from '@/constant/index.js'
-
 import { getAppPodDetailAPI } from '@/api/applications'
+import { useRoute, useRouter } from 'vue-router'
 
-export default {
-  name: 'pod-home-page',
-  data () {
-    return {
-      timeQuery: {
-        time: Date.now(),
-        range: [Date.now() - ONE_HOUR_AS_MS * 1, Date.now()]
-      },
-      processing: false,
-      podData: {},
-      selectedPodData: {},
-      drawerVisible: false
-    }
-  },
-  computed: {
-    namespace () {
-      return this.podData?.namespace || this.podData?.workload?.namespace
-    },
-    dashboardData () {
-      return {
-        name: 'pod_detail_metric',
-        label: this.$t('applications.runMetric'),
-        height: '320px'
-      }
-    },
-    routeQuery () {
-      return this.$route.query
-    },
-    defaultVariables () {
-      const { pod } = this.$route.query
-      const { namespace } = this
-      return {
-        namespace,
-        pod
-      }
-    },
-    basicData () {
-      const { routeQuery: { pod }, podData: { metadata, restartCount } } = this
-      return {
-        ...this.podData,
-        ...metadata,
-        workloadName: get(this.podData, 'workload.name'),
-        workloadKind: get(this.podData, 'workload.kind'),
-        qosClass: get(this.podData, 'status.qosClass'),
-        status: get(this.podData, 'status.phase'),
-        statusInfo: get(this.podData, 'status') || {},
-        restartNum: restartCount,
-        pod,
-        catalog: get(this.$route, 'params.name'),
-        appForm: get(this.$route, 'query.appForm'),
-        containerStatuses: get(this.podData, 'status.containerStatuses') || []
-      }
-    },
-    containerList () {
-      const list = get(this.podData, 'containers')
-      return !isEmpty(list) ? list : []
-    }
-  },
-  methods: {
-    getPodDetail () {
-      const { application: appName, pod: podName } = this.$route.query
-      const self = this
+const route = useRoute()
+const router = useRouter()
 
-      self.processing = true
+const timeQuery = ref({
+time: Date.now(),
+range: [Date.now() - ONE_HOUR_AS_MS * 1, Date.now()]
+})
+const processing = ref(false)
+const podData = ref({})
 
-      getAppPodDetailAPI({
-        appName,
-        podName
-      }).then(rsp => {
-        self.podData = {
-          ...rsp.data,
-          namespace: get(rsp, 'data.workload.namespace')
-        }
-      }).finally(() => {
-        self.processing = false
-      })
-    },
-    toLogviewer (query = {}) {
-      return {
-        name: 'logviewer',
-        query: {
-          namespace: this.namespace,
-          ...query,
-          isOneHour: true
-        }
-      }
-    },
-    toList () {
-      const { name, params, query: { application, bdc } } = this.$route
-      this.$router.push({
-        name,
-        params: {
-          ...params,
-          activeTab: 'podApplication'
-        },
-        query: {
-          application,
-          bdc
-        }
-      })
-    },
-    async refresh (changeFlag = true) {
-      this.getPodDetail()
-      if (changeFlag) this.timeQuery.time = Date.now()
+const routeQuery = computed(() => {
+  return route.query
+})
+const namespace = computed(() => {
+  return get(podData, 'value.namespace')
+})
+const dashboardData = computed(() => {
+  return {
+    name: 'pod_detail_metric',
+    label: i18n.t('applications.runMetric'),
+    height: '320px'
+  }
+})
+const defaultVariables = computed(() => {
+  const { pod } = route.query
+  return {
+    namespace: namespace.value,
+    pod
+  }
+})
+const basicData = computed(() => {
+  const pod = get(route, 'query.pod')
+  return {
+    ...podData.value,
+    ...get(podData, 'value.metadata'),
+    workloadName: get(podData, 'value.workload.name'),
+    workloadKind: get(podData, 'value.workload.kind'),
+    qosClass: get(podData, 'value.status.qosClass'),
+    status: get(podData, 'value.status.phase'),
+    statusInfo: get(podData, 'value.status', {}),
+    restartNum: get(podData, 'value.restartCount'),
+    pod,
+    catalog: get(route, 'params.name'),
+    appForm: get(route, 'query.appForm'),
+    containerStatuses: get(podData, 'value.status.containerStatuses', [])
+  }
+})
+const containerList = computed(() => {
+  return get(podData, 'value.containers', [])
+})
+
+const getPodDetail = async () => {
+  const { application: appName, pod: podName } = route.query
+  processing.value = true
+  await getAppPodDetailAPI({
+    appName,
+    podName
+  }).then(rsp => {
+    podData.value = {
+      ...rsp.data,
+      namespace: get(rsp, 'data.workload.namespace')
     }
-  },
-  mounted () {
-    this.refresh(false)
-  },
-  components: {
-    Dashboard,
-    AppConfigInfo,
-    PodDeleteButton,
-    ShowYaml,
-    ContainerList,
-    PageHeader,
-    ContainerLog
+  }).finally(() => {
+    processing.value = false
+  })
+}
+const toLogviewer = (query = {}) => {
+  return {
+    name: 'logviewer',
+    query: {
+      namespace: namespace.value,
+      ...query,
+      isOneHour: true
+    }
   }
 }
+const toList = () => {
+  const { name, params, query: { application, bdc } } = route
+  router.push({
+    name,
+    params: {
+      ...params,
+      activeTab: 'podApplication'
+    },
+    query: {
+      application,
+      bdc
+    }
+  })
+}
+const refresh = async (changeFlag = true) => {
+  await getPodDetail()
+  if (changeFlag) timeQuery.value.time = Date.now()
+}
+
+onMounted(() => {
+  refresh(false)
+})
 </script>
 
 <template lang="pug">
 .pod-home-page
   PageHeader(:data="{ content: `Pod: ${routeQuery.pod || $t('applications.noInstance')}` }", :isShowBack="true", @toBack="toList")
-    .action-btn.flex
+    .action-btn.flex.items-center
       ShowYaml.mr-2(:data="{ ...basicData, pod: routeQuery.pod, appName: routeQuery.application }", type="pod", :title="`${$t('menu.pods')}：${routeQuery.pod}`")
         el-button(type="primary") {{ $t('common.detail') }}
       el-dropdown.mr-2
@@ -163,7 +143,7 @@ export default {
                   span.ml-1 {{ $t('common.remove') }}
       el-button(@click="refresh", type="default")
         i.remix.ri-refresh-line.mr-0
-    template(slot="nextRow")
+    template(#nextRow)
       AppConfigInfo.mt-2(
         :data="basicData",
         type="pod"
@@ -171,7 +151,7 @@ export default {
   .pod-home-page-box.p-2(v-loading="processing")
     .pods-box.mb-4
       .font-bold.text-high.mb-2 {{ $t('applications.container') }}
-      ContainerList.shadow-box.has-border-table(
+      ContainerList.shadow-box(
         v-if="namespace",
         :data="containerList",
         :refreshFlag="timeQuery.time",

@@ -29,7 +29,7 @@ export default {
 <template lang="pug">
 .page-header-container.p-4.bg-white(v-if="Object.keys(data).length")
   .flex.justify-between.items-center
-    .page-header-content.flex
+    .page-header-content.flex.items-center
       i.ri-arrow-left-line.cursor-pointer.mr-2(
         v-if="isShowBack",
         @click="$emit('toBack')"
@@ -51,9 +51,12 @@ export default {
 @import '@/assets/root.scss';
 .page-header-container {
   margin: -16px -16px 16px -16px;
-
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.04);
-
+  .page-header-content {
+    .ri-arrow-left-line {
+      font-size: 20px;
+    }
+  }
   .page-header-title {
     color: $font_high;
     font-size: 24px;

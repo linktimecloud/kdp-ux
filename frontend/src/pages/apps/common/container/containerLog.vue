@@ -150,8 +150,8 @@ export default {
           i.remix.ri-external-link-line
           span {{ $t('common.more') }}{{ $t('common.logs') }}
     .flex.mb-3
-      .prepend-input.flex.mr-2(v-if="!defaultContainer")
-        .input-group-prepend {{ $t('applications.container') }}
+      .prepend-input.items-center.flex.mr-2(v-if="!defaultContainer")
+        .input-group-prepend.mr-2 {{ $t('applications.container') }}
         el-select.select-container(v-model="containerName", @change="changeContainer")
           el-option(
             v-for="item in containerList",
@@ -159,8 +159,8 @@ export default {
             :value="item.name",
             :label="item.name"
           )
-      .prepend-input.flex
-        .input-group-prepend {{ $t('applications.getLatestData') }}
+      .prepend-input.flex.items-center
+        .input-group-prepend.mr-2 {{ $t('applications.getLatestData') }}
         el-select.select-line-num(v-model="lineNum", @change="getContainerLogs")
           el-option(
             v-for="item in [50, 100, 200, 500, 1000]",

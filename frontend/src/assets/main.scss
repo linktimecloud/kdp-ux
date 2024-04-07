@@ -97,3 +97,10 @@ plaintext {
     color: $outline;
   }
 }
+
+.shadow-box {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}

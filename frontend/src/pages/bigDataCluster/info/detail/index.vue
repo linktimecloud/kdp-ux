@@ -50,9 +50,7 @@ const tabs = computed(() => {
         propsFilter: {
           org,
           bdc
-        },
-        hiddenColumns: ['group', 'bdc'],
-        hiddenSearch: ['group', 'bdc']
+        }
       }
     },
     {
