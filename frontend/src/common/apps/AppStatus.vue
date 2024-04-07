@@ -31,7 +31,7 @@ const statusMap = computed(() => {
     instance: SYSTEM_APPLICATION_STATUS(),
     bigDataCluster: BIG_DATA_CLUSTER_STATUS()
   }
-  return map[props.type]
+  return map[props.type] || DEFAULT_STATUS_MAP()
 })
 
 const item = computed(() => {

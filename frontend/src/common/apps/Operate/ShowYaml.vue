@@ -1,86 +1,76 @@
-<script>
+<script setup>
+import { ref, computed } from 'vue'
 import { isEmpty, get } from 'lodash'
+import { ElNotification } from 'element-plus'
+import i18n from '@/i18n'
+
 import { copyToClipboard } from '@/utils/document'
 import { getAppKindResourcesDetailAPI } from '@/api/applications'
 
 import json2yaml from 'js-yaml'
 
-export default {
-  name: 'ApplicationShowYaml',
-  props: {
-    data: {
-      type: Object,
-      required: true
-    },
-    cls: {
-      type: [String, Array, Boolean],
-      default: ''
-    },
-    type: String,
-    title: String
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true
   },
-  data () {
-    return {
-      drawerVisible: false,
-      processing: false,
-      content: {}
-    }
+  cls: {
+    type: [String, Array, Boolean],
+    default: ''
   },
-  computed: {
-    yamlContent () {
-      return json2yaml.dump(this.content, { lineWidth: -1 })
-    }
-  },
-  methods: {
-    isEmpty,
-    getYaml () {
-      const { namespace: resNs, pod: resName, kind: resKind, apiVersion: resAPIVersion, appName } = this.data
-      const self = this
-      const resourcesMap = {
-        pod: {
-          resourceAPI: getAppKindResourcesDetailAPI,
-          data: {
-            resNs,
-            resName,
-            resKind,
-            resAPIVersion
-          }
-        }
-      }
-      const resourceAPI = get(resourcesMap, `${this.type}.resourceAPI`)
-      const data = get(resourcesMap, `${this.type}.data`)
-      if (!resourceAPI) return
+  type: String,
+  title: String
+})
 
-      self.processing = true
-      resourceAPI({ appName, data }).then((rsp) => {
-        self.content = get(rsp, 'data') || get(rsp, 'data.data') || {}
-        self.processing = false
-      }).catch(() => {
-        self.processing = false
-      })
-    },
-    copyContent () {
-      if (!isEmpty(this.content)) {
-        const content = json2yaml.dump(this.content, { lineWidth: -1 })
-        copyToClipboard(content)
-        this.$message({
-          type: 'success',
-          message: this.$t('common.copySuccess')
-        })
+const drawerVisible = ref(false)
+const processing = ref(false)
+const content = ref({})
+
+const yamlContent = computed(() => {
+  return json2yaml.dump(content.value, { lineWidth: -1 })
+})
+
+const getYaml = async () => {
+  const { namespace: resNs, pod: resName, kind: resKind, apiVersion: resAPIVersion, appName } = props.data
+  const resourcesMap = {
+    pod: {
+      resourceAPI: getAppKindResourcesDetailAPI,
+      data: {
+        resNs,
+        resName,
+        resKind,
+        resAPIVersion
       }
     }
-  },
-  watch: {
-    drawerVisible (val) {
-      if (val) {
-        // 当类型为'onlyShow'的时候，表示直接通过prop得到的data进行展示，不需要重新发请求去拿数据
-        if (this.type === 'onlyShow') {
-          this.content = this.data
-        } else {
-          this.getYaml()
-        }
-      }
-    }
+  }
+  const resourceAPI = get(resourcesMap, `${props.type}.resourceAPI`)
+  if (!resourceAPI) return
+
+  const params = get(resourcesMap, `${props.type}.data`)
+  processing.value = true
+  await resourceAPI({ appName, params }).then((rsp) => {
+    content.value = get(rsp, 'data') || get(rsp, 'data.data') || {}
+  }).finally(() => {
+    processing.value = false
+  })
+}
+
+const copyContent = () => {
+  if (!isEmpty(yamlContent.value)) {
+    copyToClipboard(yamlContent.value)
+    ElNotification({
+      type: 'success',
+      message: i18n.t('common.copySuccess')
+    })
+  }
+}
+
+const handleOpen = () => {
+  // 当类型为'onlyShow'的时候，表示直接通过prop得到的data进行展示，不需要重新发请求去拿数据
+  if (props.type === 'onlyShow') {
+    content.value = props.data
+  } else {
+    getYaml()
   }
 }
 </script>
@@ -101,7 +91,8 @@ export default {
     :title="title",
     direction="rtl",
     :append-to-body="true",
-    :before-close="() => drawerVisible = false"
+    :before-close="() => drawerVisible = false",
+    @open="handleOpen"
   )
     .drawer-container
       el-button.mb-2(size="small", :disabled="isEmpty(content)", @click="copyContent")

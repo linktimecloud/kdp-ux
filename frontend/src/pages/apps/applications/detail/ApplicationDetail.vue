@@ -73,12 +73,8 @@ const tabs = computed(() => {
           component: PodList,
           componentTitle: i18n.t('menu.pods'),
           options: {
-            showBreadcrumb: false,
-            showSearch: false,
-            showPager: false,
             propsFilter: { group: get(route, 'query.group'), render: appName.value, bdc: get(route, 'query.bdc'), appForm: rendappsDetail.value.appFormName },
-            refreshFlag: refreshFlag.value,
-            hiddenColumns: ['bdc', 'containers', 'qosClass']
+            refreshFlag: refreshFlag.value
           },
           isTable: true
         },

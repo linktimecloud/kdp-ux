@@ -138,7 +138,7 @@ export default {
 
 <template lang="pug">
 .application-container-list
-  el-table.border-none(:data="tableList", border)
+  el-table(:data="tableList", border)
     el-table-column(
       v-for="({ key, label }) in containerListColumns",
       :key="key"

@@ -32,12 +32,6 @@ export const POD_COLUMNS = () => ([
     show: true
   },
   {
-    prop: 'containers',
-    label: i18n.t('applications.container'),
-    minWidth: 80,
-    show: true
-  },
-  {
     prop: 'restartCount',
     label: i18n.t('applications.restartNum'),
     minWidth: 120,
@@ -58,13 +52,6 @@ export const POD_COLUMNS = () => ([
       show: true
     }
   }),
-  {
-    prop: 'qosClass',
-    label: i18n.t('applications.qosClass'),
-    minWidth: 150,
-    show: true,
-    tip: 'QOS_CLASS_TIP'
-  },
   {
     prop: 'operate',
     label: i18n.t('common.operate'),
