@@ -1,88 +1,77 @@
-<script>
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
 import { get } from 'lodash'
+import i18n from '@/i18n'
 
 import { getCatalogsAppFormsAPI } from '@/api/catalog'
 
 import MarketInstallButton from '@/pages/apps/market/MarketInstallButton.vue'
 import ReasonButton from '@/common/ReasonButton.vue'
 
-export default {
-  name: 'catalog-system-apps-list',
-  data () {
-    return {
-      processing: false,
-      data: []
-    }
-  },
-  props: {
-    name: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    columns () {
-      return [
-        {
-          prop: 'name',
-          label: this.$t('applications.name'),
-          minWidth: 200
-        },
-        {
-          prop: 'version',
-          label: this.$t('applications.latestVersion')
-        },
-        {
-          prop: 'description',
-          label: this.$t('catalogs.description'),
-          minWidth: 300
-        },
-        {
-          prop: 'operate',
-          label: this.$t('common.operate')
-        }
-      ]
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const processing = ref(false)
+const data = ref([])
+
+const props = defineProps({
+  name: {
+    type: String,
+    default: ''
+  }
+})
+
+const columns = computed(() => {
+  return [
+    {
+      prop: 'name',
+      label: i18n.t('applications.name'),
+      minWidth: 200
     },
-    route () {
-      return this.$route
-    }
-  },
-  methods: {
-    getList () {
-      const self = this
-      const { name } = self
-
-      self.data = []
-      self.processing = true
-
-      getCatalogsAppFormsAPI({ catalog: name }).then(rsp => {
-        self.data = get(rsp, 'data') || []
-      }).finally(() => {
-        self.processing = false
-      })
+    {
+      prop: 'version',
+      label: i18n.t('applications.latestVersion')
     },
-    goDetail (row) {
-      const { name: sub } = row
+    {
+      prop: 'description',
+      label: i18n.t('catalogs.description'),
+      minWidth: 300
+    },
+    {
+      prop: 'operate',
+      label: i18n.t('common.operate')
+    }
+  ]
+})
 
-      return {
-        ...this.$route.query,
-        sub
-      }
-    }
-  },
-  mounted () {
-    this.getList()
-  },
-  components: {
-    MarketInstallButton,
-    ReasonButton
-  },
-  watch: {
-    name (val) {
-      this.getList()
-    }
+const getList = async () => {
+  const { name } = props
+  data.value = []
+  processing.value = true
+  await getCatalogsAppFormsAPI({ catalog: name }).then(rsp => {
+    data.value = get(rsp, 'data') || []
+  }).finally(() => {
+    processing.value = false
+  })
+}
+
+const goDetail = (row) => {
+  const { name: sub } = row
+
+  return {
+    ...route.query,
+    sub
   }
 }
+
+onMounted(() => {
+  getList()
+})
+
+watch(() => props.name, (val) => {
+  getList()
+})
 </script>
 
 <template lang="pug">

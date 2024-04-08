@@ -4,7 +4,7 @@ import { get, orderBy, keys, isEmpty, cloneDeep } from 'lodash'
 import i18n from '@/i18n'
 
 import PagerBar from '@/components/pager/PagerBar.vue'
-// import ViewContextSettingsButton from '../common/viewContextSettings.vue'
+import ViewContextSettingsButton from '../common/viewContextSettings.vue'
 import ReasonButton from '@/common/ReasonButton.vue'
 
 import { timeformat } from '@/utils/utils.js'
@@ -186,9 +186,9 @@ watch(() => lang, () => {
             :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false"
           )
             template(#default="scope")
-              //- ViewContextSettingsButton(v-if="prop === 'name'", :data="{ ...scope.row }", :type="type")
-              //-   span {{ scope.row.name }}
-              span(v-if="prop === 'origin'") {{ getOrigin(scope.row) ?? '-' }}
+              ViewContextSettingsButton(v-if="prop === 'name'", :data="{ ...scope.row }", :type="type")
+                span {{ scope.row.name }}
+              span(v-else-if="prop === 'origin'") {{ getOrigin(scope.row) ?? '-' }}
               span(v-else-if="prop === 'type'") {{ scope.row.type ?? '-' }}
               span(v-else-if="prop === 'keys'") {{ getKeys(scope.row) ?? '-' }}
               span(v-else-if="prop === 'createTime'") {{ timeformat(scope.row.createTime) }}

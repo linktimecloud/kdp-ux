@@ -117,6 +117,8 @@ onMounted(() => {
 <template lang="pug">
 .process-log
   PageHeader(:data="{ content: $t('menu.process') }", tip="OPERATION_LOG")
+    el-button(@click="fetchDebounce")
+      i.mr-0.remix.ri-refresh-line
   FilterBox(
     :data="filter",
     @submit="fetchDebounce",

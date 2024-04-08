@@ -43,8 +43,10 @@ const filter = ref(DEFAULT_FILTER())
 const data = ref([])
 const pagination = ref(PAGINATION())
 const filterList = ref([])
-const dataOrder = ref(false)
-const dataOrderBy = ref('updateTime')
+const dataSort = ref({
+  order: false,
+  orderBy: 'updateTime'
+})
 
 const userOrgName = computed(() => {
   return globalStore.userOrgName
@@ -75,9 +77,8 @@ const tableList = computed(() => {
   return ret
 })
 
-const sortMap = computed(() => {
-  const hiddenItem = get(props, 'options.hiddenColumns', [])
-  return ['name', 'catalog', 'status', 'updateTime'].filter(item => !hiddenItem.includes(item))
+const defaultOrderBy = computed(() => {
+  return props.options.defaultOrderBy || 'updateTime'
 })
 
 const getList = () => {
@@ -111,8 +112,8 @@ const getFilterList = () => {
   const list = filterTableList({
     list: data.value,
     filter: filter.value,
-    order: dataOrder.value ? 'asc' : 'desc',
-    orderBy: dataOrderBy.value,
+    order: get(dataSort, 'value.order') ? 'asc' : 'desc',
+    orderBy: get(dataSort, 'value.orderBy'),
     compareFuncs: {
       name: (itemValue, filterValue) => itemValue.includes(filterValue),
       catalog: (itemValue, filterValue) => itemValue.includes(filterValue),
@@ -126,8 +127,10 @@ const getFilterList = () => {
 
 const reset = () => {
   filter.value = DEFAULT_FILTER()
-  dataOrderBy.value = props.defaultOrderBy || 'updateTime'
-  dataOrder.value = false
+  dataSort.value = {
+    orderBy: defaultOrderBy.value,
+    order: false
+  }
 }
 
 const refresh = () => {
@@ -147,16 +150,19 @@ const toAppDetail = (row) => {
   }
 }
 
-const allowOperate = (status) => {
-  return status !== 'stopping'
+const handlerSortBy = ({ prop, order }) => {
+  dataSort.value = {
+    orderBy: prop || defaultOrderBy.value,
+    order: order === 'ascending' ? true : false
+  }
 }
 
 onMounted(() => {
   if (isEmpty(catalogTypesData.value)) {
     catalogManageStore.setCatalogTypes()
   }
-  if (props.defaultOrderBy) {
-    dataOrderBy.value = props.defaultOrderBy
+  if (defaultOrderBy) {
+    dataSort.value.orderBy = defaultOrderBy
   }
   refresh()
 })
@@ -169,9 +175,9 @@ watch(() => filter, () => {
   getFilterList()
 }, { deep: true })
 
-watch(() => dataOrder, () => {
+watch(() => dataSort, () => {
   getFilterList()
-})
+}, { deep: true })
 </script>
 
 <template lang="pug">
@@ -196,7 +202,9 @@ watch(() => dataOrder, () => {
       el-table(
         :data="tableList",
         border,
-        :class="{ 'border-none': !props.options.hiddenSearch }"
+        :class="{ 'border-none': !props.options.hiddenSearch }",
+        :default-sort="{ prop: defaultOrderBy, order: 'descending' }"
+        @sort-change="handlerSortBy"
       )
         template(
           v-for="({ prop, label, minWidth, show, width }, idx) in columns",
@@ -208,13 +216,13 @@ watch(() => dataOrder, () => {
             :label="label",
             :minWidth="minWidth",
             :width="width",
-            :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false"
+            :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
+            sortable="custom"
           )
             template(#default="scope")
               span(v-if="prop === 'name'")
                 router-link.d-block(:to="toAppDetail(scope.row)", target="_blank")
                   span {{ scope.row.name }}
-                  i.remix.ri-external-link-line.ml-1(v-if="scope.row.name")
               span(v-else-if="prop === 'bdc'")
                 template(v-if="scope.row.bdc")
                   span {{ scope.row.bdc ?? '-' }}
@@ -253,7 +261,7 @@ watch(() => dataOrder, () => {
                             .flex.more-btn
                               i.remix.ri-external-link-line
                               span {{ $t('menu.process') }}
-                      el-dropdown-item(v-if="allowOperate(scope.row.status)")
+                      el-dropdown-item(v-if="scope.row.status !== 'stopping'")
                         UninstallButton(
                           :data="{ appName: scope.row.name, bdc: scope.row.bdc }",
                           @refresh="refresh"

@@ -199,6 +199,6 @@ export default {
     @change-app="changeApp",
     @change-pod="changePod"
   )
-    template(slot="searchAfter")
+    template(#searchAfter)
       slot
 </template>

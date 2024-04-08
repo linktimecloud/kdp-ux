@@ -297,8 +297,8 @@ export default {
           )
     template(#footer)
       .flex.justify-end
-        el-button(@click="drawerVisible = false") {{ $t('common.cancel') }}
-        ReasonButton.ml-2(
+        el-button.mr-2(@click="drawerVisible = false") {{ $t('common.cancel') }}
+        ReasonButton(
           type="primary",
           :reason="saveReason",
           @click="installApp"
