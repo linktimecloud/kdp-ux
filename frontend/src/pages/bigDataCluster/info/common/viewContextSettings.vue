@@ -7,6 +7,7 @@ import SchemaForm from '@/components/schemaForm/SchemaForm.vue'
 import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 import JsonTree from '@/components/json/FormatJson.vue'
 
+import { ElNotification } from 'element-plus'
 import { copyToClipboard } from '@/utils/document'
 import { getBdcContextSettingAPI, getBdcContextSettingDefinitionSchemaAPI, getBdcContextSecretAPI, getBdcContextSecretDefinitionSchemaAPI } from '@/api/bdc'
 
@@ -52,8 +53,8 @@ const currentTypeResource = computed(() => {
     },
     applicationSecret: {
       title: i18n.t('applications.applicationSecret'),
-      schema: getBdcContextSecretAPI,
-      form: getBdcContextSecretDefinitionSchemaAPI
+      form: getBdcContextSecretAPI,
+      schema: getBdcContextSecretDefinitionSchemaAPI
     }
   }[props.type]
 })
@@ -97,7 +98,7 @@ const copyContent = () => {
   if (!isEmpty(form.value.properties)) {
     const content = JSON.stringify(form.value.properties)
     copyToClipboard(content)
-    this.$message({
+    ElNotification({
       type: 'success',
       message: i18n.t('common.copySuccess')
     })
@@ -120,7 +121,7 @@ const copyContent = () => {
     class="view-context-settings-drawer",
     :before-close="() => drawerVisible = false"
   )
-    .drawer-container
+    .drawer-container(v-if="drawerVisible")
       .flex.mb-3
         .flex.mr-3
           .label.mr-1 {{ $t('menu.bigDataCluster') }}:
@@ -140,12 +141,12 @@ const copyContent = () => {
             span {{ $t('common.copy') }}
           el-button(type="default", size="small", @click="isCode = !isCode")
             i.remix.mr-0(:class="isCode ? 'ri-computer-line' : 'ri-code-line'")
-      template(v-loading="processing.schema || processing.form")
+      div(v-loading="processing.schema || processing.form")
         SchemaForm.p-2.border.rounded(
           v-if="!isEmpty(schema.JSONSchema) && !isCode",
+          v-model="form.properties",
           :schema="schema.JSONSchema",
           :uiSchema="schema.UISchema",
-          :value="form.properties",
           :optionProps="{ disabled: true }"
         )
         JsonTree.config-data.bg-gray.border.rounded.p-2(v-else-if="!isEmpty(form.properties) && isCode", :data="form.properties")

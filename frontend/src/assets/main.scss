@@ -67,6 +67,10 @@ plaintext {
   color: $font_gray;
 }
 
+.text-primary {
+  color: $primary_color;
+}
+
 .has-input-confirm-box {
   .el-message-box__input {
     padding-left: 34px;

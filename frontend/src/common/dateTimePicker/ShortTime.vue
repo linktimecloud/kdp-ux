@@ -94,7 +94,7 @@ onMounted(() => {
     range-separator="-",
     :start-placeholder="i18n.t('common.startDate')",
     :end-placeholder="i18n.t('common.endDate')",
-    align="right",
+    align="bottom",
     :clearable="false",
     @change="handleChange"
   )

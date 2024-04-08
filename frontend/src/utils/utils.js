@@ -135,7 +135,7 @@ export const filterTableList = ({ list, filter, order = 'asc', orderBy, compareF
       const itemValue = (item[key] && item[key]?.toLowerCase()) || ''
 
       if (isFunction(compareFuncs[key])) {
-        compareFuncs[key](itemValue, filterValue, key)
+        return compareFuncs[key](itemValue, filterValue, key)
       } else {
         return itemValue === filterValue
       }
