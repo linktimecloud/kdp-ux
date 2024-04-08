@@ -67,7 +67,7 @@ const getSchema = async () => {
   if (defType) {
     processing.value.schema = true
     const apiName = currentTypeResource.value.schema
-    await apiName({ bdcName: bdcName, defType: defType }).then((rsp) => {
+    await apiName({ bdcName, defType }).then((rsp) => {
       schema.value = get(rsp, 'data') || {}
     })
     processing.value.schema = false
