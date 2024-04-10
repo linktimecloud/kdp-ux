@@ -1,6 +1,8 @@
-<script>
+<script setup>
+import { ref, computed, nextTick } from 'vue'
 import { get, isEmpty } from 'lodash'
 import { AnsiUp } from 'ansi_up'
+import i18n from '@/i18n'
 
 import { timeformat } from '@/utils/utils'
 import { saveAs } from 'file-saver'
@@ -8,123 +10,114 @@ import { getAppPodContainerLogsAPI } from '@/api/applications'
 
 import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
-export default {
-  name: 'pod-container-log',
-  props: {
-    podData: {
-      type: Object,
-      required: true
-    },
-    defaultContainer: {
-      type: String,
-      default: ''
-    }
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const props = defineProps({
+  podData: {
+    type: Object,
+    required: true
   },
-  data () {
-    return {
-      drawerVisible: false,
-      containerLogs: '',
-      processing: false,
-      lineNum: 100,
-      containerName: ''
-    }
-  },
-  computed: {
-    containerList () {
-      return get(this.podData, 'containerStatuses', [])
-    },
-    toLogviewer () {
-      const { podData: { pod, namespace, appName }, containerName } = this
-      return {
-        path: '/logviewer',
-        query: {
-          app: appName,
-          pod,
-          namespace,
-          container: containerName,
-          isOneHour: true
-        }
-      }
-    },
-    title () {
-      return this.defaultContainer ? `${this.$t('applications.container')}: ${this.defaultContainer}` : `Pod: ${this.podData.pod}`
-    },
-    coloredLogData () {
-      let logs = ''
-      try {
-        logs = atob(this.containerLogs)
-      } catch (e) {}
-      const ansiUp = new AnsiUp()
-      return ansiUp.ansi_to_html(logs)
-    },
-    bdc () {
-      return get(this.$route, 'query.bdc') || get(this.podData, 'bdc')
-    }
-  },
-  methods: {
-    isEmpty,
-    handleOpen () {
-      this.containerName = this.defaultContainer || get(this.podData, 'containerStatuses[0].name') || ''
-
-      this.getContainerLogs()
-      this.drawerVisible = true
-    },
-    getContainerLogs (line) {
-      const self = this
-      const { podData: { podName, appName }, lineNum, containerName } = self
-
-      if (!appName || !podName || !containerName) return
-
-      self.containerLogs = ''
-      self.processing = true
-      getAppPodContainerLogsAPI({
-        appName,
-        podName,
-        containerName,
-        data: {
-          tail_lines: lineNum
-        }
-      }).then(rsp => {
-        self.containerLogs = get(rsp, 'data.logs') || ''
-
-        self.$nextTick(() => {
-          self.backBottom()
-        })
-      }).finally(() => {
-        self.processing = false
-      })
-    },
-    backBottom () {
-      const self = this
-      const box = self.$refs.scrollBox
-      function returnBottom () {
-        box.scrollBy(0, (box.scrollHeight - box.scrollTop) / 10)
-        // Tips：正常情况如果容器滚动到了底部，那么 box.scrollHeight - box.clientHeight - box.scrollTop 的值应该是 0。但是实际情况中，由于浏览器像素渲染可能会导致误差，这个值可能会出现 0.5 的情况，所以这里做了一个容错处理，判断要大于 2。
-        if (box.scrollHeight - box.clientHeight - box.scrollTop > 2) {
-          setTimeout(() => { returnBottom() }, 30)
-        }
-      }
-      returnBottom()
-    },
-    downloadfile () {
-      const { containerLogs, podData, containerName } = this
-      const fileName = `${podData.pod}-${containerName}-${timeformat()}.log`
-
-      const blob = new Blob([containerLogs])
-      saveAs(blob, fileName)
-    },
-    refresh () {
-      this.lineNum = 100
-      this.getContainerLogs()
-    },
-    changeContainer (val) {
-      this.containerName = val
-      this.refresh()
-    }
-  },
-  components: {
-    EmptyHolder
+  defaultContainer: {
+    type: String,
+    default: ''
   }
+})
+
+const drawerVisible = ref(false)
+const containerLogs = ref('')
+const processing = ref(false)
+const lineNum = ref(100)
+const containerName = ref('')
+
+const containerList = computed(() => {
+  return get(props.podData, 'containerStatuses', [])
+})
+const toLogviewer = computed(() => {
+  const { podData: { pod, namespace, appName } } = props
+  return {
+    path: '/logviewer',
+    query: {
+      app: appName,
+      pod,
+      namespace,
+      container: containerName.value,
+      isOneHour: true
+    }
+  }
+})
+const title = computed(() => {
+  return props.defaultContainer ? `${i18n.t('applications.container')}: ${props.defaultContainer}` : `Pod: ${props.podData.pod}`
+})
+const coloredLogData = computed(() => {
+  let logs = ''
+  try {
+    logs = atob(containerLogs.value)
+  } catch (e) {}
+  const ansiUp = new AnsiUp()
+  return ansiUp.ansi_to_html(logs)
+})
+const bdc = computed(() => {
+  return get(route, 'query.bdc') || get(props.podData, 'bdc')
+})
+
+const handleOpen = () => {
+  containerName.value = props.defaultContainer || get(props.podData, 'containerStatuses[0].name') || ''
+  getContainerLogs()
+  drawerVisible.value = true
+}
+
+const getContainerLogs = (line) => {
+  const { podData: { podName, appName } } = props
+
+  if (!appName || !podName || !containerName.value) return
+
+  containerLogs.value = ''
+  processing.value = true
+  getAppPodContainerLogsAPI({
+    appName,
+    podName,
+    containerName: containerName.value,
+    data: {
+      tail_lines: lineNum.value
+    }
+  }).then(rsp => {
+    containerLogs.value = get(rsp, 'data.logs') || ''
+    nextTick(() => {
+      backBottom()
+    })
+  }).finally(() => {
+    processing.value = false
+  })
+}
+
+const scrollBox = ref(null)
+
+const backBottom = () => {
+  const box = scrollBox.value
+  function returnBottom () {
+    box.scrollBy(0, (box.scrollHeight - box.scrollTop) / 10)
+    // Tips：正常情况如果容器滚动到了底部，那么 box.scrollHeight - box.clientHeight - box.scrollTop 的值应该是 0。但是实际情况中，由于浏览器像素渲染可能会导致误差，这个值可能会出现 0.5 的情况，所以这里做了一个容错处理，判断要大于 2。
+    if (box.scrollHeight - box.clientHeight - box.scrollTop > 2) {
+      setTimeout(() => { returnBottom() }, 30)
+    }
+  }
+  box && returnBottom()
+}
+
+const downloadfile = () => {
+  const fileName = `${props.podData?.pod}-${containerName.value}-${timeformat()}.log`
+  const blob = new Blob([containerLogs.value])
+  saveAs(blob, fileName)
+}
+const refresh = () => {
+  lineNum.value = 100
+  getContainerLogs()
+}
+const changeContainer = (val) => {
+  containerName.value = val
+  refresh()
 }
 </script>
 

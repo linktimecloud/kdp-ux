@@ -1,30 +1,28 @@
-<script>
+<script setup>
+import i18n from '@/i18n'
 import { get } from 'lodash'
 
 import { GREEN_COLOR, DANGER_COLOR } from '@/constant/color'
 
-export default {
-  name: 'instance-container-status',
-  props: {
-    containers: {
-      type: Array,
-      required: true
-    },
-    showLabel: {
-      type: Boolean,
-      default: false
-    }
+const props = defineProps({
+  containers: {
+    type: Array,
+    required: true
   },
-  methods: {
-    getStyle (item) {
-      return {
-        backgroundColor: get(item, 'status.ready') ? GREEN_COLOR : DANGER_COLOR
-      }
-    },
-    getLabel (item) {
-      return get(item, 'status.ready') ? this.$t('applications.runtimeStatus.normal') : this.$t('applications.runtimeStatus.abnormal')
-    }
+  showLabel: {
+    type: Boolean,
+    default: false
   }
+})
+
+const getStyle = (item) => {
+  return {
+    backgroundColor: get(item, 'status.ready') ? GREEN_COLOR : DANGER_COLOR
+  }
+}
+
+const getLabel = (item) => {
+  return get(item, 'status.ready') ? i18n.t('applications.runtimeStatus.normal') : i18n.t('applications.runtimeStatus.abnormal')
 }
 </script>
 

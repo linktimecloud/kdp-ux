@@ -2,7 +2,7 @@ const routes = [
   {
     path: '/bigDataClusterInfo',
     name: 'bigDataClusterInfo',
-    component: () => import('@/pages/bigDataCluster/info/index.vue')
+    component: () => import('@/pages/bigDataCluster/info/BdcHomepage.vue')
   },
   {
     path: '/bigDataClusterOverview',

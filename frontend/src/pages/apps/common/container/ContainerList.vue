@@ -1,4 +1,8 @@
-<script>
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
+import i18n from '@/i18n'
+import { get } from 'lodash'
+
 import ContainerStatus from '@/pages/apps/common/container/containerStatus.vue'
 import ContainerLog from '@/pages/apps/common/container/containerLog.vue'
 import CommonTips from '@/common/TipsIcon.vue'
@@ -7,133 +11,120 @@ import ResourceColumn from '@/common/dashboard/ResourceColumn.vue'
 import { formatPrometheusTableData } from '@/utils/cluster/utils'
 import { getPercentage } from '@/utils/utils'
 import { postDashboardQueryAPI } from '@/api/dashboard'
-
 import { CONTAINER_LIST_TARGETS } from '@/constant/prometheus'
+import { useRoute } from 'vue-router'
 
-export default {
-  name: 'application-container-list',
-  props: {
-    data: {
-      type: Array,
-      default: () => ([])
-    },
-    refreshFlag: Number,
-    podData: {
-      type: Object,
-      retuired: true
-    }
-  },
-  data () {
-    return {
-      prometheusData: [],
-      processing: {
-        prometheus: false
-      }
-    }
-  },
-  computed: {
-    containerListColumns () {
-      return [
-        {
-          key: 'name',
-          label: this.$t('dashboard.containerName')
-        },
-        {
-          key: 'image',
-          label: this.$t('applications.image')
-        },
-        {
-          key: 'status',
-          label: this.$t('common.status')
-        },
-        {
-          key: 'cpu',
-          label: this.$t('common.cpu')
-        },
-        {
-          key: 'memory',
-          label: this.$t('common.memory')
-        },
-        {
-          key: 'operate',
-          label: this.$t('common.operate')
-        }
-      ]
-    },
-    tableList () {
-      return this.formatCapacityData(this.data)
-    }
-  },
-  components: {
-    ContainerStatus,
-    CommonTips,
-    ResourceColumn,
-    ContainerLog
-  },
-  methods: {
-    getPrometheusData () {
-      const self = this
-      const { pod } = this.$route.query
-      const { namespace } = this.podData || {}
+const route = useRoute()
 
-      if (!namespace || !pod) return
-
-      self.processing.prometheus = true
-      postDashboardQueryAPI({
-        time: Date.now(),
-        variables: {
-          namespace,
-          pod
-        },
-        targets: CONTAINER_LIST_TARGETS()
-      }).then(rsp => {
-        const dataResults = Object.values(rsp.data || {})
-        self.prometheusData = formatPrometheusTableData({
-          dataResults,
-          columns: [
-            { key: 'container', type: 'metric', primary: true },
-            ...(Object.keys(rsp.data || {}).map(key => ({ key })))
-          ]
-        })
-      }).finally(() => {
-        self.processing.prometheus = false
-      })
-    },
-    formatCapacityData (list) {
-      return list.map(item => {
-        const ret = item
-        const key = item.name
-        const capacityData = this.prometheusData[key] || {}
-        return {
-          ...ret,
-          ...capacityData,
-          cpuRequestRate: getPercentage(capacityData.cpuUsed, capacityData.cpuRequest),
-          cpuLimitRate: getPercentage(capacityData.cpuUsed, capacityData.cpuLimit),
-          memRequestRate: getPercentage(capacityData.memUsed, capacityData.memRequest),
-          memLimitRate: getPercentage(capacityData.memUsed, capacityData.memLimit)
-        }
-      })
-    },
-    isCapacityUsageProp (prop) {
-      return ['cpu', 'memory'].includes(prop)
-    },
-    getTip (prop) {
-      const map = {
-        cpu: 'APPLICATION_CPU_USE_REQUEST_LIMIT',
-        memory: 'APPLICATION_MEMORY_USE_REQUEST_LIMIT'
-      }
-      return map[prop]
-    }
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => ([])
   },
-  mounted () {
-    this.getPrometheusData()
-  },
-  watch: {
-    refreshFlag () {
-      this.getPrometheusData()
-    }
+  refreshFlag: Number,
+  podData: {
+    type: Object,
+    required: true
   }
+})
+
+const prometheusData = ref([])
+const processing = ref({
+  prometheus: false
+})
+
+const containerListColumns = computed(() => {
+  return [
+    {
+      key: 'name',
+      label: i18n.t('dashboard.containerName')
+    },
+    {
+      key: 'image',
+      label: i18n.t('applications.image')
+    },
+    {
+      key: 'status',
+      label: i18n.t('common.status')
+    },
+    {
+      key: 'cpu',
+      label: i18n.t('common.cpu')
+    },
+    {
+      key: 'memory',
+      label: i18n.t('common.memory')
+    },
+    {
+      key: 'operate',
+      label: i18n.t('common.operate')
+    }
+  ]
+})
+const tableList = computed(() => {
+  return formatCapacityData(props.data)
+})
+
+const getPrometheusData = () => {
+  const pod = get(route, 'query.pod')
+  const namespace = get(props, 'podData.namespace')
+
+  if (!namespace || !pod) return
+
+  processing.value.prometheus = true
+  postDashboardQueryAPI({
+    time: Date.now(),
+    variables: {
+      namespace,
+      pod
+    },
+    targets: CONTAINER_LIST_TARGETS()
+  }).then(rsp => {
+    const dataResults = Object.values(rsp.data || {})
+    prometheusData.value = formatPrometheusTableData({
+      dataResults,
+      columns: [
+        { key: 'container', type: 'metric', primary: true },
+        ...(Object.keys(rsp.data || {}).map(key => ({ key })))
+      ]
+    })
+  }).finally(() => {
+    processing.value.prometheus = false
+  })
 }
+const formatCapacityData = (list) => {
+  return list.map(item => {
+    const ret = item
+    const key = item.name
+    const capacityData = get(prometheusData, `value.${key}`, {})
+    return {
+      ...ret,
+      ...capacityData,
+      cpuRequestRate: getPercentage(capacityData.cpuUsed, capacityData.cpuRequest),
+      cpuLimitRate: getPercentage(capacityData.cpuUsed, capacityData.cpuLimit),
+      memRequestRate: getPercentage(capacityData.memUsed, capacityData.memRequest),
+      memLimitRate: getPercentage(capacityData.memUsed, capacityData.memLimit)
+    }
+  })
+}
+const isCapacityUsageProp = (prop) => {
+  return ['cpu', 'memory'].includes(prop)
+}
+const getTip = (prop) => {
+  const map = {
+    cpu: 'APPLICATION_CPU_USE_REQUEST_LIMIT',
+    memory: 'APPLICATION_MEMORY_USE_REQUEST_LIMIT'
+  }
+  return map[prop]
+}
+
+onMounted(() => {
+  getPrometheusData()
+})
+
+watch(() => props.refreshFlag, () => {
+  getPrometheusData()
+})
 </script>
 
 <template lang="pug">

@@ -1,79 +1,70 @@
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { get } from 'lodash'
+import i18n from '@/i18n'
 
 import JsonTree from '@/components/json/FormatJson.vue'
 
 import { getCatalogsAppFormsDataAPI } from '@/api/catalog'
 
-export default {
-  name: 'catalog-apps-list',
-  data () {
-    return {
-      processing: false,
-      data: [],
-      drawerVisible: false,
-      selectedData: {}
-    }
-  },
-  props: {
-    catalog: {
-      type: String,
-      default: ''
-    },
-    form: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    columns () {
-      return [
-        {
-          prop: 'name',
-          label: `${this.$t('applications.appMode')}${this.$t('common.name')}`
-        },
-        {
-          prop: 'type',
-          label: this.$t('applications.modeType')
-        },
-        {
-          prop: 'operate',
-          label: this.$t('common.operate')
-        }
-      ]
-    }
-  },
-  methods: {
-    getList () {
-      const { catalog, form } = this
-      const self = this
+const processing = ref(false)
+const data = ref([])
+const drawerVisible = ref(false)
+const selectedData = ref({})
 
-      if (!catalog || !form) return
-
-      self.processing = true
-      getCatalogsAppFormsDataAPI({ catalog, form }).then(rsp => {
-        const item = rsp.data || {}
-        self.data = [{
-          name: get(item, 'metadata.labels.app'),
-          type: get(item, 'spec.type'),
-          value: get(item, 'spec.properties') || {}
-        }]
-      }).finally(() => {
-        self.processing = false
-      })
-    },
-    openDrawer (item) {
-      this.selectedData = item
-      this.drawerVisible = true
-    }
+const props = defineProps({
+  catalog: {
+    type: String,
+    default: ''
   },
-  mounted () {
-    this.getList()
-  },
-  components: {
-    JsonTree
+  form: {
+    type: String,
+    default: ''
   }
+})
+
+const columns = computed(() => {
+  return [
+    {
+      prop: 'name',
+      label: `${i18n.t('applications.appMode')}${i18n.t('common.name')}`
+    },
+    {
+      prop: 'type',
+      label: i18n.t('applications.modeType')
+    },
+    {
+      prop: 'operate',
+      label: i18n.t('common.operate')
+    }
+  ]
+})
+
+const getList = () => {
+  const { catalog, form } = props
+  if (!catalog || !form) return
+
+  processing.value = true
+  getCatalogsAppFormsDataAPI({ catalog, form }).then(rsp => {
+    const item = rsp.data || {}
+    data.value = [{
+      name: get(item, 'metadata.labels.app'),
+      type: get(item, 'spec.type'),
+      value: get(item, 'spec.properties') || {}
+    }]
+  }).finally(() => {
+    processing.value = false
+  })
 }
+
+const openDrawer = (item) => {
+  selectedData.value = item
+  drawerVisible.value = true
+}
+
+onMounted(() => {
+  getList()
+})
 </script>
 
 <template lang="pug">
@@ -91,14 +82,14 @@ export default {
         span(v-else) {{ scope.row[prop]}}
   el-drawer(
     class="catalog-apps-list-drawer",
-    :title="`${$t('applications.settingTemplate')}: ${selectedData.name}`",
+    :title="`${$t('applications.settingTemplate')}: ${selectedData?.name}`",
     v-model="drawerVisible",
     size="40%"
     direction="rtl",
     :append-to-body="true",
     :before-close="() => drawerVisible = false"
   )
-    JsonTree.config-data.bg-gray.border.rounded.p-2(:data="selectedData.value")
+    JsonTree.config-data.bg-gray.border.rounded.p-2(:data="selectedData?.value")
 </template>
 
 <style lang="scss">

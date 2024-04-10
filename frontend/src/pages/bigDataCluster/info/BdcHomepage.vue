@@ -4,7 +4,7 @@ import { get, map, omitBy } from 'lodash'
 import i18n from '@/i18n'
 
 import AppConfigInfo from '@/common/apps/AppConfigInfo.vue'
-import ApplicationsContextSettings from '../contextSettings/index.vue'
+import ApplicationsContextSettings from './ContextSettings.vue'
 import PageHeader from '@/components/header/PageHeader.vue'
 import CommonTips from '@/common/TipsIcon.vue'
 import InstanceList from '@/pages/apps/applications/list/ApplicationList.vue'
@@ -153,7 +153,7 @@ watch(() => currentBdcName, (val) => {
 <style lang="scss">
 .big-data-cluster-info-detail {
   margin: 0 -15px;
-  .pageheader__container {
+  .page-header-container {
     padding-bottom: 0 !important;
   }
   .el-tabs__header {

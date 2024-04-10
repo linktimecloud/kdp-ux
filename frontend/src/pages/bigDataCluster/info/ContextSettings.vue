@@ -1,17 +1,16 @@
 <script setup>
-import { ref, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { get, orderBy, keys, isEmpty, cloneDeep } from 'lodash'
 import i18n from '@/i18n'
 
 import PagerBar from '@/components/pager/PagerBar.vue'
-import ViewContextSettingsButton from '../common/viewContextSettings.vue'
+import ViewContextSettingsButton from './common/ViewContext.vue'
 import ReasonButton from '@/common/ReasonButton.vue'
 
 import { timeformat } from '@/utils/utils.js'
 
 import { getBdcContextSettingsAPI, getBdcContextSecretsAPI } from '@/api/bdc'
 import { PAGINATION } from '@/constant'
-import { useLanguagesStore } from '@/stores/modules/languages'
 
 const props = defineProps({
   refreshFlag: Number,
@@ -25,16 +24,18 @@ const props = defineProps({
   }
 })
 
+const defaultOrderBy = 'createTime'
 const processing = ref({
   list: false,
   import: false
 })
 const data = ref([])
 const filterList = ref([])
-const showColumns = ref([])
 const pagination = ref(PAGINATION())
-const dataOrderBy = ref('createTime')
-const dataOrder = ref(false)
+const dataSort = ref({
+  order: false,
+  orderBy: defaultOrderBy
+})
 
 const bdc = computed(() => {
   return get(props.propsFilter, 'bdc') || ''
@@ -45,27 +46,32 @@ const columns = computed(() => {
     {
       prop: 'name',
       label: i18n.t('common.name'),
-      minWidth: 180
+      minWidth: 180,
+      sortable: 'custom'
     },
     {
       prop: 'origin',
       label: i18n.t('common.origin'),
-      minWidth: 100
+      minWidth: 100,
+      sortable: 'custom'
     },
     {
       prop: 'type',
       label: i18n.t('common.settingsType'),
-      minWidth: 150
+      minWidth: 150,
+      sortable: 'custom'
     },
     {
       prop: 'keys',
       label: i18n.t('common.key'),
-      minWidth: 150
+      minWidth: 150,
+      sortable: false
     },
     {
       prop: 'createTime',
       label: i18n.t('common.createdAt'),
-      minWidth: 150
+      minWidth: 150,
+      sortable: 'custom'
     }
   ]
 })
@@ -75,10 +81,6 @@ const tableList = computed(() => {
   let ret = filterList.value || []
   ret = ret.slice(start, start + limit)
   return ret
-})
-
-const total = computed(() => {
-  return filterList.value.length || 0
 })
 
 const currentTypeResource = computed(() => {
@@ -112,25 +114,14 @@ const getList = async () => {
       getFilterList()
     })
     processing.value.list = false
-    refreshTable()
   }
 }
 
 const getFilterList = () => {
   pagination.value = PAGINATION()
-  filterList.value = cloneDeep(data.value)
-  const o = dataOrder.value ? 'asc' : 'desc'
-  filterList.value = orderBy(filterList.value, [dataOrderBy.value], [o])
+  const list = cloneDeep(data.value)
+  filterList.value = orderBy(list, get(dataSort, 'value.orderBy'), [get(dataSort, 'value.order') ? 'asc' : 'desc'])
   pagination.value.total = filterList.value.length || 0
-}
-
-const bigDataClusterListRef = ref(null)
-
-const refreshTable = () => {
-  nextTick(() => {
-    const el = bigDataClusterListRef.value
-    el && el.doLayout()
-  })
 }
 
 const getKeys = (item) => {
@@ -143,6 +134,13 @@ const getOrigin = (item) => {
   return i18n.te(`cluster.contextSettingOrigin.${origin}`) ? i18n.t(`cluster.contextSettingOrigin.${origin}`) : ''
 }
 
+const handlerSortBy = ({ prop, order }) => {
+  dataSort.value = {
+    orderBy: prop || defaultOrderBy,
+    order: order === 'ascending' ? true : false
+  }
+}
+
 onMounted(() => {
   getList()
 })
@@ -150,19 +148,9 @@ onMounted(() => {
 watch(() => props.refreshFlag, () => {
   getList()
 })
-
-const languagesStore = useLanguagesStore()
-const lang = computed(() => languagesStore.currentLang)
-
-watch(() => lang, () => {
-  const data = cloneDeep(showColumns.value.length ? showColumns.value : columns.value)
-  showColumns.value = data.map(item => {
-    return {
-      ...item,
-      label: get(columns.value.find(c => c.prop === item.prop), 'label')
-    }
-  })
-}, { immediate: true })
+watch(() => dataSort, () => {
+  getFilterList()
+}, { deep: true })
 </script>
 
 <template lang="pug">
@@ -172,10 +160,11 @@ watch(() => lang, () => {
       el-table.border-none(
         :data="tableList",
         border,
-        ref="bigDataClusterListRef"
+        :default-sort="{ prop: defaultOrderBy, order: 'descending' }"
+        @sort-change="handlerSortBy"
       )
         template(
-          v-for="({ prop, label, minWidth, show, width }, idx) in showColumns",
+          v-for="({ prop, label, minWidth, show, width, sortable }, idx) in columns",
           :key="`${prop}${idx}`"
         )
           el-table-column(
@@ -183,7 +172,8 @@ watch(() => lang, () => {
             :label="label",
             :minWidth="minWidth",
             :width="width",
-            :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false"
+            :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
+            :sortable="sortable"
           )
             template(#default="scope")
               ViewContextSettingsButton(v-if="prop === 'name'", :data="{ ...scope.row }", :type="type")

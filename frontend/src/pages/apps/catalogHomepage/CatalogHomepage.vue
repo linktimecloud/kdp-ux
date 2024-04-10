@@ -1,236 +1,129 @@
-<script>
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
 import { get, upperFirst, omit, isEmpty } from 'lodash'
+import i18n from '@/i18n'
 
 import { getCatalogsAppFormAPI } from '@/api/catalog'
 import { getLabelformat } from '@/utils/utils'
+import { CATALOG_COMPONENTS_MAP } from './constant'
 
 import AppIcon from '@/common/apps/AppIcon.vue'
-import SystemAppsList from '@/pages/apps/catalogHomepage/SystemAppsList.vue'
-import AppsList from '@/pages/apps/catalogHomepage/AppsList.vue'
-import InstallList from '@/pages/apps/catalogHomepage/InstallList.vue'
-import AppInstruction from '@/pages/apps/catalogHomepage/AppInstruction.vue'
 import MarketInstallButton from '@/pages/apps/market/MarketInstallButton.vue'
 
+import { useRoute, useRouter } from 'vue-router'
 import { useCatalogManageStore } from '@/stores/modules/catalogManage'
 const catalogManageStore = useCatalogManageStore()
+const route = useRoute()
+const router = useRouter()
 
-export default {
-  name: 'catalog-homepage',
-  data () {
-    return {
-      activeTab: 'homepage',
-      refreshFlag: Date.now(),
-      catalogFormInfo: {} // 当前系统下某个应用的类型、描述、说明等信息
-    }
-  },
-  computed: {
-    catalogTypesData () {
-      return catalogManageStore.catalogTypesData
-    },
-    name () {
-      return get(this.$route, 'params.name') || get(this.$route, 'query.catalogName')
-    },
-    showName () {
-      let ret = ''
-      const { name } = this
-      if (name) {
-        ret = this.$te(`menu.${name}`) ? this.$t(`menu.${name}`) : upperFirst(this.name)
-      }
-      return ret
-    },
-    sub () {
-      return get(this.$route, 'query.sub')
-    },
-    isCatalogLevel () {
-      // 判断当前是展示catalog主页，还是catalog下某个应用的主页
-      return !!(this.name && !this.sub)
-    },
-    breadCrumb () {
-      return [
-        {
-          text: this.showName
-        },
-        {
-          text: this.sub
-        }
-      ]
-    },
-    catalogMap () {
-      const { name, sub } = this
-      return {
-        system: {
-          tabs: [
-            {
-              name: 'homepage',
-              components: [
-                {
-                  name: 'SystemAppsList',
-                  component: SystemAppsList,
-                  componentTitle: this.$t('applications.app'),
-                  options: {
-                    name
-                  },
-                  isTable: true
-                },
-                {
-                  name: 'InstallList',
-                  component: InstallList,
-                  componentTitle: this.$t('applications.containerRunningNum'),
-                  options: {
-                    name,
-                    catalog: name
-                  },
-                  isTable: true,
-                  showRefresh: true
-                }
-              ]
-            },
-            {
-              name: 'instructions',
-              components: [
-                {
-                  name: 'appInstruction',
-                  component: AppInstruction,
-                  options: {
-                    catalog: name
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        apps: {
-          tabs: [
-            {
-              name: 'homepage',
-              components: [
-                {
-                  name: 'AppsList',
-                  component: AppsList,
-                  isTable: true,
-                  componentTitle: this.$t('applications.appMode'),
-                  options: {
-                    catalog: name,
-                    form: sub
-                  }
-                },
-                {
-                  name: 'InstallList',
-                  component: InstallList,
-                  componentTitle: this.$t('applications.containerRunningNum'),
-                  options: {
-                    name,
-                    catalog: name,
-                    form: sub
-                  },
-                  isTable: true,
-                  showRefresh: true
-                }
-              ]
-            },
-            {
-              name: 'operationAndMaintenanceGuide',
-              components: [{
-                name: 'appInstruction',
-                component: AppInstruction,
-                options: {
-                  catalog: name,
-                  form: sub
-                }
-              }]
-            }
-          ]
-        }
-      }
-    },
-    currentCatalogObj () {
-      const { catalogMap, isCatalogLevel } = this
-      const name = isCatalogLevel ? 'system' : 'apps'
-      return catalogMap[name] || {}
-    },
-    tabs () {
-      const { currentCatalogObj } = this
-      return get(currentCatalogObj, 'tabs') || []
-    },
-    currentComponents () {
-      const { tabs, activeTab } = this
-      return get(tabs.find(item => item.name === activeTab), 'components') || []
-    },
-    catalogInfo () {
-      const { name, catalogTypesData } = this
-      const ret = catalogTypesData.length && catalogTypesData.find(item => item.name.toLowerCase() === name)
-      const showCategory = get(ret, 'category', '').split('/').pop()
-      return {
-        ...ret,
-        showCategory
-      }
-    }
-  },
-  methods: {
-    get,
-    getLabelformat,
-    getTabText (item) {
-      const pre = this.isCatalogLevel ? this.$t('common.system') : this.$t('applications.app')
-      return `${pre}${this.$t(`catalogs.${item}`)}`
-    },
-    goHome () {
-      const { name, params, query } = this.$route
-      this.$router.push({
-        name,
-        params,
-        query: {
-          ...omit(query, 'sub')
-        }
-      })
-    },
-    getCatalogFormInfo () {
-      const self = this
+const activeTab = ref('homepage')
+const refreshFlag = ref(Date.now())
+const catalogFormInfo = ref({}) // 当前系统下某个应用的类型、描述、说明等信息
 
-      const { sub: form, name: catalog } = self
+const catalogTypesData = computed(() => {
+  return catalogManageStore.catalogTypesData
+})
+const name = computed(() => {
+  return get(route, 'params.name') || get(route, 'query.catalogName')
+})
+const showName = computed(() =>{
+  let ret = ''
+  if (name.value) {
+    ret = i18n.te(`menu.${name.value}`) ? i18n.t(`menu.${name.value}`) : upperFirst(name.value)
+  }
+  return ret
+})
+const sub = computed(() => {
+  return get(route, 'query.sub')
+})
+const isCatalogLevel = computed(() => {
+  // 判断当前是展示catalog主页，还是catalog下某个应用的主页
+  return !!(name.value && !sub.value)
+})
+const breadCrumb = computed(() => {
+  return [
+    {
+      text: showName.value
+    },
+    {
+      text: sub.value
+    }
+  ]
+})
+const catalogComponentsMap = computed(() => {
+  return CATALOG_COMPONENTS_MAP({ name: name.value, sub: sub.value })
+})
+const currentCatalogObj = computed(() => {
+  const name = isCatalogLevel.value ? 'system' : 'apps'
+  return get(catalogComponentsMap, `value.${name}`, {})
+})
+const tabs = computed(() => {
+  return get(currentCatalogObj, 'value.tabs', [])
+})
+const currentComponents = computed(() => {
+  return get(tabs.value.find(item => item.name === activeTab.value), 'components', [])
+})
+const catalogInfo = computed(() => {
+  const ret = catalogTypesData.value.length && catalogTypesData.value.find(item => item.name.toLowerCase() === name.value)
+  const showCategory = get(ret, 'category', '').split('/').pop()
+  return {
+    ...ret,
+    showCategory
+  }
+})
 
-      if (!catalog || !form) return
+const getTabText = (item) => {
+  const pre = isCatalogLevel.value ? i18n.t('common.system') : i18n.t('applications.app')
+  return `${pre}${i18n.t(`catalogs.${item}`)}`
+}
+const goHome = () => {
+  const { name, params, query } = route
+  router.push({
+    name,
+    params,
+    query: {
+      ...omit(query, 'sub')
+    }
+  })
+}
+const getCatalogFormInfo = () => {
+  const catalog = name.value
+  const form = sub.value
+  if (!catalog || !form) return
 
-      self.catalogFormInfo = {}
-      getCatalogsAppFormAPI({ catalog, form }).then(rsp => {
-        self.catalogFormInfo = rsp.data || {}
-      })
-    },
-    getComponentCls (item) {
-      return {
-        'bg-transparent': this.activeTab === 'installation',
-        'h-full': item.name === 'appInstruction'
-      }
-    },
-    refresh () {
-      this.refreshFlag = Date.now()
-    }
-  },
-  mounted () {
-    if (isEmpty(this.catalogTypesData)) {
-      catalogManageStore.setCatalogTypes()
-    }
-  },
-  components: {
-    AppIcon,
-    MarketInstallButton
-  },
-  watch: {
-    sub (val) {
-      this.activeTab = 'homepage'
-      this.refreshFlag = Date.now()
-    },
-    name (val) {
-      this.activeTab = 'homepage'
-      this.refreshFlag = Date.now()
-    },
-    isCatalogLevel: {
-      immediate: true,
-      handler (val) {
-        if (!val) this.getCatalogFormInfo()
-      }
-    }
+  catalogFormInfo.value = {}
+  getCatalogsAppFormAPI({ catalog, form }).then(rsp => {
+    catalogFormInfo.value = rsp.data || {}
+  })
+}
+const getComponentCls = (item) => {
+  return {
+    'bg-transparent': activeTab.value === 'installation',
+    'h-full': item.name === 'appInstruction'
   }
 }
+const refresh = (changeTab = false) => {
+  if (changeTab) {
+    activeTab.value = 'homepage'
+  }
+  refreshFlag.value = Date.now()
+}
+
+onMounted(() => {
+  if (isEmpty(catalogTypesData.value)) {
+    catalogManageStore.setCatalogTypes()
+  }
+})
+
+watch(() => sub.value, () => {
+  refresh(true)
+})
+watch(() => name.value, () => {
+  refresh(true)
+})
+watch(() => isCatalogLevel, (val) => {
+  if (!val) getCatalogFormInfo()
+}, { immediate: true })
 </script>
 
 <template lang="pug">
