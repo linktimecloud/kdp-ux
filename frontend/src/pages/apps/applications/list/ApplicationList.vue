@@ -217,7 +217,7 @@ watch(() => dataSort, () => {
             :minWidth="minWidth",
             :width="width",
             :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
-            sortable="custom"
+            :sortable="prop === 'operate' ? false : 'custom'"
           )
             template(#default="scope")
               span(v-if="prop === 'name'")
