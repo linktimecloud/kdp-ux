@@ -166,7 +166,7 @@ export default {
     },
     handleInput (val) {
       this.isDirty = true
-      this.$emit('input', val)
+      this.$emit('update:modelValue', val)
 
       setTimeout(() => {
         // Tips: 表单变化的时候，这里需要延迟一点再校验，不然如果存在dom切换的场景下 验证会有问题

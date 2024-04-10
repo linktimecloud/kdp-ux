@@ -288,8 +288,8 @@ export default {
             :schema="schema.JSONSchema",
             :uiSchema="schema.UISchema"
             :optionProps="{ labelPosition: 'right', labelWidth: '160px' }",
-            :valid.sync="valid",
-            :needFirstCheck="true"
+            :needFirstCheck="true",
+            @update:valid="valid = $event",
           )
           EmptyHolder(
             v-else,

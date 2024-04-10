@@ -247,7 +247,8 @@ watch(() => dataSort, () => {
               span(v-else-if="prop === 'operate'")
                 .flex.items-center
                   UpdateConfigButton.after-line(
-                    :data="scope.row"
+                    :data="scope.row",
+                    @refresh="refresh"
                   )
                   el-dropdown
                     el-button(type="primary", link)
