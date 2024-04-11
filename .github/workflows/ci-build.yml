@@ -12,7 +12,7 @@ on:
       - release-*
 
 env:
-  VERSION: "v1.0.0-240407"
+  VERSION: "v1.0.0-240411"
   APP_NAME: "linktimecloud/kdp-ux"
   DOCKER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
   DOCKER_USERNAME: ${{ secrets.REG_USER }}
