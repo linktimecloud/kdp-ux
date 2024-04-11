@@ -39,10 +39,11 @@ export const getAppDetailAPI = ({ appName }) => {
   })
 }
 
-export const putAppAPI = ({ appName }) => {
+export const putAppAPI = ({ appName, data }) => {
   return request({
     url: `${base}/applications/${appName}`,
-    method: 'put'
+    method: 'put',
+    data
   })
 }
 

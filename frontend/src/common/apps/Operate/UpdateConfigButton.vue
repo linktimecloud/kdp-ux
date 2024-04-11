@@ -109,6 +109,8 @@ const getSchema = async () => {
   })
 }
 
+const emit = defineEmits(['refresh'])
+
 const updateAppConfig = async () => {
   processing.value.update = true
   putAppAPI({ appName: appName.value, data: reqData.value }).then((rsp) => {
@@ -121,6 +123,7 @@ const updateAppConfig = async () => {
           { type: 'success' }
         )
         getAppConfig()
+        emit('refresh')
       }
     })
     drawerVisible.value = false
@@ -155,7 +158,7 @@ const updateAppConfig = async () => {
           :schema="schema.JSONSchema",
           :uiSchema="schema.UISchema"
           :optionProps="{ labelPosition: 'right', labelWidth: '160px' }",
-          :valid.sync="valid"
+          @update:valid="valid = $event"
         )
         EmptyHolder(
           v-else,
