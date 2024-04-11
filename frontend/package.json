@@ -24,7 +24,7 @@
     "bootstrap": "^4.6.0",
     "cropperjs": "^1.5.11",
     "diff2html": "^3.1.15",
-    "echarts": "^5.3.0",
+    "echarts": "5.4.1",
     "element-ui": "^2.14.1",
     "file-saver": "^2.0.5",
     "github-markdown-css": "^2.10.0",
