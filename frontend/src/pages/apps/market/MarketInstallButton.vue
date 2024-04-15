@@ -1,5 +1,7 @@
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue'
 import { cloneDeep, get, some, isEmpty } from 'lodash'
+import i18n from '@/i18n'
 
 import { BIG_DATA_CLUSTER_STATUS } from '@/constant/cluster'
 import { processRedirect } from '@/utils/process'
@@ -15,235 +17,197 @@ const DEFAULT_FORM = () => ({
   bdc: ''
 })
 
-export default {
-  name: 'market-install-button',
-  props: {
-    data: {
-      type: Object,
-      required: true
-    },
-    btnType: {
-      type: String,
-      default: 'text'
-    }
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true
   },
-  data () {
-    return {
-      drawerVisible: false,
-      form: DEFAULT_FORM(),
-      appConfig: {},
-      processing: {
-        config: false,
-        bdc: false,
-        save: false,
-        schema: false,
-        installation: false
-      },
-      bdcList: [],
-      installedBdcList: [],
-      valid: false,
-      schema: {},
-      schemaForm: {},
-      originSchemaForm: {}
-    }
-  },
-  computed: {
-    appName () {
-      return this.data?.form
-    },
-    reqData () {
-      const { schemaForm, appName: appFormName, form: { bdc } } = this
-      const appTemplateType = get(this.appConfig, 'spec.type')
-
-      let ret = {}
-      ret = {
-        appFormName,
-        appTemplateType,
-        properties: {
-          ...schemaForm
-        },
-        appendWebhook: true,
-        processInfo: {
-          handle: 'install',
-          category: 'application',
-          // 此处的appName仅为单纯的应用名称，但安装成功后，应用实例的名称会拼接上bdc的前缀，所以这里传递给操作记录的接口也保持一致进行拼接，方便搜索。
-          name: `${bdc}-${appFormName}`
-        }
-      }
-      return ret
-    },
-    infoMap () {
-      const { appName } = this
-      return [
-        {
-          label: this.$t('applications.app'),
-          value: appName,
-          show: true
-        }
-      ].filter(item => item.show)
-    },
-    saveReason () {
-      const { form: { bdc }, valid } = this
-      const isInstalled = get(this.bdcList.find(item => item.bdc === bdc), 'isInstalled')
-      if (isInstalled) return this.$t('applications.appInstallTips')
-
-      let ret = ''
-      // 资源相关
-      if (!valid) ret = this.$t('quota.invalidFormTips')
-
-      // 数据相关
-      if (!bdc) ret = this.$t('validation.requiredFieldNoEmpty', { name: this.$t('cluster.bdc') })
-
-      // 进程相关
-      if (some(this.processing, Boolean)) ret = this.$t('common.processing')
-      return ret
-    }
-  },
-  methods: {
-    get,
-    isEmpty,
-    async handleOpen () {
-      this.getAppConfig()
-      await this.getInstalledBdcList()
-      await this.getBdcList()
-      this.drawerVisible = true
-    },
-    installApp () {
-      const self = this
-      const { reqData, form: { bdc: bdcName } } = self
-
-
-      postBdcApplicationAPI({
-        bdcName,
-        data: {
-          ...reqData
-        }
-      }).then(rsp => {
-        const pid = get(rsp, 'data.pid')
-        pid && processRedirect({
-          id: pid,
-          refresh () {
-            toast.log(
-              self.$t('common.actionSuccess'),
-              { type: 'success' }
-            )
-            self.drawerVisible = false
-            self.$emit('refresh')
-          }
-        })
-      })
-    },
-    getSchema () {
-      const self = this
-      const defType = get(this.appConfig, 'spec.type')
-      const { form: { bdc: bdcName } } = self
-
-      if (!bdcName || !defType) return
-
-      self.processing.schema = true
-      getBdcApplicationDefinitionSchemaAPI({
-        bdcName,
-        defType
-      }).then(rsp => {
-        self.schema = cloneDeep(get(rsp, 'data')) || {}
-      }).finally(() => {
-        self.processing.schema = false
-      })
-    },
-    getAppConfig () {
-      const self = this
-      const { data: { catalog, form } } = self
-
-      self.schemaForm = {}
-      self.appConfig = {}
-      self.originSchemaForm = {}
-      self.processing.config = true
-
-      getCatalogsAppFormsDataAPI({
-        catalog,
-        form
-      }).then(rsp => {
-        self.appConfig = cloneDeep(rsp.data) || {}
-        self.schemaForm = cloneDeep(get(rsp.data, 'spec.properties')) || {}
-        self.originSchemaForm = cloneDeep(get(rsp.data, 'spec.properties')) || {}
-        self.getSchema()
-      }).finally(() => {
-        self.processing.config = false
-      })
-    },
-    getInstalledBdcList () {
-      const self = this
-      const { data: { catalog, form } } = self
-
-      self.schemaForm = {}
-      self.appConfig = {}
-      self.originSchemaForm = {}
-      self.processing.config = true
-
-      return getCatalogsAppFormsInstallAPI({
-        catalog,
-        form
-      }).then(rsp => {
-        self.installedBdcList = get(rsp, 'data.installtion' || [])
-      }).finally(() => {
-        self.processing.config = false
-      })
-    },
-    getBdcList () {
-      const self = this
-      const { installedBdcList } = this
-
-      self.processing.bdc = true
-      return getBdcListAPI().then(rsp => {
-        const list = get(rsp, 'data', [])
-        self.bdcList = list.map(item => {
-          const installList = get(installedBdcList.find(i => i.org === item.orgName), 'bdc', [])
-          return {
-            org: item.orgName,
-            bdc: item.name,
-            isNotRunning: !item.status === 'Active',
-            isInstalled: installList.includes(item.name)
-          }
-        })
-        const bdc = get(list, '[0].name')
-        if (bdc) {
-          self.form.bdc = bdc
-        }
-      }).finally(() => {
-        self.processing.bdc = false
-      })
-    },
-    getBdcStatus (item) {
-      const { status } = item
-      const currentStatus = status || 'InActive'
-      return get((BIG_DATA_CLUSTER_STATUS()).find(item => item.value === currentStatus), 'label') || this.t('cluster.bdcStatus.inActive')
-    },
-    resetSchema () {
-      this.schema = {}
-      this.schemaForm = cloneDeep(this.originSchemaForm)
-    },
-    handleClose () {
-      this.drawerVisible = false
-      this.form = DEFAULT_FORM()
-      this.bdcList = []
-      this.schema = {}
-      this.schemaForm = {}
-    }
-  },
-  watch: {
-    'form.bdc' (val) {
-      this.resetSchema()
-      if (val) {
-        this.getSchema()
-      }
-    }
-  },
-  components: {
-    ReasonButton,
-    SchemaForm,
-    EmptyHolder
+  btnType: {
+    type: String,
+    default: 'text'
   }
+})
+
+const drawerVisible = ref(false)
+const form = ref(DEFAULT_FORM())
+const appConfig = ref({})
+const processing = ref({
+  config: false,
+  bdc: false,
+  save: false,
+  schema: false,
+  installation: false
+})
+const bdcList = ref([])
+const installedBdcList = ref([])
+const valid = ref(false)
+const schema = ref({})
+const schemaForm = ref({})
+const originSchemaForm = ref({})
+
+const appName = computed(() => {
+  return props.data?.form
+})
+const reqData = computed(() => {
+  const bdc = get(form, 'value.bdc')
+  const appTemplateType = get(appConfig, 'value.spec.type')
+
+  let ret = {}
+  ret = {
+    appFormName: appName.value,
+    appTemplateType,
+    properties: {
+      ...schemaForm.value
+    },
+    appendWebhook: true,
+    processInfo: {
+      handle: 'install',
+      category: 'application',
+      // 此处的appName仅为单纯的应用名称，但安装成功后，应用实例的名称会拼接上bdc的前缀，所以这里传递给操作记录的接口也保持一致进行拼接，方便搜索。
+      name: `${bdc}-${appName.value}`
+    }
+  }
+  return ret
+})
+const infoMap = computed(() => {
+  return [
+    {
+      label: i18n.t('applications.app'),
+      value: appName.value
+    }
+  ]
+})
+const saveReason = computed(() => {
+  const bdc = get(form, 'value.bdc')
+  const isInstalled = get(bdcList.value.find(item => item.bdc === bdc), 'isInstalled')
+  if (isInstalled) return i18n.t('applications.appInstallTips')
+
+  let ret = ''
+  if (!valid.value) ret = i18n.t('quota.invalidFormTips')
+  if (!bdc) ret = i18n.t('validation.requiredFieldNoEmpty', { name: i18n.t('cluster.bdc') })
+  if (some(processing.value, Boolean)) ret = i18n.t('common.processing')
+  return ret
+})
+  
+const handleOpen = async () => {
+  await getInstalledBdcList()
+  await getBdcList()
+  await getAppConfig()
+  drawerVisible.value = true
 }
+const emit = defineEmits(['refresh'])
+
+const installApp = () => {
+  const bdcName = get(form, 'value.bdc')
+  postBdcApplicationAPI({
+    bdcName,
+    data: {
+      ...reqData.value
+    }
+  }).then(rsp => {
+    const pid = get(rsp, 'data.pid')
+    pid && processRedirect({
+      id: pid,
+      refresh () {
+        toast.log(
+          i18n.t('common.actionSuccess'),
+          { type: 'success' }
+        )
+        drawerVisible.value = false
+        emit('refresh')
+      }
+    })
+  })
+}
+const getSchema = async () => {
+  const defType = get(appConfig, 'value.spec.type')
+  const bdcName = get(form, 'value.bdc')
+  if (!bdcName || !defType) return
+
+  processing.value.schema = true
+  await getBdcApplicationDefinitionSchemaAPI({
+    bdcName,
+    defType
+  }).then(rsp => {
+    schema.value = cloneDeep(get(rsp, 'data')) || {}
+  }).finally(() => {
+    processing.value.schema = false
+  })
+}
+const getAppConfig = async () => {
+  const { data: { catalog, form } } = props
+  schemaForm.value = {}
+  appConfig.value = {}
+  originSchemaForm.value = {}
+  processing.value.config = true
+  return await getCatalogsAppFormsDataAPI({
+    catalog,
+    form
+  }).then(rsp => {
+    appConfig.value = cloneDeep(rsp.data) || {}
+    schemaForm.value = cloneDeep(get(rsp.data, 'spec.properties')) || {}
+    originSchemaForm.value = cloneDeep(get(rsp.data, 'spec.properties')) || {}
+    getSchema()
+  }).finally(() => {
+    processing.value.config = false
+  })
+}
+const getInstalledBdcList = async () => {
+  const { data: { catalog, form } } = props
+  processing.value.installation = true
+  return await getCatalogsAppFormsInstallAPI({
+    catalog,
+    form
+  }).then(rsp => {
+    installedBdcList.value = get(rsp, 'data.installtion' || [])
+  }).finally(() => {
+    processing.value.installation = false
+  })
+}
+const getBdcList = () => {
+  processing.value.bdc = true
+  return getBdcListAPI().then(rsp => {
+    const list = get(rsp, 'data', [])
+    bdcList.value = list.map(item => {
+      const installList = get(installedBdcList.value.find(i => i.org === item.orgName), 'bdc', [])
+      return {
+        org: item.orgName,
+        bdc: item.name,
+        isNotRunning: !item.status === 'Active',
+        isInstalled: installList.includes(item.name)
+      }
+    })
+    const bdc = get(list, '[0].name')
+    if (bdc) {
+      form.value.bdc = bdc
+    }
+  }).finally(() => {
+    processing.value.bdc = false
+  })
+}
+const getBdcStatus = (item) => {
+  const { status } = item
+  const currentStatus = status || 'InActive'
+  return get((BIG_DATA_CLUSTER_STATUS()).find(item => item.value === currentStatus), 'label') || i18n.t('cluster.bdcStatus.inActive')
+}
+const resetSchema = () => {
+  schema.value = {}
+  schemaForm.value = cloneDeep(originSchemaForm.value)
+}
+const handleClose = () => {
+  drawerVisible.value = false
+  form.value = DEFAULT_FORM()
+  bdcList.value = []
+  schema.value = {}
+  schemaForm.value = {}
+}
+
+watch(() => 'form.bdc', (val) => {
+  resetSchema()
+  if (val) {
+    getSchema()
+  }
+})
 </script>
 
 <template lang="pug">

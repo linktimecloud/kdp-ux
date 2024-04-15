@@ -1,24 +1,22 @@
-<script>
+<script setup>
 import { copyToClipboard } from '@/utils/document'
+import { ElNotification } from 'element-plus'
+import i18n from '@/i18n'
 
-export default {
-  name: 'application-homepage-button',
-  props: {
-    appLinks: {
-      type: Array,
-      default: () => ([])
-    }
-  },
-  methods: {
-    copyContent (link) {
-      if (link) {
-        copyToClipboard(link)
-        this.$message({
-          type: 'success',
-          message: this.$t('common.copySuccess')
-        })
-      }
-    }
+const props = defineProps({
+  appLinks: {
+    type: Array,
+    default: () => ([])
+  }
+})
+
+const copyContent = (link) => {
+  if (link) {
+    copyToClipboard(link)
+    ElNotification({
+      type: 'success',
+      message: i18n.t('common.copySuccess')
+    })
   }
 }
 </script>
