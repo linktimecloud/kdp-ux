@@ -1,33 +1,26 @@
-<script>
+<script setup>
+import { computed } from 'vue'
+
 import { API_BASE } from '@/env'
 
-export default {
-  name: 'app-icon',
-  props: {
-    name: {
-      type: String,
-      default: ''
-    },
-    src: {
-      type: String,
-      default: ''
-    },
-    cls: {
-      type: String,
-      default: 'mx-auto'
-    }
+const props = defineProps({
+  name: {
+    type: String,
+    default: ''
   },
-  data () {
-    return {
-      API_BASE
-    }
+  src: {
+    type: String,
+    default: ''
   },
-  computed: {
-    icon () {
-      return API_BASE + '/img?type=icon&name=' + this.name
-    }
+  cls: {
+    type: String,
+    default: 'mx-auto'
   }
-}
+})
+
+const icon = computed(() => {
+  return API_BASE + '/img?type=icon&name=' + props.name
+})
 </script>
 
 <template lang="pug">
