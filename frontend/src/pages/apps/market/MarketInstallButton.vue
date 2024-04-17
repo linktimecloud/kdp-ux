@@ -90,10 +90,10 @@ const saveReason = computed(() => {
 })
   
 const handleOpen = async () => {
+  drawerVisible.value = true
   await getInstalledBdcList()
   await getBdcList()
   await getAppConfig()
-  drawerVisible.value = true
 }
 const emit = defineEmits(['refresh'])
 

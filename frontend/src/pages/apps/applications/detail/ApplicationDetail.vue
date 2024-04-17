@@ -164,8 +164,14 @@ const setPodNames = (pods) => {
 }
 
 onBeforeMount(() => {
-  const tab = get(route, 'params.activeTab')
+  const tab = get(route, 'query.activeTab')
   if (tab) activeTab.value = tab
+  router.replace({
+    query: {
+      ...get(route, 'query'),
+      activeTab: undefined
+    }
+  })
 })
 
 onMounted(() => {
@@ -240,7 +246,7 @@ onMounted(() => {
 @import '@/assets/root.scss';
 
 .application-instance-detail {
-  .pageheader__container {
+  .page-header-container {
     padding-bottom: 0 !important;
   }
 

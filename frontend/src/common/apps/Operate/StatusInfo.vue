@@ -142,7 +142,7 @@ const handleOpen = () => {
   .el-drawer__body {
     padding: 15px;
     .content-box {
-      max-height: calc(100vh - 100px);
+      max-height: calc(100vh - 120px);
       overflow: auto;
       background: $bg_gray_G1;
     }
