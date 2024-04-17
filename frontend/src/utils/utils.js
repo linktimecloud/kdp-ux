@@ -3,27 +3,6 @@ import i18n from '@/i18n'
 
 import { round, toNumber, partition, isNil, orderBy, get, isFunction } from 'lodash'
 
-import { useLanguagesStore } from '@/stores/modules/languages'
-const { currentLang } = useLanguagesStore()
-
-moment.locale('zh', {
-  invalidDate: '',
-  months: [
-    '一月',
-    '二月',
-    '三月',
-    '四月',
-    '五月',
-    '六月',
-    '七月',
-    '八月',
-    '九月',
-    '十月',
-    '十一月',
-    '十二月'
-  ]
-})
-
 export const timeformat = (time = Date.now(), format = 'YYYY-MM-DD HH:mm:ss') => {
   if (!time) return ''
   return moment(time).format(format)
@@ -89,16 +68,6 @@ export const flattenObj = (obj, omitKey) => {
     }
   }
   return result
-}
-
-export const getLabelformat = (label) => {
-  const l = currentLang
-  const lang = l === 'zh' ? 'cn' : l
-  let ret = label
-  if (ret && typeof ret === 'object') {
-    ret = ret[lang]
-  }
-  return ret
 }
 
 export const formatPercentage = (val, decimalDigits = 1) => {

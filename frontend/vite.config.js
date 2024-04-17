@@ -30,6 +30,22 @@ export default ({ mode }) => {
           })
         ]
       })
-    ]
+    ],
+    test: {
+      include: ['**/__tests__/**/*.spec.[tj]s'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/build/**'
+      ],
+      testTimeout: 20000,
+      environment: 'jsdom',
+      coverage: {
+        reportsDirectory: './__tests__/unit/coverage',
+        include: [
+          '**/**/utils.js'
+        ]
+      }
+    }
   })
 }
