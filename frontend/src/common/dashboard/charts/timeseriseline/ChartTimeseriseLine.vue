@@ -32,11 +32,9 @@ useECharts(chartHolderRef, options)
 
 <template lang="pug">
 .chart-timeserise-line.h-full(v-loading="processing")
-  .chart-holder.h-full.w-full(
-    ref="chartHolderRef"
-  )
-  .empty-holder-text.pt-4
-    img(src="/img/empty_data.svg")
+  .chart-holder.h-full.w-full(ref="chartHolderRef")
+  .empty-holder-text(v-if="!options.series || !options.series.length")
+    img.mx-auto(src="/img/empty_data.svg")
     p {{ $t('common.noData') }}
 </template>
 
@@ -46,6 +44,18 @@ useECharts(chartHolderRef, options)
   overflow: auto;
   .tooltip-item {
     justify-content: space-between;
+  }
+}
+
+.chart-timeserise-line {
+  position: relative;
+  .empty-holder-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
   }
 }
 </style>
