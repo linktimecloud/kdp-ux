@@ -41,7 +41,7 @@ export default function useECharts(domRef, initOptions) {
 
   onMounted(() => {
     if (options.value.resize) {
-      window.addEventListener('resize', resizeHandler)
+      window.addEventListener('resize', resizeHandler, { passive: true })
     }
     if (options.value.isInit) {
       initChart()

@@ -103,6 +103,7 @@ export const getTimeseriseLineSeriesData = (dataResults) => {
       const d = sortBy(values, (arr) => arr[0])
 
       return {
+        smooth: true,
         ...target.chartOptions,
         name: getLegendText(target.legendFormat, item.metric),
         data: formatTimeseriseLineStepData(d, target.step),
