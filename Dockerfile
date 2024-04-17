@@ -1,12 +1,12 @@
-FROM node:16-alpine as frontend-build
+FROM node:18-alpine as frontend-build
 
 WORKDIR /app
 RUN chown -R 1000:1000 /app
 
-COPY ./frontend/package.json ./
+COPY ./frontend/package.json ./frontend/yarn.lock ./
 COPY .yarnrc .
 
-RUN yarn install --network-timeout 1000000
+RUN yarn
 
 ENV NODE_ENV=production
 COPY ./frontend .

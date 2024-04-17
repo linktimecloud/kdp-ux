@@ -4,8 +4,10 @@ import { get, isInteger, toNumber, cloneDeep, isObject } from 'lodash'
 import CommonTips from '@/common/TipsIcon.vue'
 import ResourceColumn from '@/common/dashboard/ResourceColumn.vue'
 
-import { beautifyDataUnit, formatDurationTime, sortListWithoutNull } from '@/utils/utils'
+import { sortListWithoutNull } from '@/utils/utils'
 import { formatPrometheusTableData } from '@/utils/cluster/utils'
+import { formatTableChartValue } from '@/common/dashboard/utils.js'
+
 import { OVERRIDE_DASHBOARD_COLOR } from '../constant'
 
 import { useGlobalStore } from '@/stores/modules/global'
@@ -77,39 +79,7 @@ export default {
     }
   },
   methods: {
-    handleFormat (column, item, formatValue) {
-      const { format, metric_key: metricKey, key } = column
-      const value = formatValue || (metricKey ? item[metricKey] : item[key])
-
-      if (format === 'number') {
-        return Intl.NumberFormat('zh-CN', { useGrouping: true }).format(value)
-      }
-
-      if (format === 'percent') {
-        const percent = isInteger(value * 100) ? value * 100 : (value * 100).toFixed(1)
-        return (toNumber(percent) || 0) + '%'
-      }
-
-      if (format === 'bytes_rate') {
-        return value ? beautifyDataUnit({ data: value, decimalDigits: 2 }) + '/s' : ''
-      }
-
-      if (format === 'bytes') {
-        return value !== 0 ? beautifyDataUnit({ data: value, decimalDigits: 2, micrometer: true }) : 0
-      }
-
-      if (format === 'duration_time') {
-        return value * 1 ? formatDurationTime(value) : ''
-      }
-
-      // 如果toNumber有值，保证小数点的0后面有两位有效数，防止出现 0.00 这样的值
-      if (toNumber(value)) {
-        const reg = toNumber(value) > 1 ? /^[0-9]*.[0-9]{2}/ : /^[0-9]*.(0)*[0-9]{2}/
-        return toNumber(get(value.toString().match(reg), '[0]') || value)
-      }
-
-      return value
-    },
+    formatTableChartValue,
     getPrimaryValue (data) {
       // 获取每一项主键列的值(类似每一项的ID，唯一值), 一定是在每一项的metric里面
       return this.columns.reduce((ret, cur) => {
@@ -160,7 +130,7 @@ export default {
             ret += (toNumber(cur[key]) || 0)
             return ret
           }, 0)
-          sums[idx] = this.handleFormat(item, {}, data)
+          sums[idx] = this.formatTableChartValue(item, {}, data)
         }
       })
       return sums
@@ -237,8 +207,8 @@ export default {
       template(#default="scope")
         .custom-progress-bar.py-2.pl-2.pr-3(v-if="column.layout === 'progressBar'")
           .flex.small.justify-between
-            span {{ handleFormat(column, scope.row) }}
-            span {{ handleFormat({ ...column, key: column.percent_key, format: 'percent' }, scope.row) }}
+            span {{ formatTableChartValue(column, scope.row) }}
+            span {{ formatTableChartValue({ ...column, key: column.percent_key, format: 'percent' }, scope.row) }}
           el-progress.w-full.mb-1(
             :percentage="getPercentage(column, scope.row)",
             :stroke-width="8",
@@ -259,10 +229,10 @@ export default {
           i.remix.ri-external-link-line.ml-1
         .cell-box.text-ellipsis(
           v-else,
-          :style="handleFormat(column, scope.row) ? getCellStyle(column, scope.row) : ''",
+          :style="formatTableChartValue(column, scope.row) ? getCellStyle(column, scope.row) : ''",
           :class="{ 'expand-text': expandCells[`${scope.$index}-${column.key}`] }"
           @dblclick="handleExpandText(column, scope.$index)",
-        ) {{ handleFormat(column, scope.row) ?? '-' }}
+        ) {{ formatTableChartValue(column, scope.row) ?? '-' }}
   .empty-holder-text.pt-4(v-else)
     img(v-if="parseInt(rawConfig.height) > 200", src="/img/empty_data.svg")
     p {{ $t('common.noData') }}

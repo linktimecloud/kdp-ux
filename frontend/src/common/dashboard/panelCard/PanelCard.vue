@@ -3,7 +3,7 @@ import { get, omit, cloneDeep } from 'lodash'
 
 import Stat from '../charts/stat.vue'
 import Bargauge from '../charts/bargauge.vue'
-import TimeseriseLine from '../charts/timeseriseLine.vue'
+import TimeseriseLine from '../charts/timeseriseline/ChartTimeseriseLine.vue'
 import Table from '../charts/table.vue'
 
 import { OVERRIDE_DASHBOARD_COLOR } from '../constant'
@@ -181,7 +181,7 @@ export default {
     )
       span.cursor-pointer(@click.stop="handleToggle()")
         i.ml-2.remix(:class="isExpand ? 'ri-fullscreen-exit-line' : 'ri-fullscreen-line'")
-  .panel-header.w-full.justify-between.items-center(:class="{ 'd-flex': data.headCompact }")
+  .panel-header.w-full.justify-between.items-center(:class="{ 'flex': data.headCompact }")
     .panel-title.mb-1.mx-2(v-show="!data.hideTitle")
       span.title(@click="getDashboardData") {{ formatTitle }}
       el-tooltip(v-if="data.description", :content="this.$te(`dashboard.${data.description}`) ? this.$t(`dashboard.${data.description}`) : data.description", placement="top")
