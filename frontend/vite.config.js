@@ -40,6 +40,9 @@ export default ({ mode }) => {
       ],
       testTimeout: 20000,
       environment: 'jsdom',
+      env: {
+        DEFAULT_LANG: 'zh'
+      },
       coverage: {
         reportsDirectory: './__tests__/unit/coverage',
         include: [
