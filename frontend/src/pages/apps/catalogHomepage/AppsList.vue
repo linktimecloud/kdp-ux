@@ -95,7 +95,7 @@ onMounted(() => {
 <style lang="scss">
 .catalog-apps-list-drawer {
   .config-data {
-    height: calc(100vh - 150px);
+    height: calc(100vh - 100px);
     min-height: 100px;
     overflow-y: auto;
   }

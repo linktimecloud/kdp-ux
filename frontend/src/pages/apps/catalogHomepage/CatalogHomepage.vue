@@ -121,7 +121,7 @@ watch(() => sub.value, () => {
 watch(() => name.value, () => {
   refresh(true)
 })
-watch(() => isCatalogLevel, (val) => {
+watch(() => isCatalogLevel.value, (val) => {
   if (!val) getCatalogFormInfo()
 }, { immediate: true })
 </script>

@@ -95,13 +95,11 @@ const toList = () => {
   const { name, params, query: { application, bdc } } = route
   router.push({
     name,
-    params: {
-      ...params,
-      activeTab: 'podApplication'
-    },
+    params,
     query: {
       application,
-      bdc
+      bdc,
+      activeTab: 'podApplication'
     }
   })
 }
@@ -132,16 +130,16 @@ onMounted(() => {
               ContainerLog(:podData="{ ...basicData, podName: routeQuery.pod, appName: routeQuery.application }")
                 .flex.more-btn
                   i.remix.ri-external-link-line
-                  span.ml-1 {{ $t('common.logs') }}
+                  span {{ $t('common.logs') }}
             el-dropdown-item
-              PodDeleteButton.mr-2(
+              PodDeleteButton(
                 :podData="{ podName: routeQuery.pod, appName: routeQuery.application }",
                 @refresh="toList"
               )
                 .flex.more-btn
                   i.remix.ri-delete-bin-line
-                  span.ml-1 {{ $t('common.remove') }}
-      el-button(@click="refresh", type="default")
+                  span {{ $t('common.remove') }}
+      el-button(@click="toList", type="default")
         i.remix.ri-refresh-line.mr-0
     template(#nextRow)
       AppConfigInfo.mt-2(

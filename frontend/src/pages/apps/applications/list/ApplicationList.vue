@@ -262,39 +262,14 @@ watch(() => dataSort, () => {
                             .flex.more-btn
                               i.remix.ri-external-link-line
                               span {{ $t('menu.process') }}
-                      el-dropdown-item(v-if="scope.row.status !== 'stopping'")
-                        UninstallButton(
-                          :data="{ appName: scope.row.name, bdc: scope.row.bdc }",
-                          @refresh="refresh"
-                        )
-                          .flex.more-btn
-                            i.remix.ri-uninstall-line.mr-1
-                            span {{ $t('common.uninstall') }}
+                        el-dropdown-item(v-if="scope.row.status !== 'stopping'")
+                          UninstallButton(
+                            :data="{ appName: scope.row.name, bdc: scope.row.bdc }",
+                            @refresh="refresh"
+                          )
+                            .flex.more-btn
+                              i.remix.ri-uninstall-line.mr-1
+                              span {{ $t('common.uninstall') }}
               span(v-else) {{ scope.row[prop] ?? '-' }}
       PagerBar(:data="pagination")
 </template>
-
-<style lang="scss">
-@import '@/assets/root.scss';
-
-.application-list {
-  .pod-font {
-    color: $font_high;
-  }
-  .application-list-container {
-    .table-box {
-      background: #fff;
-    }
-  }
-  .operate-btn {
-    border: 1px solid $outline !important;
-    color: $font_high;
-  }
-  .border-right-0 {
-    border-right: 0 !important;
-  }
-  .text-info {
-    color: $font !important;
-  }
-}
-</style>

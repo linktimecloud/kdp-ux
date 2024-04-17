@@ -108,3 +108,21 @@ plaintext {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
+
+.dropdown-menu-full-button {
+  .el-dropdown-menu__item {
+    padding: 2px 12px;
+    height: 32px;
+    width: 100%;
+    &:hover {
+      .el-button, a {
+        color: $primary_color !important;
+      }
+    }
+    .el-button, a {
+      border: 0;
+      padding: 0;
+      color: $font_gray !important;
+    }
+  }
+}
