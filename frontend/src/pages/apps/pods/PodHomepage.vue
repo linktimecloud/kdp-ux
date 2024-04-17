@@ -139,7 +139,7 @@ onMounted(() => {
                 .flex.more-btn
                   i.remix.ri-delete-bin-line
                   span {{ $t('common.remove') }}
-      el-button(@click="toList", type="default")
+      el-button(@click="refresh", type="default")
         i.remix.ri-refresh-line.mr-0
     template(#nextRow)
       AppConfigInfo.mt-2(
