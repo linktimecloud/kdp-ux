@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import i18n from '@/i18n'
 import { isEmpty, get } from 'lodash'
 
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 import { DANGER_COLOR } from '@/constant/color'
 import { getAppKindResourcesDetailAPI, getAppDetailAPI } from '@/api/applications'
 

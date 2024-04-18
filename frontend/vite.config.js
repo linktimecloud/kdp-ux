@@ -30,6 +30,35 @@ export default ({ mode }) => {
           })
         ]
       })
-    ]
+    ],
+    test: {
+      include: ['**/__tests__/**/*.spec.[tj]s'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/build/**'
+      ],
+      testTimeout: 20000,
+      environment: 'jsdom',
+      env: {
+        DEFAULT_LANG: 'zh'
+      },
+      coverage: {
+        reportsDirectory: './__tests__/unit/coverage',
+        include: [
+          'src/common/**/*.js',
+          'src/components/**/*.js',
+          'src/pages/**/*.js',
+          'src/utils/**/*.js'
+        ],
+        exclude: [
+          'src/constant/**',
+          'src/**/constant.js',
+          'src/utils/process.js',
+          'src/utils/toast.js',
+          '**/node_modules/**'
+        ]
+      }
+    }
   })
 }

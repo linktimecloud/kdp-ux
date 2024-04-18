@@ -2,7 +2,7 @@ import { toNumber, get, sortBy, round, isInteger } from 'lodash'
 import { beautifyDataUnit, getPercentage } from '@/utils/utils'
 import i18n from '@/i18n'
 
-const formatDecimal = (value) => {
+export const formatDecimal = (value) => {
   // 如果toNumber有值，保证小数点的0后面有两位有效数，防止出现 0.00 这样的值
   if (toNumber(value)) {
     const reg = toNumber(value) > 1 ? /^[0-9]*.[0-9]{2}/ : /^[0-9]*.(0)*[0-9]{2}/

@@ -12,6 +12,7 @@ import { MASTER_NODES_TYPE } from '@/constant/cluster'
 
 import PATTERNS from '@/utils/patterns'
 import { beautifyDataUnit, formatPercentage } from '@/utils/utils'
+import { formatDecimal } from '@/common/dashboard/utils.js'
 
 import { getBdcListAPI } from '@/api/bdc'
 
@@ -138,9 +139,7 @@ export const formatCapacityValue = (type, value = 0, status) => {
     return 0
   }
   if (type === 'cpu') {
-    // 保证小数点的0后面有两位有效数，防止出现 0.00 这样的值
-    const reg = value > 1 ? /^[0-9]*.[0-9]{2}/ : /^[0-9]*.(0)*[0-9]{2}/
-    const num = toNumber(get(value.toString().match(reg), '[0]') || value)
+    const num = formatDecimal(value)
     return num + i18n.t('applications.core')
   } else {
     return beautifyDataUnit({ data: value, decimalDigits: 2, needBlankSpace: true, micrometer: true })

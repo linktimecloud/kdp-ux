@@ -4,7 +4,6 @@ import { get, upperFirst, omit, isEmpty } from 'lodash'
 import i18n from '@/i18n'
 
 import { getCatalogsAppFormAPI } from '@/api/catalog'
-import { getLabelformat } from '@/utils/utils'
 import { CATALOG_COMPONENTS_MAP } from './constant'
 
 import AppIcon from '@/common/apps/AppIcon.vue'

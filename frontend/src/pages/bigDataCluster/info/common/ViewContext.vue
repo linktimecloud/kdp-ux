@@ -8,7 +8,7 @@ import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 import JsonTree from '@/components/json/FormatJson.vue'
 
 import { ElNotification } from 'element-plus'
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 import { getBdcContextSettingAPI, getBdcContextSettingDefinitionSchemaAPI, getBdcContextSecretAPI, getBdcContextSecretDefinitionSchemaAPI } from '@/api/bdc'
 
 const props = defineProps({
@@ -97,7 +97,7 @@ const openDrawer = () => {
 const copyContent = () => {
   if (!isEmpty(form.value.properties)) {
     const content = JSON.stringify(form.value.properties)
-    copyToClipboard(content)
+    useClipboard(content)
     ElNotification({
       type: 'success',
       message: i18n.t('common.copySuccess')
