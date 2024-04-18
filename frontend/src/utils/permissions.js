@@ -1,9 +1,10 @@
 import { RULE_SEPARATOR } from '@/constant/settingService'
+import { useGlobalStore } from '@/stores/modules/global'
 
 export const getActionPermissions = (prePaths = [], action = 'deny') => {
   const pre = prePaths.join(RULE_SEPARATOR) // 'step__d__400'
 
-  const userPermissions = {}
+  const { userPermissions = {} } = useGlobalStore() || {}
   const resource = userPermissions[action] || []
 
   const reg = new RegExp(`^${pre}`)

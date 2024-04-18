@@ -1,5 +1,5 @@
 <script setup>
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 import { ElNotification } from 'element-plus'
 import i18n from '@/i18n'
 
@@ -12,7 +12,7 @@ defineProps({
 
 const copyContent = (link) => {
   if (link) {
-    copyToClipboard(link)
+    useClipboard(link)
     ElNotification({
       type: 'success',
       message: i18n.t('common.copySuccess')

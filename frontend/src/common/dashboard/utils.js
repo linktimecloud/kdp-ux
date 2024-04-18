@@ -1,8 +1,8 @@
 import { toNumber, get, sortBy, round, isInteger } from 'lodash'
-import { beautifyDataUnit, getPercentage } from '@/utils/utils'
+import { beautifyDataUnit, getPercentage, formatDurationTime } from '@/utils/utils'
 import i18n from '@/i18n'
 
-const formatDecimal = (value) => {
+export const formatDecimal = (value) => {
   // 如果toNumber有值，保证小数点的0后面有两位有效数，防止出现 0.00 这样的值
   if (toNumber(value)) {
     const reg = toNumber(value) > 1 ? /^[0-9]*.[0-9]{2}/ : /^[0-9]*.(0)*[0-9]{2}/
@@ -26,12 +26,6 @@ const formatTimeMs = (value) => {
   return (isInteger(value * 1000) ? value * 1000 : (value * 1000).toFixed(1)) + ' ms'
 }
 
-const formatDurationTime = (value) => {
-  return value * 1 ? formatDurationTime(value) : ''
-}
-
-
-
 export const formatterAxisLabel = (config, value) => {
   const formatMap = {
     percent: formatPercent(value),
@@ -54,7 +48,7 @@ export const formatTableChartValue = (column, item, formatValue) => {
     percent: formatPercent(value),
     bytes: beautifyDataUnit({ data: toNumber(value), decimalDigits: 2 }) || 0,
     bytes_rate: formatBytesRate(value, 2, ''),
-    duration_time: formatDurationTime(value)
+    duration_time: formatDurationTime(value) || ''
   }
 
   let ret = formatMap[format] ?? value

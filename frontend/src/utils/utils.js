@@ -3,33 +3,12 @@ import i18n from '@/i18n'
 
 import { round, toNumber, partition, isNil, orderBy, get, isFunction } from 'lodash'
 
-import { useLanguagesStore } from '@/stores/modules/languages'
-const { currentLang } = useLanguagesStore()
-
-moment.locale('zh', {
-  invalidDate: '',
-  months: [
-    '一月',
-    '二月',
-    '三月',
-    '四月',
-    '五月',
-    '六月',
-    '七月',
-    '八月',
-    '九月',
-    '十月',
-    '十一月',
-    '十二月'
-  ]
-})
-
 export const timeformat = (time = Date.now(), format = 'YYYY-MM-DD HH:mm:ss') => {
   if (!time) return ''
   return moment(time).format(format)
 }
 
-export const getUrlQuery = /* istanbul ignore next */ url => {
+export const getUrlQuery = url => {
   const querys = (url.split('?')[1] && url.split('?')[1].split('&')) || []
   return querys.reduce((ret, cur) => {
     ret[cur.split('=')[0]] = cur.split('=')[1]
@@ -91,16 +70,6 @@ export const flattenObj = (obj, omitKey) => {
   return result
 }
 
-export const getLabelformat = (label) => {
-  const l = currentLang
-  const lang = l === 'zh' ? 'cn' : l
-  let ret = label
-  if (ret && typeof ret === 'object') {
-    ret = ret[lang]
-  }
-  return ret
-}
-
 export const formatPercentage = (val, decimalDigits = 1) => {
   const percentage = round(val * 100, decimalDigits)
   return percentage ? `${percentage}%` : '0'
@@ -126,13 +95,13 @@ export const sortListWithoutNull = ({ list = [], prop = '', subProp = '', order 
     .concat(unSortable)
 }
 
-export const filterTableList = ({ list, filter, order = 'asc', orderBy, compareFuncs = {} }) => {
+export const filterTableList = ({ list, filter = {}, order = 'asc', orderBy, compareFuncs = {} }) => {
   // Step-1: 通过筛选项进行过滤
   let ret = list.filter(item => {
     return Object.keys(filter).every(key => {
       if (!filter[key]) return true
-      const filterValue = (filter[key] && filter[key]?.toLowerCase()) || ''
-      const itemValue = (item[key] && item[key]?.toLowerCase()) || ''
+      const filterValue = (filter[key] && filter[key]?.toString().toLowerCase())
+      const itemValue = (item[key] && item[key]?.toString().toLowerCase())
 
       if (isFunction(compareFuncs[key])) {
         return compareFuncs[key](itemValue, filterValue, key)
