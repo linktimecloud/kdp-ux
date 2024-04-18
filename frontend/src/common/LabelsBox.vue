@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import i18n from '@/i18n'
 
 import { get, isEmpty } from 'lodash'
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 import { ElMessageBox } from 'element-plus'
 
 const props = defineProps({
@@ -57,7 +57,7 @@ const labelLength = computed(() => {
 
 const copyContent = (label) => {
   if (label) {
-    copyToClipboard(label)
+    useClipboard(label)
     ElMessageBox({
       type: 'success',
       message: i18n.t('common.copySuccess')

@@ -4,7 +4,7 @@ import { isEmpty, get } from 'lodash'
 import { ElNotification } from 'element-plus'
 import i18n from '@/i18n'
 
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 import { getAppKindResourcesDetailAPI } from '@/api/applications'
 
 import json2yaml from 'js-yaml'
@@ -57,7 +57,7 @@ const getYaml = async () => {
 
 const copyContent = () => {
   if (!isEmpty(yamlContent.value)) {
-    copyToClipboard(yamlContent.value)
+    useClipboard(yamlContent.value)
     ElNotification({
       type: 'success',
       message: i18n.t('common.copySuccess')

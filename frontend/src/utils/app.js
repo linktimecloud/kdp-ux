@@ -57,7 +57,7 @@ export const getExportCsvDataFromAppList = ({ list = [], columns = [], type = 'p
       status: item => get(SYSTEM_APPLICATION_STATUS().find(s => s.value === item.status), 'label') || i18n.t('cluster.unknown'),
       containers: item => item.containerStatuses.map(c => c.name).join(),
       bdc: item => getBdcText(item),
-      updateTime: item => moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss')
+      updateTime: item => item.updateTime ? moment(item.updateTime).format('yyyy-MM-DD HH:mm:ss') : i18n.t('common.noData')
     }
   }
 

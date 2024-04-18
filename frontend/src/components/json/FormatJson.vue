@@ -7,7 +7,7 @@ import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 import PATTERNS from '@/utils/patterns'
 
-import { copyToClipboard } from '@/utils/document'
+import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
   data: {
@@ -39,7 +39,7 @@ const getUrlValue = (val) => {
 }
 
 const handleCopy = () => {
-  copyToClipboard(JSON.stringify(props.data))
+  useClipboard(JSON.stringify(props.data))
   ElNotification({
     type: 'success',
     message: i18n.t('common.copySuccess')

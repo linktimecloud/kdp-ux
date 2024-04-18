@@ -46,7 +46,15 @@ export default ({ mode }) => {
       coverage: {
         reportsDirectory: './__tests__/unit/coverage',
         include: [
-          '**/**/utils.js'
+          'src/common/**/*.js',
+          'src/components/**/*.js',
+          'src/pages/**/*.js',
+          'src/utils/**/*.js'
+        ],
+        exclude: [
+          'src/constant/**',
+          'src/**/constant.js',
+          '**/node_modules/**'
         ]
       }
     }
