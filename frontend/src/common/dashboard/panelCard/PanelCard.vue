@@ -1,10 +1,10 @@
 <script>
 import { get, omit, cloneDeep } from 'lodash'
 
-import Stat from '../charts/stat.vue'
-import Bargauge from '../charts/bargauge.vue'
-import TimeseriseLine from '../charts/timeseriseline/ChartTimeseriseLine.vue'
-import Table from '../charts/table.vue'
+import Stat from '../charts/ChartStat.vue'
+import Bargauge from '../charts/ChartBargauge.vue'
+import ChartTimeLine from '@/common/dashboard/charts/timeseriseline/ChartTimeseriseLine.vue'
+import Table from '../charts/ChartTable.vue'
 
 import { OVERRIDE_DASHBOARD_COLOR } from '../constant'
 import { rawToDataResults } from './utils'
@@ -23,7 +23,7 @@ const reqAPIMap = [
 ]
 
 export default {
-  name: 'dashboard-panel-card',
+  name: 'DashboardPanelCard',
   props: {
     data: {
       type: Object,
@@ -53,7 +53,7 @@ export default {
       const map = {
         stat: Stat,
         bargauge: Bargauge,
-        'timeserise-line': TimeseriseLine,
+        'timeserise-line': ChartTimeLine,
         table: Table,
         'range-table': Table
       }
@@ -99,6 +99,25 @@ export default {
       return ret
     }
   },
+  watch: {
+    timeQuery: {
+      handler () {
+        this.getDashboardData()
+      },
+      deep: true
+    },
+    omitSortByVariables: {
+      handler (val, old) {
+        if (JSON.stringify(val) !== JSON.stringify(old)) {
+          this.getDashboardData()
+        }
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.getDashboardData()
+  },
   methods: {
     async getDashboardData () {
       this.resetTargetsStep()
@@ -140,35 +159,16 @@ export default {
         this.$emit('restoreShowPanels')
       }
     }
-  },
-  mounted () {
-    this.getDashboardData()
-  },
-  watch: {
-    timeQuery: {
-      handler () {
-        this.getDashboardData()
-      },
-      deep: true
-    },
-    omitSortByVariables: {
-      handler (val, old) {
-        if (JSON.stringify(val) !== JSON.stringify(old)) {
-          this.getDashboardData()
-        }
-      },
-      deep: true
-    }
   }
 }
 </script>
 
 <template lang="pug">
 .dashboard-panel-card(
-  :style="getPanelStyle",
+  v-show="isCollapse || isExpand",
   :id="name",
   :ref="name",
-  v-show="isCollapse || isExpand",
+  :style="getPanelStyle",
   :class="isExpand ? 'active' : ''"
 )
   .loading-icon.small.text-high(v-show="processing && data.type !== 'table' && data.type !== 'logs'")
@@ -176,7 +176,7 @@ export default {
   .toggle-icon.small.text-high(v-show="data.type === 'logs'")
     el-tooltip(
       :key="name",
-      :content="isExpand ? this.$t('common.collapsePanel') : this.$t('common.expandPanel')"
+      :content="isExpand ? $t('common.collapsePanel') : $t('common.expandPanel')"
       placement="top"
     )
       span.cursor-pointer(@click.stop="handleToggle()")
@@ -184,7 +184,7 @@ export default {
   .panel-header.w-full.justify-between.items-center(:class="{ 'flex': data.headCompact }")
     .panel-title.mb-1.mx-2(v-show="!data.hideTitle")
       span.title(@click="getDashboardData") {{ formatTitle }}
-      el-tooltip(v-if="data.description", :content="this.$te(`dashboard.${data.description}`) ? this.$t(`dashboard.${data.description}`) : data.description", placement="top")
+      el-tooltip(v-if="data.description", :content="$te(`dashboard.${data.description}`) ? $t(`dashboard.${data.description}`) : data.description", placement="top")
         i.remix.ml-1.text-gray(:class="data.isTipsLineIcon ? 'ri-information-line' : 'ri-information-fill'")
     //- TODO 替换为 searchbox
     //- CommonDashboardFilter.w-auto(
@@ -197,10 +197,10 @@ export default {
   .panel-container(:style="containerStyle")
     component(
       :is="chartComponent",
-      :dataResults="dataResults",
-      :rawConfig="data",
+      :data-results="dataResults",
+      :raw-config="data",
       :processing="processing",
-      :panelVariables="panelVariables"
+      :panel-variables="panelVariables"
     )
 </template>
 

@@ -4,7 +4,10 @@ import Dashboard from '@/common/dashboard/DashboardPanels.vue'
 import { ONE_HOUR_AS_MS } from '@/constant'
 
 export default {
-  name: 'application-detail-resource-dashboard',
+  name: 'ApplicationDetailResourceDashboard',
+  components: {
+    Dashboard
+  },
   props: {
     podNames: {
       type: String,
@@ -31,9 +34,6 @@ export default {
         namespace
       }
     }
-  },
-  components: {
-    Dashboard
   }
 }
 </script>
@@ -43,8 +43,8 @@ export default {
   Dashboard(
     v-if="podNames && namespace",
     name="instance_resource",
-    :timeQuery="timeQuery",
-    :defaultVariables="defaultVariables"
+    :time-query="timeQuery",
+    :default-variables="defaultVariables"
   )
 </template>
 

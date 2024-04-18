@@ -5,7 +5,6 @@ import i18n from '@/i18n'
 
 import PagerBar from '@/components/pager/PagerBar.vue'
 import ViewContextSettingsButton from './common/ViewContext.vue'
-import ReasonButton from '@/common/ReasonButton.vue'
 
 import { timeformat } from '@/utils/utils.js'
 
@@ -35,10 +34,6 @@ const pagination = ref(PAGINATION())
 const dataSort = ref({
   order: false,
   orderBy: defaultOrderBy
-})
-
-const bdc = computed(() => {
-  return get(props.propsFilter, 'bdc') || ''
 })
 
 const columns = computed(() => {
@@ -164,13 +159,13 @@ watch(() => dataSort, () => {
         @sort-change="handlerSortBy"
       )
         template(
-          v-for="({ prop, label, minWidth, show, width, sortable }, idx) in columns",
+          v-for="({ prop, label, minWidth, width, sortable }, idx) in columns",
           :key="`${prop}${idx}`"
         )
           el-table-column(
             :prop="prop",
             :label="label",
-            :minWidth="minWidth",
+            :min-width="minWidth",
             :width="width",
             :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
             :sortable="sortable"
@@ -183,5 +178,5 @@ watch(() => dataSort, () => {
               span(v-else-if="prop === 'keys'") {{ getKeys(scope.row) ?? '-' }}
               span(v-else-if="prop === 'createTime'") {{ timeformat(scope.row.createTime) }}
               span(v-else) {{ scope.row[prop] }}
-      PagerBar(:data="pagination")
+      PagerBar(:data="pagination", @update:data="pagination = $event")
 </template>

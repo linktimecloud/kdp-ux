@@ -9,7 +9,7 @@ import { CustomNodeType, CustomEdgeType } from './constant'
 import { formatLogicFlowData } from './utils'
 
 export default {
-  name: 'application-resources-topology',
+  name: 'ApplicationResourcesTopology',
   props: {
     appName: {
       type: String,
@@ -47,6 +47,14 @@ export default {
       }]
       return formatLogicFlowData(list, { x: 200, y: 400 })
     }
+  },
+  watch: {
+    refreshFlag () {
+      this.getTopologyResources()
+    }
+  },
+  mounted () {
+    this.getTopologyResources()
   },
   methods: {
     getTopologyResources () {
@@ -106,14 +114,6 @@ export default {
         lfInstance.resetZoom()
         lfInstance.resetTranslate()
       }
-    }
-  },
-  mounted () {
-    this.getTopologyResources()
-  },
-  watch: {
-    refreshFlag () {
-      this.getTopologyResources()
     }
   }
 }

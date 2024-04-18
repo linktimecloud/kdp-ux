@@ -62,7 +62,7 @@ const deletePod = () => {
 <template lang="pug">
 .pod-delete-button
   ReasonButton(
-    :btnOptions="{ link: true }",
+    :btn-options="{ link: true }",
     @click="handleConfirm"
   )
     slot

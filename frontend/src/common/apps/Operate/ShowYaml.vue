@@ -86,8 +86,8 @@ const handleOpen = () => {
     slot
       span {{ $t('common.detail') }}
   el-drawer(
-    class="application-show-yaml-drawer",
     v-model="drawerVisible",
+    class="application-show-yaml-drawer",
     :title="title",
     direction="rtl",
     :append-to-body="true",

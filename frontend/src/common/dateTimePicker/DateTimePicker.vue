@@ -53,6 +53,30 @@ export default {
       return ret
     }
   },
+  watch: {
+    'options.resetFlag': {
+      deep: true,
+      handler () {
+        this.date = ''
+        this.time = '00:00:00'
+      }
+    },
+    formatDate: {
+      deep: true,
+      handler (val) {
+        this.$emit('update:data', val)
+      }
+    },
+    data: {
+      deep: true,
+      handler () {
+        this.initDate()
+      }
+    }
+  },
+  mounted () {
+    if (this.data) this.initDate()
+  },
   methods: {
     initDate () {
       const timeArray = this.data.split(' ')
@@ -70,30 +94,6 @@ export default {
       if (type === 'date') placeholder = get(options, 'dateOptions.placeholder') || i18n.t('time.selectDate')
       if (type === 'time') placeholder = get(options, 'timeOptions.placeholder') || i18n.t('misc.selectTime')
       return placeholder
-    }
-  },
-  mounted () {
-    if (this.data) this.initDate()
-  },
-  watch: {
-    'options.resetFlag': {
-      deep: true,
-      handler () {
-        this.date = ''
-        this.time = '00:00:00'
-      }
-    },
-    formatDate: {
-      deep: true,
-      handler (val) {
-        this.$emit('update:data', val)
-      }
-    },
-    data: {
-      deep: true,
-      handler (val) {
-        this.initDate()
-      }
     }
   }
 }

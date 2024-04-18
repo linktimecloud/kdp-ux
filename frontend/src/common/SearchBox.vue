@@ -41,20 +41,9 @@ const props = defineProps({
 const searchItem = ref(null)
 const containerBox = ref(null)
 const actionBtnsBox = ref(null)
-
 const oneRowNum = ref(0)
-
 const isWrap = ref(false)
-
 const isOpen = ref(true)
-
-const showPropItemList = computed(() => {
-  if (!isWrap.value || isOpen.value) {
-    return props.properties
-  } else {
-    return props.properties.slice(0, oneRowNum.value)
-  }
-})
 
 const properLen = computed(() => {
   return props.properties.length
@@ -85,7 +74,7 @@ const getOneRowNum = () => {
   }
 }
 
-const emit = defineEmits()
+const emit = defineEmits(['handleChange'])
 
 const handleAction = (val) => {
   emit(val)
@@ -93,6 +82,10 @@ const handleAction = (val) => {
 
 const getLabel = (value, options) => {
   return get(options.find(item => item.value === value), 'label') || value
+}
+
+const handleChange = (newValue, propName) => {
+  emit('handleChange', { newValue, propName });
 }
 
 onMounted(() => {
@@ -111,19 +104,20 @@ watch(() => properLen, () => {
     slot(name="beforeLabel")
     .search-content(
       v-for="(property, idx) in properties",
+      v-show="!isWrap || isOpen || idx < oneRowNum",
       :key="idx",
-      ref="searchItem",
-      v-show="!isWrap || isOpen || idx < oneRowNum"
+      ref="searchItem"
     )
       .search-item.flex.items-center
         template(v-if="!property.type || property.type === 'input'")
           .label.input-prepend(v-if="property.label") {{ property.label }}
           el-input.w-auto(
-            v-model="data[property.name]",
+            :model-value="data[property.name]",
             :class="property.class",
             :clearable="true",
             :placeholder="property.placeholder",
-            :disabled="property.disabled"
+            :disabled="property.disabled",
+            @update:modelValue="value => handleChange(value, property.name)"
           )
             template(v-if="property.suffixIcon", #suffix)
               i(:class="property.suffixIcon")
@@ -136,7 +130,7 @@ watch(() => properLen, () => {
               :content="property.tipsContent"
             )
           el-select.search-box-select(
-            v-model="data[property.name]",
+            :model-value="data[property.name]",
             :class="property.class",
             :multiple="property.multiple",
             :collapse-tags="property.collapseTags || true",
@@ -146,6 +140,7 @@ watch(() => properLen, () => {
             :placeholder="property.placeholder",
             :disabled="property.disabled",
             @change="handleAction(`change-${property.name}`)"
+            @update:modelValue="value => handleChange(value, property.name)"
           )
             .group-option(v-if="isGroupedOption(property.options)")
               el-option-group(
@@ -171,7 +166,7 @@ watch(() => properLen, () => {
             span {{ property.label }}
             el-tooltip(v-if="property.labelTips", :content="property.labelTips")
               i.remix.ri-information-fill.ml-1
-          el-radio-group.mr-2(v-model="data[property.name]")
+          el-radio-group.mr-2(:model-value="data[property.name]", @update:modelValue="value => handleChange(value, property.name)")
             el-radio.mr-3.mb-0(
               v-for="{ value, label } in (property.options || [])",
               :key="value",
@@ -179,53 +174,45 @@ watch(() => properLen, () => {
             ) {{ label }}
         template(v-if="property.type === 'checkbox'")
           el-checkbox.mb-0(
-            v-model="data[property.name]",
+            :model-value="data[property.name]",
+            @update:modelValue="value => handleChange(value, property.name)"
           ) {{ property.label }}
         template(v-if="property.type === 'switch'")
           el-switch(
-            v-model="data[property.name]",
+            :model-value="data[property.name]",
             :active-value="property.activeValue || true",
-            :inactive-value="property.inactiveValue || false"
+            :inactive-value="property.inactiveValue || false",
+            @update:modelValue="value => handleChange(value, property.name)"
           )
           .label.ml-2.mr-2 {{ property.label }}
         template(v-if="property.type === 'datetimerange'")
           DateTimePicker(
-            :data.sync="data[property.name]",
+            :data="data[property.name]",
             :class="property.class",
             :options="property.options || {}",
-            :showSeparator="property.showSeparator",
-            :disabled="property.disabled"
+            :show-separator="property.showSeparator",
+            :disabled="property.disabled",
+            @update:data="value => handleChange(value, property.name)"
           )
         template(v-if="property.type === 'autocomplete'")
           .label.input-prepend(v-if="property.label") {{ property.label }}
           el-autocomplete(
-            v-model="data[property.name]",
+            :model-value="data[property.name]",
             :fetch-suggestions="property.searchAutocomplete || searchAutocomplete",
             :value-key="property.valueKey",
             :clearable="property.clearable === false ? false : true",
             :disabled="property.disabled",
             :trigger-on-focus="!!property.trigger",
-            @select="property.handleSelect"
+            @select="property.handleSelect",
+            @update:modelValue="value => handleChange(value, property.name)"
           )
-            template(slot-scope="{ item }")
+            template(#default="{ item }")
               el-tooltip(
                 :content="item[property.valueKey]",
                 placement="right-start",
                 :open-delay="200"
               )
                 .text-truncate.d-block {{ item[property.valueKey] }}
-        template(v-if="property.type === 'sortBy' && data.sortBy")
-          .sortBy-container.flex.items-center.mx-2
-            el-dropdown(@command="val => data.sortBy.prop = val")
-              el-button.pr-1.sort-btn
-                span {{ $t('common.sort') }}: {{ getLabel(data.sortBy.prop, property.options) }}
-                i.el-icon-arrow-down.text-gray
-              template(#dropdown)
-                el-dropdown-menu
-                  el-dropdown-item(v-for="item in property.options", :key="item.value", :command="item.value")
-                    span(:class="{ 'text-primary': item.value === data.sortBy.prop }") {{ item.label }}
-            el-button(@click="data.sortBy.order = data.sortBy.order === 'ascending' ? 'descending' : 'ascending'")
-              i.remix.mr-0(:class="data.sortBy.order === 'ascending' ? 'ri-sort-asc' : 'ri-sort-desc'")
     slot(name="searchAfter")
     .action-btns.flex.items-center(ref="actionBtns")
       el-button.mr-2(

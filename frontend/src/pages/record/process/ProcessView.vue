@@ -1,10 +1,10 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { get } from 'lodash'
 
-import List from './list/index.vue'
-import Detail from './detail/index.vue'
+import List from './list/ProcessList.vue'
+import Detail from './ProcessHomepage.vue'
 
 const route = useRoute()
 

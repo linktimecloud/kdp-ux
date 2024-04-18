@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import useECharts from '@/composables/useECharts.js'
 import { formatChartOption } from './constant'
 import { getTimeseriseLineSeriesData } from '@/common/dashboard/utils.js'

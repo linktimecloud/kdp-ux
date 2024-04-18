@@ -24,7 +24,7 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'update:data'])
 
 const currentPage = computed(() => {
   const { limit, start } = props.data
@@ -32,7 +32,7 @@ const currentPage = computed(() => {
 })
 
 const paginationOptions = computed(() => {
-  const { total, limit, start } = props.data
+  const { total, limit } = props.data
   return {
     // data config
     total,
@@ -50,20 +50,19 @@ const paginationOptions = computed(() => {
 })
 
 const handleChangeSize = (size) => {
-  props.data.start = 0
-  props.data.limit = size
+  emit('update:data', { ...props.data, start: 0, limit: size })
   emit('refresh')
 }
 
 const handleChangeCurrent = (p) => {
-  props.data.start = (p - 1) * props.data.limit
+  emit('update:data', { ...props.data, start: (p - 1) * props.data.limit })
   emit('refresh')
 }
 
 onMounted(() => {
   if (props.type === 'router') {
     const p = route.query.p * 1 || 1
-    props.data.start = (p - 1) * props.data.limit
+    emit('update:data', { ...props.data, start: (p - 1) * props.data.limit })
   }
   if (props.isMountedFetch) {
     emit('refresh')
@@ -82,7 +81,7 @@ watch(() => currentPage.value, (val) => {
 <template lang="pug">
 .pager(v-if="data")
   el-pagination.flex.justify-center.w-full.py-4.bg-white(
-    :currentPage="currentPage",
+    :current-page="currentPage",
     v-bind="paginationOptions",
     @current-change="handleChangeCurrent",
     @size-change="handleChangeSize"

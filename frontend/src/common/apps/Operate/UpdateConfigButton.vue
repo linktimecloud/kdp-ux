@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import i18n from '@/i18n'
 import { isEmpty, get, some } from 'lodash'
 import toast from '@/utils/toast'
@@ -136,14 +136,14 @@ const updateAppConfig = async () => {
 <template lang="pug">
 .update-config-button.flex(v-if="data.status !== 'stopping'")
   ReasonButton(
-    :btnOptions="btnOptions",
+    :btn-options="btnOptions",
     :reason="updateReason",
     @click="handleOpen"
   ) {{ $t('common.update') }}
   el-drawer(
+    v-model="drawerVisible",
     class="update-config-drawer",
     :title="`${$t('common.update')}: ${appName}`",
-    v-model="drawerVisible",
     direction="rtl",
     size="50%",
     :append-to-body="true",
@@ -156,8 +156,8 @@ const updateAppConfig = async () => {
           v-if="!isEmpty(schema.JSONSchema) && !isEmpty(schemaForm)",
           v-model="schemaForm",
           :schema="schema.JSONSchema",
-          :uiSchema="schema.UISchema"
-          :optionProps="{ labelPosition: 'right', labelWidth: '160px' }",
+          :ui-schema="schema.UISchema"
+          :option-props="{ labelPosition: 'right', labelWidth: '160px' }",
           @update:valid="valid = $event"
         )
         EmptyHolder(

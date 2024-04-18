@@ -3,7 +3,7 @@ import { useClipboard } from '@vueuse/core'
 import { ElNotification } from 'element-plus'
 import i18n from '@/i18n'
 
-const props = defineProps({
+defineProps({
   appLinks: {
     type: Array,
     default: () => ([])

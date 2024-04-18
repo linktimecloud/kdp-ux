@@ -10,7 +10,10 @@ import { useBdcStore } from '@/stores/modules/bdc'
 const bdcStore = useBdcStore()
 
 export default {
-  name: 'record-log-search',
+  name: 'RecordLogSearch',
+  components: {
+    SearchBox
+  },
   props: {
     filter: {
       required: true,
@@ -74,6 +77,17 @@ export default {
       return ret.filter(item => !hiddenItems.includes(item.name))
     }
   },
+  watch: {
+    currentBdcNS: {
+      handler (val) {
+        if (val) {
+          this.$emit('update:filter', { ...this.filter, namespace: val })
+          this.initData()
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
     getApps () {
       const self = this
@@ -92,14 +106,13 @@ export default {
         })
         self.propertiesOptions.apps = list
         if (!self.filter.app) {
-          self.filter.app = list[0]?.value
+          self.$emit('update:filter', { ...self.filter, app: list[0]?.value })
         }
       })
     },
-    getPods () {
+    getPods (appName) {
       const self = this
       self.propertiesOptions.pods = []
-      const appName = self.filter.app
 
       if (!appName) return
 
@@ -114,18 +127,18 @@ export default {
         })
 
         self.propertiesOptions.pods = pods
-
-        self.filter.podNames = pods.map(item => item.value).join('|')
+        let data = {}
+        data.podNames = pods.map(item => item.value).join('|')
         if (pods.every(item => item.value !== self.filter.pod)) {
-          self.filter.pod = '.+'
+          data.pod = '.+'
         }
+        self.$emit('update:filter', { ...self.filter, ...data })
       })
     },
-    getContainers () {
+    getContainers (podName) {
       const self = this
-      const { filter: { app: appName, pod: podName } } = this
+      const { filter: { app: appName } } = this
       self.propertiesOptions.containers = []
-
       if (!(appName && podName && podName !== '.+')) return
 
       return getAppPodDetailAPI({
@@ -140,18 +153,9 @@ export default {
         })
         self.propertiesOptions.containers = containers
         if (containers.every(item => item.value !== self.filter.container)) {
-          self.filter.container = '.+'
+          self.$emit('update:filter', { ...self.filter, container: '.+' })
         }
       })
-    },
-    changeApp () {
-      this.filter.pod = '.+'
-      this.filter.podNames = ''
-      this.getPods()
-    },
-    changePod () {
-      this.filter.container = '.+'
-      this.getContainers()
     },
     reset () {
       const defaultApp = this.propertiesOptions.apps[0]?.value
@@ -160,30 +164,26 @@ export default {
         app: defaultApp,
         podNames: this.filter.podNames
       })
-      if (this.filter.app !== defaultApp) {
-        this.filter.app = defaultApp
-        this.changeApp()
-      }
       this.propertiesOptions.containers = []
     },
     async initData () {
-      await this.getApps(true)
-      await this.getPods(true)
-      await this.getContainers(true)
-    }
-  },
-  components: {
-    SearchBox
-  },
-  watch: {
-    currentBdcNS: {
-      handler (val) {
-        if (val) {
-          this.filter.namespace = val
-          this.initData()
-        }
-      },
-      immediate: true
+      await this.getApps()
+      await this.getPods(this.filter.app)
+      await this.getContainers()
+    },
+    handleChange (data) {
+      let ret = { ...this.filter }
+      ret[data.propName] = data.newValue
+      if (data.propName === 'app') {
+        ret.pod = '.+'
+        ret.podNames = ''
+        this.getPods()
+      }
+      if (data.propName === 'pod') {
+        ret.container = '.+'
+        this.getContainers(data.newValue)
+      }
+      this.$emit('update:filter', ret)
     }
   }
 }
@@ -194,10 +194,9 @@ export default {
   SearchBox(
     :data="filter",
     :properties="properties",
-    :actionBtns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
+    :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
     @reset="reset",
-    @change-app="changeApp",
-    @change-pod="changePod"
+    @handle-change="data => handleChange(data)"
   )
     template(#searchAfter)
       slot

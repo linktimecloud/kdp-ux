@@ -7,7 +7,10 @@ import { formatDurationTime, getPercentage } from '@/utils/utils'
 import { OVERRIDE_DASHBOARD_COLOR } from '../constant'
 
 export default {
-  name: 'chart-stat',
+  name: 'ChartStat',
+  components: {
+    CommonTips
+  },
   props: {
     dataResults: {
       type: Array,
@@ -74,9 +77,6 @@ export default {
       const key = get(item, 'target.labelTips')
       return key
     }
-  },
-  components: {
-    CommonTips
   }
 }
 </script>

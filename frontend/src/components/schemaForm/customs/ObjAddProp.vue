@@ -5,7 +5,7 @@ import { cloneDeep, isEmpty } from 'lodash'
 import i18n from '@/i18n'
 
 export default {
-  name: 'schema-form-object-add-prop',
+  name: 'SchemaFormObjectAddProp',
   props: {
     ...fieldProps
   },
@@ -45,6 +45,35 @@ export default {
       ]
     }
   },
+  watch: {
+    keyValues: {
+      handler (val) {
+        const obj = {}
+        val.forEach(item => {
+          if (item.key) {
+            if (item.isVisible && this.isPwdFormat) {
+              // encode base 64
+              try {
+                obj[item.key] = btoa(item.value)
+              } catch (e) {
+                obj[item.key] = item.value
+              }
+            } else {
+              obj[item.key] = item.value
+            }
+          }
+        })
+        vueUtils.setPathVal(this.rootFormData, this.curNodePath, obj)
+      },
+      deep: true
+    },
+    rootFormData () {
+      this.initKeyValues()
+    }
+  },
+  mounted () {
+    this.initKeyValues()
+  },
   methods: {
     addItem () {
       this.keyValues.push({
@@ -75,12 +104,16 @@ export default {
         // decode base 64
         try {
           this.keyValues[idx].value = atob(this.keyValues[idx].value)
-        } catch (e) {}
+        } catch (e) {
+          console.log(e)
+        }
       } else {
         // encode base 64
         try {
           this.keyValues[idx].value = btoa(this.keyValues[idx].value)
-        } catch (e) {}
+        } catch (e) {
+          console.log(e)
+        }
       }
     },
     initKeyValues () {
@@ -90,35 +123,6 @@ export default {
         value: curValue[key],
         isVisible: false
       }))
-    }
-  },
-  mounted () {
-    this.initKeyValues()
-  },
-  watch: {
-    keyValues: {
-      handler (val) {
-        const obj = {}
-        val.forEach(item => {
-          if (item.key) {
-            if (item.isVisible && this.isPwdFormat) {
-              // encode base 64
-              try {
-                obj[item.key] = btoa(item.value)
-              } catch (e) {
-                obj[item.key] = item.value
-              }
-            } else {
-              obj[item.key] = item.value
-            }
-          }
-        })
-        vueUtils.setPathVal(this.rootFormData, this.curNodePath, obj)
-      },
-      deep: true
-    },
-    rootFormData () {
-      this.initKeyValues()
     }
   }
 }
@@ -151,12 +155,12 @@ el-form-item.schema-form-object-add-prop.pb-2(
               :disabled="readonly",
               @focus="changeVisible(idx, true)"
             )
-              i.cursor-pointer(
-                v-if="!readonly && isPwdFormat",
-                slot="suffix",
-                :class="keyValues[idx].isVisible ? 'ri-eye-line' : 'ri-eye-off-line'",
-                @click="changeVisible(idx, !keyValues[idx].isVisible)"
-              )
+              template(#suffix)
+                i.cursor-pointer(
+                  v-if="!readonly && isPwdFormat",
+                  :class="keyValues[idx].isVisible ? 'ri-eye-line' : 'ri-eye-off-line'",
+                  @click="changeVisible(idx, !keyValues[idx].isVisible)"
+                )
           .action-btn.ml-2
             el-button.py-1.px-2(v-if="!readonly", @click="removeItem(idx)")
               i.ri-delete-bin-line.m-0

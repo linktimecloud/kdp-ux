@@ -14,7 +14,11 @@ import { useGlobalStore } from '@/stores/modules/global'
 const globalStore = useGlobalStore()
 
 export default {
-  name: 'chart-table',
+  name: 'ChartTable',
+  components: {
+    CommonTips,
+    ResourceColumn
+  },
   props: {
     // dataResults=[{target: {}, result: {}}]
     dataResults: {
@@ -78,6 +82,19 @@ export default {
       }
     }
   },
+  watch: {
+    'panelVariables.sortBy': {
+      handler (val) {
+        if (isObject(val)) {
+          this.sort = cloneDeep(val)
+        }
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.sort = this.rawConfig.defaultSort || { prop: this.showColumns[0].key, order: 'ascending' }
+  },
   methods: {
     formatTableChartValue,
     getPrimaryValue (data) {
@@ -118,7 +135,7 @@ export default {
       const { color } = steps.find(s => toNumber(value) >= s.value) || {}
       return OVERRIDE_DASHBOARD_COLOR[color] || color
     },
-    handleSummary (param) {
+    handleSummary () {
       const { showColumns, list } = this
       const sums = []
       showColumns.forEach((item, idx) => {
@@ -150,23 +167,6 @@ export default {
         prop,
         order
       }
-    }
-  },
-  mounted () {
-    this.sort = this.rawConfig.defaultSort || { prop: this.showColumns[0].key, order: 'ascending' }
-  },
-  components: {
-    CommonTips,
-    ResourceColumn
-  },
-  watch: {
-    'panelVariables.sortBy': {
-      handler (val) {
-        if (isObject(val)) {
-          this.sort = cloneDeep(val)
-        }
-      },
-      deep: true
     }
   }
 }

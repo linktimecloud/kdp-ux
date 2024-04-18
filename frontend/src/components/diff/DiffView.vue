@@ -6,7 +6,7 @@ import 'diff2html/bundles/css/diff2html.min.css'
  * Component Settings
  */
 export default {
-  name: 'diff-html',
+  name: 'DiffHtml',
   props: {
     data: {
       type: String,

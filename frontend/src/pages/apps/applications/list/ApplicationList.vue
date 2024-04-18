@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import i18n from '@/i18n'
-import { get, orderBy, isEmpty, cloneDeep, has } from 'lodash'
+import { get, isEmpty, has } from 'lodash'
 
 import PageHeader from '@/components/header/PageHeader.vue'
 import SearchBox from '@/common/SearchBox.vue'
@@ -16,10 +15,8 @@ import { DEFAULT_FILTER, APPLICATION_LIST_COLUMNS, APPLICATION_PROPERTIES } from
 import { PAGINATION } from '@/constant'
 import { timeformat, filterTableList } from '@/utils/utils.js'
 import { getCatalogsAppFormsAppsAPI } from '@/api/catalog'
-import { useGlobalStore } from '@/stores/modules/global'
 import { useCatalogManageStore } from '@/stores/modules/catalogManage'
 
-const globalStore = useGlobalStore()
 const catalogManageStore = useCatalogManageStore()
 
 const props = defineProps({
@@ -35,7 +32,10 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  refreshFlag: Number
+  refreshFlag: {
+    type: Number,
+    default: 0
+  }
 })
 
 const processing = ref(false)
@@ -46,10 +46,6 @@ const filterList = ref([])
 const dataSort = ref({
   order: false,
   orderBy: 'updateTime'
-})
-
-const userOrgName = computed(() => {
-  return globalStore.userOrgName
 })
 
 const catalogTypeList = computed(() => {
@@ -161,8 +157,8 @@ onMounted(() => {
   if (isEmpty(catalogTypesData.value)) {
     catalogManageStore.setCatalogTypes()
   }
-  if (defaultOrderBy) {
-    dataSort.value.orderBy = defaultOrderBy
+  if (get(props, 'options.defaultOrderBy')) {
+    dataSort.value.orderBy = get(props, 'options.defaultOrderBy')
   }
   refresh()
 })
@@ -194,8 +190,9 @@ watch(() => dataSort, () => {
       SearchBox.border-0(
         :data="filter",
         :properties="properties",
-        :actionBtns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
+        :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
         theme="light",
+        @handle-change="data => filter[data.propName] = data.newValue",
         @reset="reset"
       )
     .table-box(v-loading="processing")
@@ -214,7 +211,7 @@ watch(() => dataSort, () => {
             v-if="show",
             :prop="prop",
             :label="label",
-            :minWidth="minWidth",
+            :min-width="minWidth",
             :width="width",
             :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
             :sortable="prop === 'operate' ? false : 'custom'"
@@ -271,5 +268,5 @@ watch(() => dataSort, () => {
                               i.remix.ri-uninstall-line.mr-1
                               span {{ $t('common.uninstall') }}
               span(v-else) {{ scope.row[prop] ?? '-' }}
-      PagerBar(:data="pagination")
+      PagerBar(:data="pagination", @update:data="pagination = $event")
 </template>

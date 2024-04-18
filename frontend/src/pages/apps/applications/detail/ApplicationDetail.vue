@@ -122,18 +122,6 @@ const getGrafanaUrl = () => {
   })
 }
 
-const toLogviewer = (query = {}) => {
-  const namespace = get(route, 'query.group')
-  return {
-    name: 'logviewer',
-    query: {
-      namespace,
-      ...query,
-      isOneHour: true
-    }
-  }
-}
-
 const toList = () => {
   router.push({ name: route.name, query: {} })
 }
@@ -183,11 +171,11 @@ onMounted(() => {
 .application-instance-detail(v-loading="processing")
   PageHeader(:data="{ content: `${i18n.t('applications.instance')}: ${appName}` }")
     .action-btn.flex
-      HomepageButton.mr-2(:appLinks="appLinks")
+      HomepageButton.mr-2(:app-links="appLinks")
       .update-run-btn.mr-2
         UpdateConfigButton(
           :data="appBasicData",
-          :btnOptions="{}"
+          :btn-options="{}"
         )
       el-button.mr-2(@click="refresh")
         i.remix.mr-0.ri-refresh-line
@@ -238,7 +226,7 @@ onMounted(() => {
         :is="item.component",
         v-bind="item.options",
         :class="item.isTable ? 'has-border-table' : 'border-0'",
-        @setPodNames="setPodNames"
+        @set-pod-names="setPodNames"
       )
 </template>
 

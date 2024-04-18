@@ -69,9 +69,7 @@ watch(
 watch(
   () => props.modelValue,
   (val) => {
-    if (val && val.length) {
-      dateRange.value = [...val]
-    }
+    dateRange.value = val.length ? [...val] : []
   }
 )
 
@@ -90,7 +88,7 @@ onMounted(() => {
     v-model="dateRange",
     type="datetimerange",
     :shortcuts="pickerOptions.shortcuts",
-    :disabledDate="pickerOptions.disabledDate",
+    :disabled-date="pickerOptions.disabledDate",
     range-separator="-",
     :start-placeholder="i18n.t('common.startDate')",
     :end-placeholder="i18n.t('common.endDate')",

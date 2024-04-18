@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import i18n from '@/i18n'
-import { get, omit, isEmpty } from 'lodash'
+import { get } from 'lodash'
 
 import PagerBar from '@/components/pager/PagerBar.vue'
 import PodDeleteButton from '@/common/apps/Operate/PodDeleteButton.vue'
@@ -18,7 +17,7 @@ import { formatPrometheusTableData } from '@/utils/cluster/utils'
 import { getPercentage, sortListWithoutNull } from '@/utils/utils'
 import { getAppPodsAPI } from '@/api/applications'
 import { postDashboardQueryAPI } from '@/api/dashboard'
-import { POD_COLUMNS, CAPACITY_USAGE_COLUMNS, POD_QUS_CLASS, DEFAULT_FILTER, POD_PROPERTIES } from './constant'
+import { POD_COLUMNS, CAPACITY_USAGE_COLUMNS, DEFAULT_FILTER } from './constant'
 import { PODS_LIST_TARGETS } from '@/constant/prometheus'
 import { PAGINATION } from '@/constant'
 import { useRoute } from 'vue-router'
@@ -49,11 +48,7 @@ const prometheusData = ref([])
 const columns = computed(() => {
   const hiddenItem = get(props, 'options.hiddenColumns', [])
   return POD_COLUMNS().filter(item => item.show && !hiddenItem.includes(item.prop))
-})
-const properties = computed(() => {
-  const hiddenItem = get(props, 'options.hiddenSearch', [])
-  return POD_PROPERTIES().filter(item => !hiddenItem.includes(item.name))
-})  
+}) 
 const tableList = computed(() => {
   const { limit, start } = pagination.value
   let ret = filterList.value
@@ -147,11 +142,6 @@ const formatCapacityData = (list) =>  {
     }
   })
 }
-const reset = () => {
-  filter.value = DEFAULT_FILTER()
-  dataOrderBy.value = 'createTime'
-  dataOrder.value = false
-}
 const isCapacityUsageProp = (prop) => {
   return CAPACITY_USAGE_COLUMNS.includes(prop)
 }
@@ -203,7 +193,7 @@ watch(() => props.refreshFlag, () => {
             :key="prop + idx",
             :prop="prop",
             :label="label",
-            :minWidth="minWidth",
+            :min-width="minWidth",
             :fixed="!idx ? 'left' : prop === 'operate' ? 'right' : false",
             :align="align"
           )
@@ -233,14 +223,14 @@ watch(() => props.refreshFlag, () => {
               span(v-else-if="prop === 'operate'")
                 .flex.items-center
                   ShowYaml.after-line(:data="{ ...scope.row, appName }", type="pod", :title="`${$t('menu.pods')}：${scope.row.pod}`")
-                  ContainerLog.after-line(:podData="{ ...scope.row, podName: scope.row.pod, appName }")
+                  ContainerLog.after-line(:pod-data="{ ...scope.row, podName: scope.row.pod, appName }")
                   PodDeleteButton(
-                    :podData="{ podName: scope.row.pod, appName }",
+                    :pod-data="{ podName: scope.row.pod, appName }",
                     @refresh="refresh"
                   )
               span(v-else) {{ scope.row[prop] ?? '-' }}
       EmptyHolder.m-4(v-else)
-      PagerBar(:data="pagination")
+      PagerBar(:data="pagination", @update:data="pagination = $event")
 </template>
 
 <style lang="scss">
