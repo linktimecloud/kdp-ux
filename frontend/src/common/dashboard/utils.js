@@ -1,5 +1,5 @@
 import { toNumber, get, sortBy, round, isInteger } from 'lodash'
-import { beautifyDataUnit, getPercentage } from '@/utils/utils'
+import { beautifyDataUnit, getPercentage, formatDurationTime } from '@/utils/utils'
 import i18n from '@/i18n'
 
 export const formatDecimal = (value) => {
@@ -26,12 +26,6 @@ const formatTimeMs = (value) => {
   return (isInteger(value * 1000) ? value * 1000 : (value * 1000).toFixed(1)) + ' ms'
 }
 
-const formatDurationTime = (value) => {
-  return value * 1 ? formatDurationTime(value) : ''
-}
-
-
-
 export const formatterAxisLabel = (config, value) => {
   const formatMap = {
     percent: formatPercent(value),
@@ -54,7 +48,7 @@ export const formatTableChartValue = (column, item, formatValue) => {
     percent: formatPercent(value),
     bytes: beautifyDataUnit({ data: toNumber(value), decimalDigits: 2 }) || 0,
     bytes_rate: formatBytesRate(value, 2, ''),
-    duration_time: formatDurationTime(value)
+    duration_time: formatDurationTime(value) || ''
   }
 
   let ret = formatMap[format] ?? value
