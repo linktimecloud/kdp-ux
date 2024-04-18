@@ -3,15 +3,16 @@ import { h } from 'vue'
 import i18n from '@/i18n'
 import { ElMessageBox } from 'element-plus'
 import { isFunction } from 'lodash'
-import { useRouter } from 'vue-router'
 
 import ProcessStatus from '@/common/process/ProcessContent.vue'
 
-const router = useRouter()
+const toProcess = (id) => {
+  window.location.href = `/#/process?id=${id}`
+}
 
 export const processRedirect = ({ id, refresh, direct }) => {
   if (direct) {
-    router.push({ name: 'process', query: { id } })
+    toProcess(id)
     return
   }
 
@@ -24,7 +25,7 @@ export const processRedirect = ({ id, refresh, direct }) => {
     showCancelButton: true,
     'close-on-click-modal': false,
     'close-on-press-escape': false,
-    beforeClose (instance, done) {
+    beforeClose (action, instance, done) {
       const processInstance = instance?.message?.component
       const setupState = processInstance?.setupState || {}
 
@@ -39,7 +40,7 @@ export const processRedirect = ({ id, refresh, direct }) => {
     }
   }).then((action) => {
       if (action === 'confirm') {
-        router.push({ name: 'process', query: { id } })
+        toProcess(id)
       }
     })
     .catch(() => {})
