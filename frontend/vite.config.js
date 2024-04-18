@@ -54,6 +54,8 @@ export default ({ mode }) => {
         exclude: [
           'src/constant/**',
           'src/**/constant.js',
+          'src/utils/process.js',
+          'src/utils/toast.js',
           '**/node_modules/**'
         ]
       }

@@ -8,7 +8,7 @@ export const timeformat = (time = Date.now(), format = 'YYYY-MM-DD HH:mm:ss') =>
   return moment(time).format(format)
 }
 
-export const getUrlQuery = /* istanbul ignore next */ url => {
+export const getUrlQuery = url => {
   const querys = (url.split('?')[1] && url.split('?')[1].split('&')) || []
   return querys.reduce((ret, cur) => {
     ret[cur.split('=')[0]] = cur.split('=')[1]
