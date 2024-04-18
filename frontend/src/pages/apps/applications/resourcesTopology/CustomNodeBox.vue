@@ -10,7 +10,11 @@ import { GRAY_COLOR, DANGER_COLOR, WARNING_COLOR } from '@/constant/color'
 import { ICON_NAMES } from './constant'
 
 export default {
-  name: 'topology-custom-node',
+  name: 'TopologyCustomNode',
+  components: {
+    AppIcon,
+    StatusInfo
+  },
   props: {
     properties: {
       type: Object,
@@ -21,10 +25,6 @@ export default {
     return {
       i18n
     }
-  },
-  components: {
-    AppIcon,
-    StatusInfo
   },
   computed: {
     iconPath () {
@@ -132,9 +132,9 @@ export default {
     StatusInfo(
       :type="properties.isRoot ? 'appDetail' : 'commonAppResource'",
       :data="{ name: properties.name, status: true }",
-      :reqData="detailReqData",
-      :drawerTitle="`${properties.kind} : ${properties.name}`",
-      drawerSize="40%"
+      :req-data="detailReqData",
+      :drawer-title="`${properties.kind} : ${properties.name}`",
+      drawer-size="40%"
     )
       i.remix.ri-more-2-fill.text-primary
 </template>

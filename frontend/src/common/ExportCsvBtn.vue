@@ -2,7 +2,10 @@
 import ReasonButton from '@/common/ReasonButton.vue'
 
 export default {
-  name: 'export-csv',
+  name: 'ExportCsv',
+  components: {
+    ReasonButton
+  },
   props: {
     disabled: {
       type: Boolean,
@@ -20,9 +23,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  components: {
-    ReasonButton
   },
   computed: {
     reason () {

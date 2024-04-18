@@ -5,7 +5,10 @@ import CommonTips from '@/common/TipsIcon.vue'
  * Component Settings
  */
 export default {
-  name: 'pageHeader',
+  name: 'PageHeader',
+  components: {
+    CommonTips
+  },
   props: {
     data: {
       type: Object,
@@ -19,9 +22,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  components: {
-    CommonTips
   }
 }
 </script>

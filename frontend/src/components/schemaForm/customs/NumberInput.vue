@@ -7,7 +7,7 @@
 import { isNumber } from 'lodash'
 
 export default {
-  name: 'schema-form-number-input',
+  name: 'SchemaFormNumberInput',
   props: {
     value: [Number],
     readonly: {
@@ -26,9 +26,6 @@ export default {
       showValue: null
     }
   },
-  mounted () {
-    this.showValue = this.value
-  },
   watch: {
     showValue (val) {
       const newVal = (isNumber(val)) ? val : undefined
@@ -38,17 +35,20 @@ export default {
     value (val) {
       this.showValue = val
     }
+  },
+  mounted () {
+    this.showValue = this.value
   }
 }
 </script>
 
 <template lang="pug">
 el-input.schema-form-number-input(
+  v-model.number="showValue",
   :disabled="disabled",
   :readonly="readonly",
   :min="min",
   :max="max",
-  type="number",
-  v-model.number="showValue"
+  type="number"
 )
 </template>

@@ -113,8 +113,8 @@ const copyContent = () => {
   )
     slot
   el-drawer(
-    :title="actionTitle",
     v-model="drawerVisible",
+    :title="actionTitle",
     direction="rtl",
     size="50%",
     :append-to-body="true",
@@ -146,8 +146,8 @@ const copyContent = () => {
           v-if="!isEmpty(schema.JSONSchema) && !isCode",
           v-model="form.properties",
           :schema="schema.JSONSchema",
-          :uiSchema="schema.UISchema",
-          :optionProps="{ disabled: true }"
+          :ui-schema="schema.UISchema",
+          :option-props="{ disabled: true }"
         )
         JsonTree.config-data.bg-gray.border.rounded.p-2(v-else-if="!isEmpty(form.properties) && isCode", :data="form.properties")
         EmptyHolder(

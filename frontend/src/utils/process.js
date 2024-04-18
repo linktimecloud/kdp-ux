@@ -3,8 +3,11 @@ import { h } from 'vue'
 import i18n from '@/i18n'
 import { ElMessageBox } from 'element-plus'
 import { isFunction } from 'lodash'
+import { useRouter } from 'vue-router'
 
 import ProcessStatus from '@/common/process/ProcessContent.vue'
+
+const router = useRouter()
 
 export const processRedirect = ({ id, refresh, direct }) => {
   if (direct) {
@@ -21,7 +24,7 @@ export const processRedirect = ({ id, refresh, direct }) => {
     showCancelButton: true,
     'close-on-click-modal': false,
     'close-on-press-escape': false,
-    beforeClose (action, instance, done) {
+    beforeClose (instance, done) {
       const processInstance = instance?.message?.component
       const setupState = processInstance?.setupState || {}
 
@@ -34,7 +37,7 @@ export const processRedirect = ({ id, refresh, direct }) => {
       }
       done()
     }
-  }).then(() => {
+  }).then((action) => {
       if (action === 'confirm') {
         router.push({ name: 'process', query: { id } })
       }

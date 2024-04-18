@@ -28,8 +28,8 @@ const propsFilter = computed(() => {
 <template lang="pug">
 .catalog-install-list.shadow-box
   AppList.content(
-    :propsFilter="propsFilter",
+    :props-filter="propsFilter",
     :options="{ hiddenSearch: true, hiddenColumns: ['catalog'] }",
-    :refreshFlag="refreshFlag"
+    :refresh-flag="refreshFlag"
   )
 </template>

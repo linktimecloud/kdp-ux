@@ -4,7 +4,7 @@ import { get } from 'lodash'
 
 import { GREEN_COLOR, DANGER_COLOR } from '@/constant/color'
 
-const props = defineProps({
+defineProps({
   containers: {
     type: Array,
     required: true
@@ -42,7 +42,7 @@ const getLabel = (item) => {
         .flex.ml-3.items-center
           .status-color.mr-1(:style="getStyle(item)")
           span {{ getLabel(item) }}
-    template.container-box.flex.items-center.cursor-pointer.flex-wrap(#reference, @click="$emit('clickStatus')")
+    template.container-box.flex.items-center.cursor-pointer.flex-wrap(#reference)
       .flex.items-center(v-for="item in containers", :key="item.name")
         .status-color.mr-1.mb-1(
           :key="item.name",

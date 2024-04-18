@@ -9,8 +9,10 @@ import ServiceErrorModal from '@/components/error/ServiceErrorModal.vue'
 
 let loadingInstance
 
+const DEFAULT_TYPE = 'warning'
+
 const handleServiceError = (responseData, options) => {
-  const { error, message, status } = responseData
+  const { error, message } = responseData
 
   if (options.toast) {
     const { app, info = {}, type = 'warning' } = error

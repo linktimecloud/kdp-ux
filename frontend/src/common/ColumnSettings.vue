@@ -182,14 +182,14 @@ export default {
       .column-settings-footer.flex.justify-end.mb-1
         el-button(size="small", type="primary", link, @click="handleCancel") {{ $t('common.cancel') }}
         el-button(size="small", plain, type="primary", @click="handleSave") {{ $t('common.confirm') }}
-    el-button(
-      slot="reference",
-      type="primary",
-      link
-    )
-      slot
-        i.remix.ri-settings-3-line.me-1.text-secondary
-        span.text-secondary {{ $t('common.columnSettings') }}
+    template(#reference)
+      el-button(
+        type="primary",
+        link
+      )
+        slot
+          i.remix.ri-settings-3-line.me-1.text-secondary
+          span.text-secondary {{ $t('common.columnSettings') }}
 </template>
 <style lang="scss">
 @import '@/assets/root.scss';

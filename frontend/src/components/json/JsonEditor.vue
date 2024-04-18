@@ -4,7 +4,7 @@ import i18n from '@/i18n'
 import JsonEditor from 'jsoneditor'
 
 export default {
-  name: 'json-editor',
+  name: 'JsonEditor',
   props: {
     warningText: {
       type: String,
@@ -35,22 +35,6 @@ export default {
       editor: null,
       error: false,
       internalChange: false
-    }
-  },
-  methods: {
-    async setEditor (value) {
-      if (this.editor) {
-        this.editor.set(value)
-      }
-    },
-    jsonChange (value) {
-      this.isError = false
-      this.$emit('change', value)
-    },
-    hasError (value) {
-      if (value) {
-        this.isError = true
-      }
     }
   },
   watch: {
@@ -97,13 +81,29 @@ export default {
       options,
       this.data
     )
+  },
+  methods: {
+    async setEditor (value) {
+      if (this.editor) {
+        this.editor.set(value)
+      }
+    },
+    jsonChange (value) {
+      this.isError = false
+      this.$emit('change', value)
+    },
+    hasError (value) {
+      if (value) {
+        this.isError = true
+      }
+    }
   }
 }
 </script>
 
 <template lang="pug">
 .custom-json-editor(:class="isSimpleJson ? 'simple-json' : ''")
-  #jsonEditor(:style="{ height }", ref="jsonEditor")
+  #jsonEditor(ref="jsonEditor", :style="{ height }")
   p.text-warning(v-show="warningText") {{ warningText }}
   small.text-danger(v-show="isError") {{ i18n.t('common.jsonEditorErrorMessage') }}
 </template>

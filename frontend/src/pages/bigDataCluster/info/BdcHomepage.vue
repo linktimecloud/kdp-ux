@@ -138,10 +138,10 @@ watch(() => currentBdcName, (val) => {
             )
   .detail-container.px-3.pb-3
     component(
-      v-if="currentBdcName",
       :is="currentComponent.component",
+      v-if="currentBdcName",
       :key="activeTab",
-      :refreshFlag="refreshFlag",
+      :refresh-flag="refreshFlag",
       v-bind="currentComponent.options",
       :type="activeTab"
     )

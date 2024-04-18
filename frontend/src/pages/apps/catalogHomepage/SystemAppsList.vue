@@ -69,7 +69,7 @@ onMounted(() => {
   getList()
 })
 
-watch(() => props.name, (val) => {
+watch(() => props.name, () => {
   getList()
 })
 </script>
@@ -82,7 +82,7 @@ watch(() => props.name, (val) => {
       :key="prop",
       :prop="prop",
       :label="label",
-      :minWidth="minWidth"
+      :min-width="minWidth"
     )
       template(#default="scope")
         span(v-if="prop === 'name'")

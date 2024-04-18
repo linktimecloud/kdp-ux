@@ -6,7 +6,10 @@ import 'github-markdown-css/github-markdown.css'
 import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
 export default {
-  name: 'format-markdown',
+  name: 'FormatMarkdown',
+  components: {
+    EmptyHolder
+  },
   props: {
     data: {
       type: String,
@@ -25,9 +28,6 @@ export default {
       const scrollable = this.scrollable
       return { scrollable }
     }
-  },
-  components: {
-    EmptyHolder
   }
 }
 </script>
@@ -36,8 +36,8 @@ export default {
 .format-markdown
   .markdown-body.p-2(
     v-if="data",
-    v-html="html",
-    :class="cls"
+    :class="cls",
+    v-html="html"
   )
   EmptyHolder(v-else)
 </template>

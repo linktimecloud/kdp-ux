@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { get, debounce, omit } from 'lodash'
 import i18n from '@/i18n'
 import { useRoute } from 'vue-router'
@@ -7,7 +7,7 @@ import { useRoute } from 'vue-router'
 import PageHeader from '@/components/header/PageHeader.vue'
 import PagerBar from '@/components/pager/PagerBar.vue'
 import DateTimePickeShort from '@/common/dateTimePicker/ShortTime.vue'
-import FilterBox from './filter.vue'
+import FilterBox from './ProcessFilter.vue'
 
 import { getProcessListAPI } from '@/api/process'
 import { timeformat } from '@/utils/utils.js'
@@ -122,11 +122,13 @@ onMounted(() => {
   FilterBox(
     :data="filter",
     @submit="fetchDebounce",
-    @reset="resetFilter"
+    @reset="resetFilter",
+    @handle-change="data => filter[data.propName] = data.newValue"
   )
     DateTimePickeShort(
-      v-model="filter.timeRange",
-      :shortcutList="shortcutList"
+      :model-value="filter.timeRange",
+      :shortcut-list="shortcutList",
+      @update:modelValue="value => filter.timeRange = value"
     )
   el-table.border-none(v-loading="processing", :data="list", border)
     el-table-column(
@@ -134,7 +136,7 @@ onMounted(() => {
       :key="prop",
       :prop="prop",
       :label="label",
-      :minWidth="minWidth"
+      :min-width="minWidth"
     )
       template(#default="scope")
         router-link(
@@ -147,7 +149,8 @@ onMounted(() => {
         span(v-else) {{ scope.row[prop] }}
   PagerBar(
     :data="pagination",
-    :isMountedFetch="false",
+    :is-mounted-fetch="false",
+    @update:data="pagination = $event",
     @refresh="getProcessList"
   )
 </template>

@@ -13,7 +13,10 @@ import CustomJsonItem from './customs/JsonItem.vue'
 import CustomNumberInput from './customs/NumberInput.vue'
 
 export default {
-  name: 'schema-form',
+  name: 'SchemaForm',
+  components: {
+    VueForm
+  },
   props: {
     modelValue: {
       type: Object,
@@ -59,6 +62,17 @@ export default {
         // 自定义string类型的校验规则：必须有值且不能为空字符串
         validateString: value => typeof value === 'string' && value
       }
+    }
+  },
+  watch: {
+    modelValue () {
+      this.checkValid()
+    }
+  },
+  mounted () {
+    // init的时候会先执行一次 handleInput
+    if (!this.needFirstCheck) {
+      this.isDirty = false
     }
   },
   methods: {
@@ -173,20 +187,6 @@ export default {
         this.checkValid()
       }, 100)
     }
-  },
-  components: {
-    VueForm
-  },
-  mounted () {
-    // init的时候会先执行一次 handleInput
-    if (!this.needFirstCheck) {
-      this.isDirty = false
-    }
-  },
-  watch: {
-    modelValue () {
-      this.checkValid()
-    }
   }
 }
 </script>
@@ -194,15 +194,15 @@ export default {
 <template lang="pug">
 .schema-form(:class="{ 'is-dirty': isDirty }")
   VueForm.schema-form-wrap(
-    :modelValue="modelValue",
     ref="schemaFormWrap",
+    :model-value="modelValue",
     :schema="formatSchema",
     :ui-schema="uiSchema",
     :fallback-label="true",
-    :formFooter="{ show: false }",
-    :formProps="formProps",
-    :customFormats="customFormats",
-    @update:modelValue="handleInput"
+    :form-footer="{ show: false }",
+    :form-props="formProps",
+    :custom-formats="customFormats",
+    @update:model-value="handleInput"
   )
 </template>
 

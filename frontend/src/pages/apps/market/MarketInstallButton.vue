@@ -218,9 +218,9 @@ watch(() => 'form.bdc', (val) => {
     @click="handleOpen"
   ) {{ $t('common.install') }}
   el-drawer(
+    v-model="drawerVisible",
     class="market-install-drawer",
     :title="$t('common.install')",
-    v-model="drawerVisible",
     direction="rtl",
     size="50%",
     :append-to-body="true",
@@ -235,8 +235,8 @@ watch(() => 'form.bdc', (val) => {
           .d-block
             span.text-gray {{ $t('menu.bigDataCluster') }}：
             el-select(
-              v-loading="processing.bdc",
               v-model="form.bdc",
+              v-loading="processing.bdc",
               filterable
             )
               el-option(
@@ -250,9 +250,9 @@ watch(() => 'form.bdc', (val) => {
             v-if="!isEmpty(schema.JSONSchema)",
             v-model="schemaForm",
             :schema="schema.JSONSchema",
-            :uiSchema="schema.UISchema"
-            :optionProps="{ labelPosition: 'right', labelWidth: '160px' }",
-            :needFirstCheck="true",
+            :ui-schema="schema.UISchema"
+            :option-props="{ labelPosition: 'right', labelWidth: '160px' }",
+            :need-first-check="true",
             @update:valid="valid = $event",
           )
           EmptyHolder(

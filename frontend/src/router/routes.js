@@ -7,17 +7,17 @@ const routes = [
   {
     path: '/bigDataClusterOverview',
     name: 'bigDataClusterOverview',
-    component: () => import('@/pages/bigDataCluster/overview/index.vue')
+    component: () => import('@/pages/bigDataCluster/overview/BdcOverview.vue')
   },
   {
     path: '/process',
     name: 'process',
-    component: () => import('@/pages/record/process/index.vue')
+    component: () => import('@/pages/record/process/ProcessView.vue')
   },
   {
     path: '/logviewer',
     name: 'logviewer',
-    component: () => import('@/pages/record/logviewer/index.vue')
+    component: () => import('@/pages/record/logviewer/LogViewer.vue')
   },
 
   {

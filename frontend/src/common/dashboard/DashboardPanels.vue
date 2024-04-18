@@ -5,7 +5,10 @@ import { getDashboardConfigAPI } from '@/api/dashboard'
 import PanelCard from './panelCard/PanelCard.vue'
 
 export default {
-  name: 'dashboard-panels',
+  name: 'DashboardPanels',
+  components: {
+    PanelCard
+  },
   props: {
     name: {
       type: String,
@@ -31,6 +34,26 @@ export default {
     linePanels () {
       return this.panels.filter(item => item.type === 'timeserise-line') || []
     }
+  },
+  watch: {
+    defaultVariables: {
+      deep: true,
+      handler (val) {
+        this.panelVariables = {
+          ...this.panelVariables,
+          ...val
+        }
+      }
+    },
+    panels: {
+      immediate: true,
+      handler () {
+        this.restoreShowPanels()
+      }
+    }
+  },
+  mounted () {
+    this.getDashboardConfig()
   },
   methods: {
     async getDashboardConfig () {
@@ -68,29 +91,6 @@ export default {
     restoreShowPanels () {
       this.showPanels = this.panels.map(item => item.title)
     }
-  },
-  mounted () {
-    this.getDashboardConfig()
-  },
-  components: {
-    PanelCard
-  },
-  watch: {
-    defaultVariables: {
-      deep: true,
-      handler (val) {
-        this.panelVariables = {
-          ...this.panelVariables,
-          ...val
-        }
-      }
-    },
-    panels: {
-      immediate: true,
-      handler () {
-        this.restoreShowPanels()
-      }
-    }
   }
 }
 </script>
@@ -100,15 +100,15 @@ export default {
   PanelCard(
     v-for="item in panels",
     :key="item.title",
+    v-model:show-panels="showPanels",
     :data="item",
     :style="getPanelLayoutStyle(item)",
-    :timeQuery="timeQuery",
-    :panelVariables="panelVariables",
-    :scopeTplList="getScopeTplList(item)"
+    :time-query="timeQuery",
+    :panel-variables="panelVariables"
+    :scope-tpl-list="getScopeTplList(item)",
     :name="name",
-    :showPanels.sync="showPanels",
-    :prometheusHealth="dataConfig.prometheusHealth",
-    @restoreShowPanels="restoreShowPanels"
+    :prometheus-health="dataConfig.prometheusHealth",
+    @restore-show-panels="restoreShowPanels"
   )
 </template>
 

@@ -81,9 +81,9 @@ onMounted(() => {
           el-button(type="primary", link, @click="openDrawer(scope.row)") {{ $t('common.view') }}{{ $t('applications.settingTemplate') }}
         span(v-else) {{ scope.row[prop]}}
   el-drawer(
+    v-model="drawerVisible",
     class="catalog-apps-list-drawer",
     :title="`${$t('applications.settingTemplate')}: ${selectedData?.name}`",
-    v-model="drawerVisible",
     size="40%"
     direction="rtl",
     :append-to-body="true",

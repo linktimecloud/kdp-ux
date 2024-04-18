@@ -45,8 +45,8 @@ const handleSetLang = async (lang) => {
       )
         el-dropdown-item(
           v-for="(li, i) in list",
-          :command="li.lang",
-          :key="i"
+          :key="i",
+          :command="li.lang"
         )
           span {{ li.text }}
 </template>

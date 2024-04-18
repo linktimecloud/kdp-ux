@@ -25,12 +25,12 @@ const toList = () => {
     :data="{ content: $t('menu.processDetail')}",
     tip="PROCESS_LOG",
     :override="true",
-    :isShowBack="true",
-    @toBack="toList"
+    :is-show-back="true",
+    @to-back="toList"
   )
   ProcessLogs(
-    class="process-logs-status",
-    :id="id"
+    :id="id",
+    class="process-logs-status"
   )
 </template>
 
