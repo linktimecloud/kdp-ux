@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: 'error-page',
+  name: 'ErrorPage',
   computed: {
     entry () {
       return 'home'

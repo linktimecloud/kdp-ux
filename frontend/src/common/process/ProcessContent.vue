@@ -101,13 +101,9 @@ const resetFilter = () => {
 const emit = defineEmits(['update:status'])
 
 const getList = async () => {
-  const data = {
-    ...pagination.value,
-    exclude: 'PREDEFINED'
-  }
   const pid = props.id
   loading.value = true
-  const httpRes = await getProcessDetailLogsAPI({ pid }).then((rsp) => {
+  return await getProcessDetailLogsAPI({ pid }).then((rsp) => {
     const d = rsp.data
     pagination.value = d.pagination || {}
     logData.value = d.list || []
@@ -136,13 +132,14 @@ const getList = async () => {
         titleOpt.value.class = 'text-info'
         break
     }
-  }).catch((error) => {
+  }).catch(() => {
     if (retryNum.value >= MAX_RETRY_NUM) {
       stop()
     }
     retryNum.value++
+  }).finally(() => {
+    loading.value = false
   })
-  loading.value = false
 }
 const stop = () => {
   clearInterval(handler)
@@ -151,9 +148,6 @@ const restart = () => {
   stop()
   getList()
   handler = setInterval(getList, WAIT_REFRESH)
-}
-const resetKeyword = () => {
-  filter.value.keyword = ''
 }
 onMounted(() => {
   restart()
@@ -182,7 +176,8 @@ watch(() => props.id, (val) => {
   SearchBox.mb-2.p-0.border-0.resource-search-box(
     :data="filter",
     :properties="properties",
-    :actionBtns="[{ value: 'reset', label: i18n.t('common.reset'), type: 'default' }]",
+    :action-btns="[{ value: 'reset', label: i18n.t('common.reset'), type: 'default' }]",
+    @handle-change="data => filter[data.propName] = data.newValue",
     @reset="resetFilter"
   )
   ProcessList(:data="list", :keyword="filter.keyword")

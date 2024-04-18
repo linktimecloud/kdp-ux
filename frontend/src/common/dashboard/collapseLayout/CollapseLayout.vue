@@ -2,7 +2,10 @@
 import CommonTips from '@/common/TipsIcon.vue'
 
 export default {
-  name: 'collapse-layout',
+  name: 'CollapseLayout',
+  components: {
+    CommonTips
+  },
   props: {
     data: {
       type: Object,
@@ -19,9 +22,6 @@ export default {
     return {
       isExpand: true
     }
-  },
-  components: {
-    CommonTips
   },
   mounted () {
     this.isExpand = this.defaultExpand

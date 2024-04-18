@@ -77,7 +77,7 @@ const copyContent = (label) => {
       :width="300"
     )
       .flex.flex-wrap.content-box
-        el-tag.mr-2.mt-1(v-for="(label, idx) in labelData", type="info" :key="idx")
+        el-tag.mr-2.mt-1(v-for="(label, idx) in labelData", :key="idx" type="info")
           el-tooltip(
             popper-class="app-labels-item-tooltip",
             placement="left",

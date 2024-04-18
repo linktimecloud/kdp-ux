@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { ElNotification } from 'element-plus'
 import { isEmpty } from 'lodash'
 import i18n from '@/i18n'
@@ -34,7 +34,9 @@ const getUrlValue = (val) => {
   let ret = ''
   try {
     ret = JSON.parse(val)
-  } catch (e) {}
+  } catch (e) {
+    console.log(e)
+  }
   return PATTERNS.url.test(ret) ? ret : ''
 }
 
@@ -59,7 +61,7 @@ const handleCopy = () => {
     i.remix.ri-file-copy-line
     span {{ i18n.t('common.copy') }}
   VueJsonPretty(:data="data", v-bind="options")
-    template(#renderNodeKey="{ node, defaultKey }")
+    template(#renderNodeKey="{ defaultKey }")
       span {{ defaultKey }}
     template(#renderNodeValue="{ node, defaultValue }")
       a(

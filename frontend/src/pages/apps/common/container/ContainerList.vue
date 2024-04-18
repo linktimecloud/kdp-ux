@@ -143,10 +143,10 @@ watch(() => props.refreshFlag, () => {
           CommonTips(:name="getTip(key)")
       template(#default="scope")
         span(v-if="key === 'status'")
-          ContainerStatus(:containers="[scope.row]", :showLabel="true")
+          ContainerStatus(:containers="[scope.row]", :show-label="true")
         span(v-else-if="isCapacityUsageProp(key)")
           ResourceColumn(:type="key", :row="scope.row")
         span(v-else-if="key === 'operate'")
-          ContainerLog(:podData="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :defaultContainer="scope.row.name")
+          ContainerLog(:pod-data="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :default-container="scope.row.name")
         span(v-else) {{ scope.row[key]}}
 </template>

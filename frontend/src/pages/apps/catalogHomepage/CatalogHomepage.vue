@@ -4,7 +4,6 @@ import { get, upperFirst, omit, isEmpty } from 'lodash'
 import i18n from '@/i18n'
 
 import { getCatalogsAppFormAPI } from '@/api/catalog'
-import { getLabelformat } from '@/utils/utils'
 import { CATALOG_COMPONENTS_MAP } from './constant'
 
 import AppIcon from '@/common/apps/AppIcon.vue'
@@ -39,16 +38,6 @@ const sub = computed(() => {
 const isCatalogLevel = computed(() => {
   // 判断当前是展示catalog主页，还是catalog下某个应用的主页
   return !!(name.value && !sub.value)
-})
-const breadCrumb = computed(() => {
-  return [
-    {
-      text: showName.value
-    },
-    {
-      text: sub.value
-    }
-  ]
 })
 const catalogComponentsMap = computed(() => {
   return CATALOG_COMPONENTS_MAP({ name: name.value, sub: sub.value })
@@ -151,7 +140,7 @@ watch(() => isCatalogLevel.value, (val) => {
           MarketInstallButton.ml-2(
             v-if="!catalogFormInfo.invisible",
             :data="{ catalog: name, form: sub }",
-            btnType="primary",
+            btn-type="primary",
             @refresh="refresh"
           )
       .d-block.text-gray.font-thirteen.mt-1 {{ catalogFormInfo.description }}
@@ -176,9 +165,9 @@ watch(() => isCatalogLevel.value, (val) => {
         :is="item.component",
         :key="`${item.name}${name}${sub}`",
         v-bind="item.options",
-        :refreshFlag="refreshFlag",
-        @refresh="refresh",
-        :class="item.isTable ? 'has-border-table' : 'border-0'"
+        :refresh-flag="refreshFlag",
+        :class="item.isTable ? 'has-border-table' : 'border-0'",
+        @refresh="refresh"
       )
 </template>
 <style lang="scss">

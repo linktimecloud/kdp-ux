@@ -1,7 +1,7 @@
 <script setup>
 import BrandIcon from './BrandIcon.vue'
 import UserInfo from './UserInfo.vue'
-import Languages from './Languages.vue'
+import Languages from './LanguagesBox.vue'
 </script>
 
 <template lang="pug">

@@ -66,7 +66,7 @@ const uninstallApp = () => {
 .uninstall-app-button
   ReasonButton(
     :cls="['text-danger']",
-    :btnOptions="btnOptions",
+    :btn-options="btnOptions",
     @click="handleConfirm"
   )
     slot

@@ -6,7 +6,8 @@ import SearchBox from '@/common/SearchBox.vue'
 
 const props = defineProps({
   data: {
-    type: Object
+    type: Object,
+    default: () => ({})
   }
 })
 
@@ -48,22 +49,19 @@ const properties = computed(() => {
     }
   ]
 })
-
-const getHandleSuggestions = (queryString, cb) => {
-  cb(handleOptions)
-}
 </script>
 
 <template lang="pug">
 .filter-wrapper.clearfix.bg-transparent
   SearchBox.resource-search-box(
-    :data="data",
+    :data="props.data",
     :properties="properties",
-    :actionBtns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
+    :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
+    @handle-change="data => $emit('handleChange', data)",
     @search="$emit('submit')",
     @reset="$emit('reset')"
   )
-    template(v-slot:searchAfter)
+    template(#searchAfter)
       slot
 </template>
 

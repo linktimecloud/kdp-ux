@@ -74,7 +74,7 @@ export const formatTimeseriseLineStepData = (list = [], step) => {
 
   // 通过设置的步长给未返回数据的时间段填充null值，优化图表展示
   const ret = []
-  list.forEach((item, index) => {
+  list.forEach((item) => {
     if (ret.length) {
       const curTime = item[0]
       let lastTime = ret[ret.length - 1][0]

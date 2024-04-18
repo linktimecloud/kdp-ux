@@ -7,7 +7,11 @@ import JsonTree from '@/components/json/FormatJson.vue'
 import { fieldProps, vueUtils, formUtils } from '@lljj/vue3-form-element'
 
 export default {
-  name: 'json-schema-form-item-json',
+  name: 'JsonSchemaFormItemJson',
+  components: {
+    JsonEditor,
+    JsonTree
+  },
   props: {
     ...fieldProps
   },
@@ -53,10 +57,6 @@ export default {
       ]
     }
   },
-  components: {
-    JsonEditor,
-    JsonTree
-  },
   methods: {
     onJsonChange (value) {
       vueUtils.setPathVal(this.rootFormData, this.curNodePath, value)
@@ -87,12 +87,12 @@ el-form-item.schema-form-item-json.pb-2(
   template(v-else)
     JsonEditor.w-full(
       v-if="value",
-      :data="value",
       :key="curNodePath",
-      :isSimpleJson="true",
+      :data="value",
+      :is-simple-json="true",
       :height="height",
       @change="onJsonChange",
-      @getError="onHasError"
+      @get-error="onHasError"
     )
 </template>
 

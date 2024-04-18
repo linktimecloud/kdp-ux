@@ -72,7 +72,6 @@ const getResourceTopTenPods = async () => {
 
 onMounted(() => {
   filter.value.namespace = currentBdcNS.value
-  console.log('currentBdcNS.value', currentBdcNS.value)
   currentBdcNS.value && getResourceTopTenPods()
 })
 
@@ -93,30 +92,31 @@ watch(() => currentBdcNS, (val) => {
     .bdc-resource-contains.mb-2
       Dashboard(
         name="bdc_resource",
-        :timeQuery="timeQueryOverview",
-        :defaultVariables="filter"
+        :time-query="timeQueryOverview",
+        :default-variables="filter"
       )
     .bdc-overview-contains.mb-2
       Dashboard(
         name="bdc_overview",
-        :timeQuery="timeQueryOverview",
-        :defaultVariables="filter"
+        :time-query="timeQueryOverview",
+        :default-variables="filter"
       )
     CollapseLayout.mb-3(
       :data="{ name: 'bdc_pod_metric', label: $t('cluster.dashboard.podResourceUsageTop') }",
-      :defaultExpand="true"
+      :default-expand="true"
     )
-      template(v-slot:headerRight)
+      template(#headerRight)
         DateTimePickeShort.mr-2(
-          v-model="timeQueryWorkload.range",
-          :defaultShortcutLable="$t('time.lastestTwentyFourHours')",
-          :shortcutList="TIME_DURATION_SHORTCUTS()",
-          :hiddenClearBtn="true"
+          :model-value="timeQueryWorkload.range",
+          :default-shortcut-lable="$t('time.lastestTwentyFourHours')",
+          :shortcut-list="TIME_DURATION_SHORTCUTS()",
+          :hidden-clear-btn="true",
+          @update:modelValue="value => timeQueryWorkload.range = value"
         )
       Dashboard(
         name="bdc_pod_metric",
-        :timeQuery="timeQueryWorkload",
-        :defaultVariables="filter"
+        :time-query="timeQueryWorkload",
+        :default-variables="filter"
       )
 </template>
 

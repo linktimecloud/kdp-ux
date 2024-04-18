@@ -54,7 +54,9 @@ const coloredLogData = computed(() => {
   let logs = ''
   try {
     logs = atob(containerLogs.value)
-  } catch (e) {}
+  } catch (e) {
+    console.log(e)
+  }
   const ansiUp = new AnsiUp()
   return ansiUp.ansi_to_html(logs)
 })
@@ -68,11 +70,9 @@ const handleOpen = () => {
   drawerVisible.value = true
 }
 
-const getContainerLogs = (line) => {
+const getContainerLogs = () => {
   const { podData: { podName, appName } } = props
-
   if (!appName || !podName || !containerName.value) return
-
   containerLogs.value = ''
   processing.value = true
   getAppPodContainerLogsAPI({
@@ -123,12 +123,12 @@ const changeContainer = (val) => {
 
 <template lang="pug">
 .pod-container-log
-  el-button(@click="handleOpen", type="primary", link)
+  el-button(type="primary", link, @click="handleOpen")
     slot
       span {{ $t('common.logs') }}
   el-drawer(
-    class="pod-container-log-dialog",
     v-model="drawerVisible",
+    class="pod-container-log-dialog",
     direction="rtl",
     size="800px",
     :title="title",
@@ -165,7 +165,7 @@ const changeContainer = (val) => {
         i.remix.mr-0.ri-refresh-line
       el-button(type='primary', @click="downloadfile") {{ $t('common.download') }}
     div(v-loading="processing")
-      .log-box.p-2.small(v-if="!isEmpty(containerLogs)", v-html="coloredLogData", ref="scrollBox")
+      .log-box.p-2.small(v-if="!isEmpty(containerLogs)", ref="scrollBox", v-html="coloredLogData")
       EmptyHolder.m-4(v-else, :full="false")
 </template>
 

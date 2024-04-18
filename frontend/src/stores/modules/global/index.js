@@ -2,7 +2,6 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getUserAPI } from '@/api/user'
-import * as ENV from '@/env'
 
 export const useGlobalStore = defineStore('global', () => {
   // state

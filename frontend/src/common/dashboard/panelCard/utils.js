@@ -134,7 +134,7 @@ const HANDLERS = {
   POD_LOG_FILEERR_GRAPH: podlogStdoutGraphFormatter,
 
   // 错误日志内容
-  POD_LOG_FILEERR_LOGS: (rspData, targets) => {
+  POD_LOG_FILEERR_LOGS: (rspData) => {
     const raw = rspData[0]
 
     delete raw.refId

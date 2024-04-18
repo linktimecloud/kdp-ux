@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { get, isEmpty } from 'lodash'
+import { get } from 'lodash'
 import i18n from '@/i18n'
 
 import Dashboard from '@/common/dashboard/DashboardPanels.vue'
@@ -81,16 +81,6 @@ const getPodDetail = async () => {
     processing.value = false
   })
 }
-const toLogviewer = (query = {}) => {
-  return {
-    name: 'logviewer',
-    query: {
-      namespace: namespace.value,
-      ...query,
-      isOneHour: true
-    }
-  }
-}
 const toList = () => {
   const { name, params, query: { application, bdc } } = route
   router.push({
@@ -115,7 +105,7 @@ onMounted(() => {
 
 <template lang="pug">
 .pod-home-page
-  PageHeader(:data="{ content: `Pod: ${routeQuery.pod || $t('applications.noInstance')}` }", :isShowBack="true", @toBack="toList")
+  PageHeader(:data="{ content: `Pod: ${routeQuery.pod || $t('applications.noInstance')}` }", :is-show-back="true", @to-back="toList")
     .action-btn.flex.items-center
       ShowYaml.mr-2(:data="{ ...basicData, pod: routeQuery.pod, appName: routeQuery.application }", type="pod", :title="`${$t('menu.pods')}：${routeQuery.pod}`")
         el-button(type="primary") {{ $t('common.detail') }}
@@ -127,19 +117,19 @@ onMounted(() => {
         template(#dropdown)
           el-dropdown-menu.dropdown-menu-full-button
             el-dropdown-item
-              ContainerLog(:podData="{ ...basicData, podName: routeQuery.pod, appName: routeQuery.application }")
+              ContainerLog(:pod-data="{ ...basicData, podName: routeQuery.pod, appName: routeQuery.application }")
                 .flex.more-btn
                   i.remix.ri-external-link-line
                   span {{ $t('common.logs') }}
             el-dropdown-item
               PodDeleteButton(
-                :podData="{ podName: routeQuery.pod, appName: routeQuery.application }",
+                :pod-data="{ podName: routeQuery.pod, appName: routeQuery.application }",
                 @refresh="toList"
               )
                 .flex.more-btn
                   i.remix.ri-delete-bin-line
                   span {{ $t('common.remove') }}
-      el-button(@click="refresh", type="default")
+      el-button(type="default", @click="refresh")
         i.remix.ri-refresh-line.mr-0
     template(#nextRow)
       AppConfigInfo.mt-2(
@@ -152,16 +142,16 @@ onMounted(() => {
       ContainerList.shadow-box(
         v-if="namespace",
         :data="containerList",
-        :refreshFlag="timeQuery.time",
-        :podData="{ ...basicData, appName: routeQuery.application }"
+        :refresh-flag="timeQuery.time",
+        :pod-data="{ ...basicData, appName: routeQuery.application }"
       )
     .pod-detail-metric-box.mb-3
       .font-bold.text-high.mb-2 {{ $t('applications.runMetric') }}
       .pod-metric-box.shadow-box
         Dashboard(
           :name="dashboardData.name",
-          :timeQuery="timeQuery",
-          :defaultVariables="defaultVariables"
+          :time-query="timeQuery",
+          :default-variables="defaultVariables"
         )
 </template>
 

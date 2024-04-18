@@ -101,7 +101,7 @@ const showData = computed(() => {
             )
               //- span {{ `[${level.toUpperCase()}] `}}
               span(v-html="showData")
-        .flex.w-full(v-for="label in labels")
+        .flex.w-full(v-for="label in labels", :key="label.name")
           .label-name.text-left.px-4 {{ label.name }}
           .label-value.text-left {{ label.value ?? '-' }}
 </template>

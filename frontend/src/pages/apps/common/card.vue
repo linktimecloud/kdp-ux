@@ -6,7 +6,10 @@ import { versionCompare } from '@/utils/version'
 import AppIcon from '@/common/apps/AppIcon.vue'
 
 export default {
-  name: 'app-list-card',
+  name: 'AppListCard',
+  components: {
+    AppIcon
+  },
   props: {
     data: {
       type: Object
@@ -56,17 +59,14 @@ export default {
       }
       return ret
     }
-  },
-  components: {
-    AppIcon
   }
 }
 </script>
 
 <template lang="pug">
 .card.apps-list-card(
-  :class="`${type}-list-card`",
-  v-if="data"
+  v-if="data",
+  :class="`${type}-list-card`"
 )
   .card-body
     .img-wrapper.block-middle
@@ -80,7 +80,7 @@ export default {
         v-show="showIcon",
         :to="card.to"
       )
-        AppIcon(:src="data.icon", :id="data.id")
+        AppIcon(:id="data.id", :src="data.icon")
     .content-wrapper
       h5
         el-tooltip(

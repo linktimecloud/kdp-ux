@@ -26,7 +26,13 @@ const DEFAULT_LOG_FILTER = () => ({
 })
 
 export default {
-  name: 'log-viewer',
+  name: 'LogViewer',
+  components: {
+    PageHeader,
+    DateTimePickeShort,
+    LogSearchBox,
+    Logs
+  },
   data () {
     return {
       filter: DEFAULT_LOG_FILTER(),
@@ -69,11 +75,30 @@ export default {
       return ret
     }
   },
-  components: {
-    PageHeader,
-    DateTimePickeShort,
-    LogSearchBox,
-    Logs
+  watch: {
+    filter: {
+      deep: true,
+      handler () {
+        this.fetchDebounce()
+      }
+    },
+    'timeQuery.range' (val) {
+      this.fetchDebounce()
+
+      const { duration, rangeTooLongTips } = this.shortcutList[this.shortcutList.length - 1]
+      const [start, end] = val || {}
+      if (start && end && end - start > duration) {
+        this.$message({
+          type: 'warning',
+          message: rangeTooLongTips,
+          duration: 3000
+        })
+      }
+    }
+  },
+  mounted () {
+    this.initFilter()
+    this.isReadyFilter = true
   },
   methods: {
     updateTime () {
@@ -109,7 +134,7 @@ export default {
         ...DEFAULT_LOG_FILTER(),
         ...overideData
       }
-      this.refreshDateTimeFlag = Date.now()
+      this.timeQuery.range = [Date.now() - 1000 * 60 * 5, Date.now()]
     },
     getLogData () {
       const self = this
@@ -159,32 +184,6 @@ export default {
     fetchDebounce: debounce(function () {
       this.getLogData()
     }, 500)
-  },
-  mounted () {
-    this.initFilter()
-
-    this.isReadyFilter = true
-  },
-  watch: {
-    filter: {
-      deep: true,
-      handler () {
-        this.fetchDebounce()
-      }
-    },
-    'timeQuery.range' (val) {
-      this.fetchDebounce()
-
-      const { duration, rangeTooLongTips } = this.shortcutList[this.shortcutList.length - 1]
-      const [start, end] = val || {}
-      if (start && end && end - start > duration) {
-        this.$message({
-          type: 'warning',
-          message: rangeTooLongTips,
-          duration: 3000
-        })
-      }
-    }
   }
 }
 </script>
@@ -205,11 +204,11 @@ export default {
           el-dropdown-menu
             el-dropdown-item(
               :disabled="!dataResults.length",
-              @click.native="downloadStd"
+              @click="downloadStd"
             ) {{ $t('log.exportStdLog') }}
             el-dropdown-item(
               :disabled="!dataResults.length",
-              @click.native="downloadFile"
+              @click="downloadFile"
             ) {{ $t('log.exportFileLog') }}
   .tip-box.mb-3.p-2(v-if="showTipBox")
     .flex.justify-between
@@ -220,21 +219,21 @@ export default {
   LogSearchBox(
     v-if="isReadyFilter",
     :filter="filter",
+    @update:filter="filter = $event"
     @reset="resetFilter"
   )
     DateTimePickeShort(
-      v-model="timeQuery.range",
-      :defaultShortcutLable="defaultShortcutLable",
-      :shortcutList="shortcutList",
-      :refreshFlag="refreshDateTimeFlag",
-      @input="val => timeQuery.range = val",
-      :hiddenClearBtn="true"
+      :model-value="timeQuery.range",
+      :default-shortcut-lable="defaultShortcutLable",
+      :shortcut-list="shortcutList",
+      :hidden-clear-btn="true",
+      @update:modelValue="val => timeQuery.range = val"
     )
   .dashboard-wrapper(v-loading="processing")
     Logs.logs-container(
       :data="dataResults",
       :keyword="filter.keyword",
-      :showInfinite="true",
+      :show-infinite="true",
       :class="showTipBox ? 'show-tip-height' : ''"
     )
 </template>

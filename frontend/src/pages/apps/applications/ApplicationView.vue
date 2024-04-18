@@ -3,7 +3,7 @@ import List from './list'
 import Detail from './detail'
 
 export default {
-  name: 'applications',
+  name: 'ApplicationView',
   computed: {
     breadcrumb () {
       return {
@@ -22,8 +22,8 @@ export default {
 <template lang="pug">
 .application
   component(
-    :breadcrumb="breadcrumb",
     :is="current",
-    resourceType="bdc"
+    :breadcrumb="breadcrumb",
+    resource-type="bdc"
   )
 </template>

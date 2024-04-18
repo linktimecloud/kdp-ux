@@ -1,9 +1,8 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import i18n from '@/i18n'
 import { isEmpty, get } from 'lodash'
 
-import { copyToClipboard } from '@/utils/document'
 import { DANGER_COLOR } from '@/constant/color'
 import { getAppKindResourcesDetailAPI, getAppDetailAPI } from '@/api/applications'
 
@@ -109,8 +108,8 @@ const handleOpen = () => {
       i.remix.ri-file-info-line.mr-1
       span {{ i18n.t('applications.statusInfo') }}
   el-drawer(
-    class="application-status-info-drawer",
     v-model="drawerVisible",
+    class="application-status-info-drawer",
     direction="rtl",
     :title="drawerTitle || i18n.t('applications.statusInfo')",
     :size="drawerSize",
@@ -124,8 +123,8 @@ const handleOpen = () => {
       .content-box.p-2(v-loading="processing")
         JsonTree(
           :data="content",
-          :jsonFormatOptions="{ calculateValueStyle }",
-          :enableCopy="true"
+          :json-format-options="{ calculateValueStyle }",
+          :enable-copy="true"
         )
 </template>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import i18n from '@/i18n'
 import { isBoolean } from 'lodash'
 
@@ -11,14 +11,12 @@ import LabelsBox from '@/common/LabelsBox.vue'
 
 import { timeformat } from '@/utils/utils.js'
 
-import { SYSTEM_APPLICATION_STATUS, APP_CONFIG_INFO_MAP } from '@/constant/application'
+import { APP_CONFIG_INFO_MAP } from '@/constant/application'
 
 const props = defineProps({
   data: Object,
   type: String
 })
-
-const systemApplicationStatus = ref(SYSTEM_APPLICATION_STATUS())
 
 const itemMap = computed(() => {
   return APP_CONFIG_INFO_MAP()[props.type]
@@ -37,21 +35,6 @@ const statusTitle = computed(() => {
 const isLabelKey = (key) => {
   const labelMap = ['labels', 'annotations', 'labelSelector', 'nodeSelector', 'secrets']
   return labelMap.includes(key)
-}
-
-const toInstanceDetail = () => {
-  const { appName: name, bdc } = props.data
-
-  const query = {
-    name,
-    bdc,
-    action: 'detail'
-  }
-
-  return {
-    name: 'applications',
-    query
-  }
 }
 </script>
 
@@ -100,7 +83,7 @@ const toInstanceDetail = () => {
         :info="data.statusInfo"
       )
     .flex.items-center(v-else-if="key === 'affinity'")
-      AffinityInfo(:data="data.affinity", :showLabel="true", :title="`Pod：${data.pod}`")
+      AffinityInfo(:data="data.affinity", :show-label="true", :title="`Pod：${data.pod}`")
     span.text-high.ml-2(v-else-if="format === 'time'") {{ timeformat(data[key]) }}
     LabelsBox(v-else-if="isLabelKey(key)", :sign="key", :data="data")
     span.text-high.ml-2(v-else-if="key === 'kerberos'") {{ data[key] ? $t('common.on') : $t('common.off') }}

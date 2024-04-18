@@ -1,6 +1,6 @@
 import i18n from '@/i18n'
 
-export const validPasswordForm = ({ form, processing, isOpenId, userName } = {}) => {
+export const validPasswordForm = ({ form, processing, isOpenId } = {}) => {
   const { password = '', originPassword, confirmPassword } = form || {}
   const rules = [
     { match: processing, content: i18n.t('common.processing') },

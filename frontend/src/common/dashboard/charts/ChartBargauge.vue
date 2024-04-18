@@ -3,7 +3,7 @@ import { get, toNumber } from 'lodash'
 import { OVERRIDE_DASHBOARD_COLOR } from '../constant'
 
 export default {
-  name: 'chart-bargauge',
+  name: 'ChartBargauge',
   props: {
     dataResults: {
       type: Array,

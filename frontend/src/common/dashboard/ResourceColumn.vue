@@ -3,7 +3,7 @@ import { formatPercentage } from '@/utils/utils'
 import { formatCapacityValue } from '@/utils/cluster/utils'
 
 export default {
-  name: 'resource-column',
+  name: 'ResourceColumn',
   props: {
     type: {
       type: String,
