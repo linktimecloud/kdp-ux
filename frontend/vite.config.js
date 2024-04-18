@@ -56,6 +56,7 @@ export default ({ mode }) => {
           'src/**/constant.js',
           'src/utils/process.js',
           'src/utils/toast.js',
+          'src/utils/request.js',
           '**/node_modules/**'
         ]
       }
