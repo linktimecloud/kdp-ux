@@ -11,4 +11,5 @@ mock/*
 frontend/node_modules
 frontend/dist
 frontend/test
+frontend/__tests__
 web/public
