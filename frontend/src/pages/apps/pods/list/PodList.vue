@@ -29,8 +29,14 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  refreshFlag: Number,
-  propsFilter: Object
+  refreshFlag: {
+    type: Number,
+    default: 0
+  },
+  propsFilter: {
+    type: Object,
+    default: () => ({})
+  }
 })
 
 const processing = ref({
@@ -48,7 +54,7 @@ const prometheusData = ref([])
 const columns = computed(() => {
   const hiddenItem = get(props, 'options.hiddenColumns', [])
   return POD_COLUMNS().filter(item => item.show && !hiddenItem.includes(item.prop))
-}) 
+})
 const tableList = computed(() => {
   const { limit, start } = pagination.value
   let ret = filterList.value
@@ -123,7 +129,7 @@ const getFilterList = () => {
   // Step-3: 排序
   const o = dataOrder.value ? 'asc' : 'desc'
   list = sortListWithoutNull({ list, prop: dataOrderBy.value, order: o })
-  
+
   filterList.value = list
   pagination.value.total = list.length || 0
 }
@@ -170,7 +176,7 @@ const refresh = () => {
   getList()
   getPrometheusData()
 }
-  
+
 onMounted(() => {
   refresh()
 })
@@ -230,7 +236,7 @@ watch(() => props.refreshFlag, () => {
                   )
               span(v-else) {{ scope.row[prop] ?? '-' }}
       EmptyHolder.m-4(v-else)
-      PagerBar(:data="pagination", @update:data="pagination = $event")
+      PagerBar(v-model="pagination")
 </template>
 
 <style lang="scss">

@@ -267,5 +267,5 @@ watch(() => dataSort, () => {
                               i.remix.ri-uninstall-line.mr-1
                               span {{ $t('common.uninstall') }}
               span(v-else) {{ scope.row[prop] ?? '-' }}
-      PagerBar(:data="pagination", @update:data="pagination = $event")
+      PagerBar(v-model="pagination")
 </template>

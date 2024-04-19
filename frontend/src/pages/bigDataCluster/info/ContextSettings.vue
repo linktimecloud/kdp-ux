@@ -12,7 +12,10 @@ import { getBdcContextSettingsAPI, getBdcContextSecretsAPI } from '@/api/bdc'
 import { PAGINATION } from '@/constant'
 
 const props = defineProps({
-  refreshFlag: Number,
+  refreshFlag: {
+    type: Number,
+    default: 0
+  },
   propsFilter: {
     type: Object,
     default: () => ({})
@@ -178,5 +181,5 @@ watch(() => dataSort, () => {
               span(v-else-if="prop === 'keys'") {{ getKeys(scope.row) ?? '-' }}
               span(v-else-if="prop === 'createTime'") {{ timeformat(scope.row.createTime) }}
               span(v-else) {{ scope.row[prop] }}
-      PagerBar(:data="pagination", @update:data="pagination = $event")
+      PagerBar(v-model="pagination")
 </template>

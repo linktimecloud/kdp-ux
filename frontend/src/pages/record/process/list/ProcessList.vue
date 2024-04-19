@@ -146,9 +146,8 @@ onMounted(() => {
         span(v-else-if="prop === 'createdAt'") {{ timeformat(scope.row.createdAt) }}
         span(v-else) {{ scope.row[prop] }}
   PagerBar(
-    :data="pagination",
+    v-model="pagination"
     :is-mounted-fetch="false",
-    @update:data="pagination = $event",
     @refresh="getProcessList"
   )
 </template>
