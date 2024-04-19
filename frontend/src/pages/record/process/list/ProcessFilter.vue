@@ -59,7 +59,6 @@ const properties = computed(() => {
     :model-value="modelValue",
     :properties="properties",
     :action-btns="[{ value: 'reset', type: 'default' }]",
-    :max-row-num="3",
     @update:model-value="data => emits('update:modelValue', data)",
     @search="emits('submit')",
     @reset="emits('reset')"
