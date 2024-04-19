@@ -126,6 +126,7 @@ onMounted(() => {
   }
   .datetime-picker {
     width: 350px;
+    min-width: 336px;
     max-width: 350px;
     height: 30px !important;
     line-height: 30px !important;

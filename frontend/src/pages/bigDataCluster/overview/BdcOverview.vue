@@ -107,11 +107,10 @@ watch(() => currentBdcNS, (val) => {
     )
       template(#headerRight)
         DateTimePickeShort.mr-2(
-          :model-value="timeQueryWorkload.range",
+          v-model="timeQueryWorkload.range",
           :default-shortcut-lable="$t('time.lastestTwentyFourHours')",
           :shortcut-list="TIME_DURATION_SHORTCUTS()",
-          :hidden-clear-btn="true",
-          @update:modelValue="value => timeQueryWorkload.range = value"
+          :hidden-clear-btn="true"
         )
       Dashboard(
         name="bdc_pod_metric",
