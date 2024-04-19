@@ -1,10 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import i18n from '@/i18n'
-
 import { isEmpty, cloneDeep } from 'lodash'
-import { useClipboard } from '@vueuse/core'
-import { ElMessageBox } from 'element-plus'
+
+import { copyToClipboard } from '@/utils/utils'
 
 import JsonTree from '@/components/json/FormatJson.vue'
 
@@ -41,14 +40,8 @@ const label = computed(() => {
 })
 
 const copyContent = () => {
-  if (props.content) {
-    const content = JSON.stringify(props.content)
-    useClipboard(content)
-    ElMessageBox({
-      type: 'success',
-      message: i18n.t('common.copySuccess')
-    })
-  }
+  const content = JSON.stringify(props.content)
+  copyToClipboard({ content })
 }
 </script>
 

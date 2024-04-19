@@ -30,7 +30,7 @@ export default {
 </script>
 
 <template lang="pug">
-.empty-holder.row.justify-center.items-center(
+.empty-holder.flex.justify-center.items-center(
   :class="cls",
   :style="full ? {} : { height: `${height}px` }"
 )

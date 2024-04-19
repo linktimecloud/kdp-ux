@@ -1,5 +1,7 @@
 import moment from 'moment'
 import i18n from '@/i18n'
+import { useClipboard } from '@vueuse/core'
+import { ElNotification } from 'element-plus'
 
 import { round, toNumber, partition, isNil, orderBy, get, isFunction } from 'lodash'
 
@@ -117,4 +119,16 @@ export const filterTableList = ({ list, filter = {}, order = 'asc', orderBy, com
   }
 
   return ret
+}
+
+export const copyToClipboard = ({ content = '', isShowMessage = true }) => {
+  if (!content) return
+  const { copy } = useClipboard()
+  copy(content)
+  if (isShowMessage) {
+    ElNotification({
+      type: 'success',
+      message: i18n.t('common.copySuccess')
+    })
+  }
 }

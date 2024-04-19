@@ -10,7 +10,6 @@ import CommonTips from '@/common/TipsIcon.vue'
 import ContainerLog from '@/pages/apps/common/container/containerLog.vue'
 import AppStatus from '@/common/apps/AppStatus.vue'
 import ResourceColumn from '@/common/dashboard/ResourceColumn.vue'
-import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
 import { timeformat, filterTableList } from '@/utils/utils.js'
 import { formatPrometheusTableData } from '@/utils/cluster/utils'
@@ -184,7 +183,7 @@ watch(() => props.refreshFlag, () => {
 .application-pods-list
   .application-pods-list-container.shadow-box
     .table-box(v-loading="processing.pods")
-      el-table(v-if="tableList.length", :data="tableList", border)
+      el-table(:data="tableList", border)
         template(
           v-for="({ prop, label, minWidth, show, tip, align }, idx) in columns",
         )
@@ -229,7 +228,6 @@ watch(() => props.refreshFlag, () => {
                     @refresh="refresh"
                   )
               span(v-else) {{ scope.row[prop] ?? '-' }}
-      EmptyHolder.m-4(v-else)
       PagerBar(:data="pagination", @update:data="pagination = $event")
 </template>
 

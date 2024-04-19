@@ -1,7 +1,7 @@
 <script setup>
-import { useClipboard } from '@vueuse/core'
-import { ElNotification } from 'element-plus'
 import i18n from '@/i18n'
+
+import { copyToClipboard } from '@/utils/utils'
 
 defineProps({
   appLinks: {
@@ -9,16 +9,6 @@ defineProps({
     default: () => ([])
   }
 })
-
-const copyContent = (link) => {
-  if (link) {
-    useClipboard(link)
-    ElNotification({
-      type: 'success',
-      message: i18n.t('common.copySuccess')
-    })
-  }
-}
 </script>
 
 <template lang="pug">
@@ -30,7 +20,7 @@ span.application-homepage-button(v-if="appLinks.length")
         el-dropdown-item(v-for="(item, idx) in appLinks" :key="idx")
           .flex.justify-between(v-if="item.inner")
             span {{ item.link }}(Inner)
-            el-button(type="primary", link, @click="copyContent(item.link)")
+            el-button(type="primary", link, @click="copyToClipboard({ content: item.link })")
               i.remix.ri-file-copy-line
           a(v-else, :href="item.link", target="_blank")
             span {{ item.link }}

@@ -257,6 +257,7 @@ watch(() => 'form.bdc', (val) => {
           )
           EmptyHolder(
             v-else,
+            :full="false",
             :height="300"
           )
     template(#footer)

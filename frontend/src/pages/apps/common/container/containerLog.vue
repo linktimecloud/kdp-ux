@@ -50,15 +50,18 @@ const toLogviewer = computed(() => {
 const title = computed(() => {
   return props.defaultContainer ? `${i18n.t('applications.container')}: ${props.defaultContainer}` : `Pod: ${props.podData.pod}`
 })
-const coloredLogData = computed(() => {
+const formatLogs = computed(() => {
   let logs = ''
   try {
     logs = atob(containerLogs.value)
   } catch (e) {
     console.log(e)
   }
+  return logs
+})
+const coloredLogData = computed(() => {
   const ansiUp = new AnsiUp()
-  return ansiUp.ansi_to_html(logs)
+  return ansiUp.ansi_to_html(formatLogs.value)
 })
 const bdc = computed(() => {
   return get(route, 'query.bdc') || get(props.podData, 'bdc')
@@ -108,7 +111,7 @@ const backBottom = () => {
 
 const downloadfile = () => {
   const fileName = `${props.podData?.pod}-${containerName.value}-${timeformat()}.log`
-  const blob = new Blob([containerLogs.value])
+  const blob = new Blob([formatLogs.value])
   saveAs(blob, fileName)
 }
 const refresh = () => {
