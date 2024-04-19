@@ -10,34 +10,32 @@ on:
 jobs:
   lint-web:
     runs-on: ubuntu-latest
-    container: node:16
+    container: node:18
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install and lint
         working-directory: web
         run: |
-          npm install || exit 1
-          npm run lint || exit 1
-          echo "Lint finished!"
+          yarn install
+          yarn lint
 
   lint-test-frontend:
     runs-on: ubuntu-latest
-    container: node:16
+    container: node:18
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install and test
         working-directory: frontend
         env:
           NODE_ENV: test
         run: |
-          yarn --immutable || exit 1
-          npm run lint || exit 1
-          npm run lint:scss || exit 1
-          npm run unit:coverage || exit 1
+          yarn install
+          yarn lint
+          yarn run unit:coverage
           echo "Test finished!"

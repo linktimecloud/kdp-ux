@@ -8,8 +8,8 @@
 ### 准备
 
 - [nvm](https://github.com/nvm-sh/nvm)
-  - 确保安装在`.nvmrc`中指定的node版本，例如 "nvm install --lts=gallium"
-  - 运行 `nvm use` 来使用在 `.nvmrc`中指定的node版本，例如 "nvm use --lts=gallium"
+  - 确保安装在`.nvmrc`中指定的node版本，例如 "nvm install --lts=Hydrogen"
+  - 运行 `nvm use` 来使用在 `.nvmrc`中指定的node版本，例如 "nvm use --lts=Hydrogen"
   - 或者通过运行 `nvm alias default <version>`将node版本设置为默认
 - [yarn](https://yarnpkg.com/)
   - 通过运行 `npm install -g yarn` 来安装yarn
@@ -17,7 +17,7 @@
 ### 安装
 
 - 运行 `cd ./frontend && yarn install` 在 `frontend` 目录中安装依赖项
-- 运行 `cd ./web && npm install` 在 `web` 目录中安装依赖项
+- 运行 `cd ./web && yarn install` 在 `web` 目录中安装依赖项
 
 ### Node服务开发
 
@@ -52,7 +52,10 @@
 
 ### 前端
 
-- [Vue](https://v2.cn.vuejs.org/)
+- [Vite](https://vitejs.dev/)
+- [Vue](https://vuejs.org/)
 - [Vue Router](https://router.vuejs.org/)
-- [Element UI](https://element.eleme.cn/)
+- [Pinia](https://pinia.esm.dev/)
+- [Tailwind](https://tailwindcss.com/)
+- [Element Plus](https://element-plus.org/)
 - [Others](./frontend/package.json)

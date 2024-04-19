@@ -8,8 +8,8 @@ English | [简体中文](./README_CN.md)
 ### Preparation
 
 - [nvm](https://github.com/nvm-sh/nvm)
-  - Ensure the node version specified in `.nvmrc` is installed, for example "nvm install --lts=gallium"
-  - Run `nvm use` to use the node version specified in `.nvmrc`, for example "nvm use --lts=gallium"
+  - Ensure the node version specified in `.nvmrc` is installed, for example "nvm install --lts=Hydrogen"
+  - Run `nvm use` to use the node version specified in `.nvmrc`, for example "nvm use --lts=Hydrogen"
   - Or set the node version as default by running `nvm alias default <version>`
 - [yarn](https://yarnpkg.com/)
   - Install yarn by running `npm install -g yarn`
@@ -17,7 +17,7 @@ English | [简体中文](./README_CN.md)
 ### Installation
 
 - Run `cd ./frontend && yarn install` to install dependencies in `frontend` directory
-- Run `cd ./web && npm install` to install dependencies in `web` directory
+- Run `cd ./web && yarn install` to install dependencies in `web` directory
 
 ### Node Service Development
 
@@ -52,7 +52,10 @@ English | [简体中文](./README_CN.md)
 
 ### Front-end
 
-- [Vue](https://v2.vuejs.org/)
+- [Vite](https://vitejs.dev/)
+- [Vue](https://vuejs.org/)
 - [Vue Router](https://router.vuejs.org/)
-- [Element UI](https://element.eleme.io/)
+- [Pinia](https://pinia.esm.dev/)
+- [Tailwind](https://tailwindcss.com/)
+- [Element Plus](https://element-plus.org/)
 - [Others](./frontend/package.json)

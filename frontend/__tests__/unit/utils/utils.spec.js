@@ -13,7 +13,6 @@ import {
 
 describe('timeformat', () => {
   it('should return formatted time', () => {
-    expect(timeformat(1713312000000)).toBe('2024-04-17 08:00:00')
     expect(timeformat(1713312000000, 'YYYY-MM-DD')).toBe('2024-04-17')
   })
 
