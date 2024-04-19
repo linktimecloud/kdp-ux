@@ -1,10 +1,8 @@
 const { isEmpty, toNumber, isUndefined, omitBy } = require('lodash')
 const config = require('config')
-const fetch = require('node-fetch')
-const { t } = require(global.I18NPATH)
+const axios = require('axios')
 
 const { PROMETHEUS_SERVICE, LOKI_SERVICE } = config.get('METRICS_SERVICE')
-const { ApiErrorNames, ApiError } = require(global.UTILPATH + 'error')
 
 /**
  * api doc
@@ -117,34 +115,8 @@ const requestMetricService = async (datasourceType, { path, params }) => {
     url: fetchUrl
   }))
 
-  const resText = await fetch(fetchUrl)
-    .then(rsp => rsp.text())
-
-  const firstStr = (resText || '')[0]
-
-  if (firstStr !== '{') {
-    throw new ApiError(ApiErrorNames.LOKI_DATA_ERROR, {
-      app: 'LOKI',
-      description: t('error.lokiDataError', { resText }),
-      exception: `${resText} when request to ${fetchUrl}`
-    })
-  }
-
-  let rspJson
-
-  try {
-    rspJson = JSON.parse(resText)
-  } catch (err) {
-    // invalid json response
-    // Unexpected token o in JSON at position 1
-    console.log('query range error is:', err)
-
-    throw new ApiError(ApiErrorNames.JSON_PARSE_ERROR, {
-      exception: err.toString()
-    })
-  }
-
-  const { status, data = {} } = rspJson
+  const rawResponse = await axios({ url: fetchUrl, timeout: 30000 })
+  const { status, data = {} } = rawResponse?.data || {}
 
   // query 和 query_range 接口需要处理返回数据
   const isQuery = params.query

@@ -9,7 +9,10 @@ const props = defineProps({
     type: Array,
     default: () => ([])
   },
-  defaultShortcutLable: String,
+  defaultShortcutLable: {
+    type: String,
+    default: ''
+  },
   shortcutList: {
     type: Array,
     default: () => TIME_DURATION_SHORTCUTS()
@@ -18,11 +21,15 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  refreshFlag: Number
+  refreshFlag: {
+    type: Number,
+    default: 0
+  }
 })
 
 const dateRange = ref([])
 const curShortcutLable = ref('')
+const tempLabel = ref('')
 
 const emits = defineEmits(['update:modelValue'])
 
@@ -35,8 +42,8 @@ const pickerOptions = computed(() => {
         const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - item.duration)
-        curShortcutLable.value = item.label
-        return [start, end, item.label]
+        tempLabel.value = item.label
+        return [start, end]
       }
     })),
     disabledDate (date) {
@@ -48,7 +55,11 @@ const pickerOptions = computed(() => {
 // Methods
 const handleChange = (data) => {
   const [start, end] = data || []
+
+  curShortcutLable.value = tempLabel.value
   emits('update:modelValue', [start.getTime(), end.getTime()])
+
+  tempLabel.value = ''
 }
 
 // Watches
