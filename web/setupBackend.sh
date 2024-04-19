@@ -6,11 +6,11 @@ export PORT=3300
 COMMON_HOST=localhost
 
 # Mysql env
-export DBUSERNAME=kdpAdmin
-export DBPASSWORD=kdpAdmin123*
+export DBUSERNAME=root
+export DBPASSWORD=123456
 export MYSQL_DATABASE=kdp_ux_db
 export MYSQL_HOST=localhost
-export MYSQL_PORT=13306
+export MYSQL_PORT=3306
 
 # Service env
 export PROMETHEUS_SERVICE=http://localhost:9091
