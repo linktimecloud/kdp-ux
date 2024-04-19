@@ -4,12 +4,14 @@ import i18n from '@/i18n'
 
 import SearchBox from '@/common/SearchBox.vue'
 
-const props = defineProps({
-  data: {
+defineProps({
+  modelValue: {
     type: Object,
     default: () => ({})
   }
 })
+
+const emits = defineEmits(['update:modelValue', 'submit', 'reset'])
 
 const handleOptions = computed(() => {
   const defaultHandleKeys = ['install', 'update', 'restart', 'stop', 'delete', 'uninstall']
@@ -54,12 +56,13 @@ const properties = computed(() => {
 <template lang="pug">
 .filter-wrapper.clearfix.bg-transparent
   SearchBox.resource-search-box(
-    :data="props.data",
+    :model-value="modelValue",
     :properties="properties",
-    :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
-    @handle-change="data => $emit('handleChange', data)",
-    @search="$emit('submit')",
-    @reset="$emit('reset')"
+    :action-btns="[{ value: 'reset', type: 'default' }]",
+    :max-row-num="3",
+    @update:model-value="data => emits('update:modelValue', data)",
+    @search="emits('submit')",
+    @reset="emits('reset')"
   )
     template(#searchAfter)
       slot

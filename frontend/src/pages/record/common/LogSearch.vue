@@ -1,202 +1,165 @@
-<script>
+<script setup>
 import { get } from 'lodash'
-
+import i18n from '@/i18n'
 import { getAppListAPI, getAppPodsAPI, getAppPodDetailAPI } from '@/api/applications'
-
 import { DEFAULT_OPTIONS } from '@/constant/application'
 import SearchBox from '@/common/SearchBox.vue'
-
+import { ref, watch, computed } from 'vue'
 import { useBdcStore } from '@/stores/modules/bdc'
+
 const bdcStore = useBdcStore()
 
-export default {
-  name: 'RecordLogSearch',
-  components: {
-    SearchBox
+const props = defineProps({
+  filter: {
+    type: Object,
+    required: true
   },
-  props: {
-    filter: {
-      required: true,
-      type: Object
-    },
-    hiddenItems: {
-      type: Array,
-      default: () => ([])
-    }
-  },
-  data () {
-    return {
-      propertiesOptions: {
-        apps: [],
-        pods: [],
-        containers: []
-      },
-      processing: {}
-    }
-  },
-  computed: {
-    currentBdcName () {
-      return bdcStore.currentBdcName
-    },
-    currentBdcNS () {
-      return bdcStore.currentBdcNS
-    },
-    properties () {
-      const { propertiesOptions: { apps, pods, containers }, hiddenItems } = this
-      const ret = [
-        {
-          name: 'keyword',
-          label: '',
-          type: 'input',
-          suffixIcon: 'ri-search-line',
-          placeholder: `${this.$t('common.input')}${this.$t('dashboard.logContenKeywords')}`
-        },
-        {
-          name: 'app',
-          label: this.$t('applications.instance'),
-          type: 'select',
-          clearable: false,
-          options: apps
-        },
-        {
-          name: 'pod',
-          label: this.$t('applications.appPod'),
-          type: 'select',
-          options: DEFAULT_OPTIONS().concat(pods),
-          clearable: false
-        },
-        {
-          name: 'container',
-          label: this.$t('applications.container'),
-          type: 'select',
-          options: DEFAULT_OPTIONS().concat(containers),
-          clearable: false
-        }
-      ]
-
-      return ret.filter(item => !hiddenItems.includes(item.name))
-    }
-  },
-  watch: {
-    currentBdcNS: {
-      handler (val) {
-        if (val) {
-          this.$emit('update:filter', { ...this.filter, namespace: val })
-          this.initData()
-        }
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    getApps () {
-      const self = this
-      const { currentBdcName } = self
-
-      if (!currentBdcName) return
-
-      return getAppListAPI({
-        bdcName: currentBdcName
-      }).then(rsp => {
-        const list = (rsp?.data || []).map(item => {
-          return {
-            name: item.name,
-            value: item.name
-          }
-        })
-        self.propertiesOptions.apps = list
-        if (!self.filter.app) {
-          self.$emit('update:filter', { ...self.filter, app: list[0]?.value })
-        }
-      })
-    },
-    getPods (appName) {
-      const self = this
-      self.propertiesOptions.pods = []
-
-      if (!appName) return
-
-      return getAppPodsAPI({
-        appName
-      }).then(rsp => {
-        const pods = (rsp?.data || []).map(item => {
-          return {
-            name: get(item, 'metadata.name'),
-            value: get(item, 'metadata.name')
-          }
-        })
-
-        self.propertiesOptions.pods = pods
-        let data = {}
-        data.podNames = pods.map(item => item.value).join('|')
-        if (pods.every(item => item.value !== self.filter.pod)) {
-          data.pod = '.+'
-        }
-        self.$emit('update:filter', { ...self.filter, ...data })
-      })
-    },
-    getContainers (podName) {
-      const self = this
-      const { filter: { app: appName } } = this
-      self.propertiesOptions.containers = []
-      if (!(appName && podName && podName !== '.+')) return
-
-      return getAppPodDetailAPI({
-        appName,
-        podName
-      }).then(rsp => {
-        const containers = get(rsp, 'data.containers', []).map(item => {
-          return {
-            name: item.name,
-            value: item.name
-          }
-        })
-        self.propertiesOptions.containers = containers
-        if (containers.every(item => item.value !== self.filter.container)) {
-          self.$emit('update:filter', { ...self.filter, container: '.+' })
-        }
-      })
-    },
-    reset () {
-      const defaultApp = this.propertiesOptions.apps[0]?.value
-      this.$emit('reset', {
-        namespace: this.currentBdcNS,
-        app: defaultApp,
-        podNames: this.filter.podNames
-      })
-      this.propertiesOptions.containers = []
-    },
-    async initData () {
-      await this.getApps()
-      await this.getPods(this.filter.app)
-      await this.getContainers()
-    },
-    handleChange (data) {
-      let ret = { ...this.filter }
-      ret[data.propName] = data.newValue
-      if (data.propName === 'app') {
-        ret.pod = '.+'
-        ret.podNames = ''
-        this.getPods()
-      }
-      if (data.propName === 'pod') {
-        ret.container = '.+'
-        this.getContainers(data.newValue)
-      }
-      this.$emit('update:filter', ret)
-    }
+  hiddenItems: {
+    type: Array,
+    default: () => ([])
   }
+})
+
+const emits = defineEmits(['change', 'reset'])
+
+const propertiesOptions = ref({ apps: [], pods: [], containers: [] })
+
+const currentBdcName = computed(() => bdcStore.currentBdcName)
+const currentBdcNS = computed(() => bdcStore.currentBdcNS)
+
+const properties = computed(() => {
+  const { apps, pods, containers } = propertiesOptions.value
+  const ret = [
+    { name: 'keyword', label: '', type: 'input', suffixIcon: 'ri-search-line', placeholder: `${i18n.t('common.input')}${i18n.t('dashboard.logContenKeywords')}` },
+    { name: 'app', label: i18n.t('applications.instance'), type: 'select', clearable: false, options: apps },
+    { name: 'pod', label: i18n.t('applications.appPod'), type: 'select', options: DEFAULT_OPTIONS().concat(pods), clearable: false },
+    { name: 'container', label: i18n.t('applications.container'), type: 'select', options: DEFAULT_OPTIONS().concat(containers), clearable: false }
+  ]
+
+  return ret.filter(item => !props.hiddenItems.includes(item.name))
+})
+
+const handleChange = (data) => {
+  emits('change', { ...props.filter, ...data })
 }
+
+const getApps = () => {
+  if (!currentBdcName.value) return
+
+  return getAppListAPI({
+    bdcName: currentBdcName.value
+  }).then(rsp => {
+    const list = (rsp?.data || []).map(item => {
+      return {
+        name: item.name,
+        value: item.name
+      }
+    })
+    propertiesOptions.value.apps = list
+    if (!props.filter.app) {
+      handleChange({ app: list[0]?.value })
+    }
+  })
+}
+
+const getPods = () => {
+  propertiesOptions.value.pods = []
+  const appName = props.filter.app
+
+  if (!appName) return
+
+  return getAppPodsAPI({
+    appName
+  }).then(rsp => {
+    const pods = (rsp?.data || []).map(item => {
+      return {
+        name: get(item, 'metadata.name'),
+        value: get(item, 'metadata.name')
+      }
+    })
+
+    propertiesOptions.value.pods = pods
+
+    const changeData = { podNames: pods.map(item => item.value).join('|') }
+    if (pods.every(item => item.value !== props.filter.pod)) {
+      changeData.pod = '.+'
+    }
+    handleChange({ ...changeData })
+  })
+}
+
+const getContainers = () => {
+  const { filter: { app: appName, pod: podName } } = props
+  propertiesOptions.value.containers = []
+
+  if (!(appName && podName && podName !== '.+')) return
+
+  return getAppPodDetailAPI({
+    appName,
+    podName
+  }).then(rsp => {
+    const containers = get(rsp, 'data.containers', []).map(item => {
+      return {
+        name: item.name,
+        value: item.name
+      }
+    })
+    propertiesOptions.value.containers = containers
+    if (containers.every(item => item.value !== props.filter.container)) {
+      handleChange({ container: '.+' })
+    }
+  })
+}
+
+const changeApp = () => {
+  handleChange({ pod: '.+', podNames: '' })
+  getPods()
+}
+
+const changePod = () => {
+  handleChange({ container: '.+' })
+  getContainers()
+}
+
+const reset = () => {
+  const defaultApp = propertiesOptions.value.apps[0]?.value
+  emits('reset', {
+    namespace: currentBdcNS.value,
+    app: defaultApp,
+    podNames: props.filter.podNames
+  })
+  if (props.filter.app !== defaultApp) {
+    handleChange({ app: defaultApp })
+    changeApp()
+  }
+  propertiesOptions.value.containers = []
+}
+
+const initData = () => {
+  getApps(true)
+  getPods(true)
+  getContainers(true)
+}
+
+watch(() => currentBdcNS.value, (val) => {
+  if (val) {
+    handleChange({ namespace: val })
+    initData()
+  }
+}, { immediate: true })
+
 </script>
 
 <template lang="pug">
 .record-log-search
   SearchBox(
-    :data="filter",
+    :model-value="filter",
     :properties="properties",
-    :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
+    :action-btns="[{ value: 'reset', type: 'default' }]",
     @reset="reset",
-    @handle-change="data => handleChange(data)"
+    @update:model-value="$emit('change', $event)"
+    @change-app="changeApp",
+    @change-pod="changePod"
   )
     template(#searchAfter)
       slot

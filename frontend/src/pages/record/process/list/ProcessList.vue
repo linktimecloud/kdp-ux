@@ -120,15 +120,13 @@ onMounted(() => {
     el-button(@click="fetchDebounce")
       i.mr-0.remix.ri-refresh-line
   FilterBox(
-    :data="filter",
+    v-model="filter",
     @submit="fetchDebounce",
-    @reset="resetFilter",
-    @handle-change="data => filter[data.propName] = data.newValue"
+    @reset="resetFilter"
   )
     DateTimePickeShort(
-      :model-value="filter.timeRange",
-      :shortcut-list="shortcutList",
-      @update:modelValue="value => filter.timeRange = value"
+      v-model="filter.timeRange",
+      :shortcut-list="shortcutList"
     )
   el-table.border-none(v-loading="processing", :data="list", border)
     el-table-column(

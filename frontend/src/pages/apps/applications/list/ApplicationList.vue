@@ -188,11 +188,10 @@ watch(() => dataSort, () => {
   .application-list-container.shadow-box
     template(v-if="!has(options, 'hiddenSearch')")
       SearchBox.border-0(
-        :data="filter",
+        v-model="filter",
         :properties="properties",
-        :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
-        theme="light",
-        @handle-change="data => filter[data.propName] = data.newValue",
+        :action-btns="[{ value: 'reset', type: 'default' }]",
+        :max-row-num="5",
         @reset="reset"
       )
     .table-box(v-loading="processing")
