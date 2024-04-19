@@ -2,10 +2,9 @@ FROM node:18-alpine as build
 
 WORKDIR /app
 
-COPY ./frontend/package.json ./frontend/yarn.lock ./
-COPY .yarnrc .
+COPY ./frontend/package.json ./frontend/yarn.lock .yarnrc ./
 
-RUN yarn
+RUN yarn && yarn cache clean --force
 
 ENV NODE_ENV=production
 COPY ./frontend .
@@ -17,10 +16,9 @@ FROM node:18-alpine as release
 
 WORKDIR /app
 
-COPY ./web/package.json ./web/yarn.lock ./
-COPY .yarnrc .
+COPY ./web/package.json ./web/yarn.lock .yarnrc ./
 
-RUN yarn
+RUN yarn && yarn cache clean --force
 
 ENV NODE_ENV=production
 ENV ENV=production
