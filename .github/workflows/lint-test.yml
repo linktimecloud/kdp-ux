@@ -10,7 +10,9 @@ on:
 jobs:
   lint-web:
     runs-on: ubuntu-latest
-    container: node:18
+    strategy:
+      matrix:
+        node-version: [18.x]
 
     steps:
       - name: Checkout repository
@@ -24,7 +26,9 @@ jobs:
 
   lint-test-frontend:
     runs-on: ubuntu-latest
-    container: node:18
+    strategy:
+      matrix:
+        node-version: [18.x]
 
     steps:
       - name: Checkout repository
