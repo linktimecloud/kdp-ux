@@ -21,6 +21,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['change', 'reset'])
+const logFilter = ref({ ...props.filter })
 
 const propertiesOptions = ref({ apps: [], pods: [], containers: [] })
 
@@ -39,10 +40,6 @@ const properties = computed(() => {
   return ret.filter(item => !props.hiddenItems.includes(item.name))
 })
 
-const handleChange = (data) => {
-  emits('change', { ...props.filter, ...data })
-}
-
 const getApps = () => {
   if (!currentBdcName.value) return
 
@@ -56,15 +53,15 @@ const getApps = () => {
       }
     })
     propertiesOptions.value.apps = list
-    if (!props.filter.app) {
-      handleChange({ app: list[0]?.value })
+    if (!logFilter.value.app) {
+      logFilter.value.app = list[0]?.value
     }
   })
 }
 
 const getPods = () => {
   propertiesOptions.value.pods = []
-  const appName = props.filter.app
+  const appName = logFilter.value.app
 
   if (!appName) return
 
@@ -80,16 +77,15 @@ const getPods = () => {
 
     propertiesOptions.value.pods = pods
 
-    const changeData = { podNames: pods.map(item => item.value).join('|') }
-    if (pods.every(item => item.value !== props.filter.pod)) {
-      changeData.pod = '.+'
+    logFilter.value.podNames = pods.map(item => item.value).join('|')
+    if (pods.every(item => item.value !== logFilter.value.pod)) {
+      logFilter.value.pod = '.+'
     }
-    handleChange({ ...changeData })
   })
 }
 
 const getContainers = () => {
-  const { filter: { app: appName, pod: podName } } = props
+  const { app: appName, pod: podName } = logFilter.value
   propertiesOptions.value.containers = []
 
   if (!(appName && podName && podName !== '.+')) return
@@ -105,19 +101,20 @@ const getContainers = () => {
       }
     })
     propertiesOptions.value.containers = containers
-    if (containers.every(item => item.value !== props.filter.container)) {
-      handleChange({ container: '.+' })
+    if (containers.every(item => item.value !== logFilter.value.container)) {
+      logFilter.value.container = '.+'
     }
   })
 }
 
 const changeApp = () => {
-  handleChange({ pod: '.+', podNames: '' })
+  logFilter.value.pod = '.+'
+  logFilter.value.podNames = ''
   getPods()
 }
 
 const changePod = () => {
-  handleChange({ container: '.+' })
+  logFilter.value.container = '.+'
   getContainers()
 }
 
@@ -126,38 +123,45 @@ const reset = () => {
   emits('reset', {
     namespace: currentBdcNS.value,
     app: defaultApp,
-    podNames: props.filter.podNames
+    podNames: logFilter.value.podNames
   })
-  if (props.filter.app !== defaultApp) {
-    handleChange({ app: defaultApp })
+  if (logFilter.value.app !== defaultApp) {
+    logFilter.value.app = defaultApp
     changeApp()
   }
   propertiesOptions.value.containers = []
 }
 
-const initData = () => {
-  getApps(true)
-  getPods(true)
-  getContainers(true)
+const initData = async () => {
+  await getApps()
+  await getPods()
+  await getContainers()
 }
 
 watch(() => currentBdcNS.value, (val) => {
   if (val) {
-    handleChange({ namespace: val })
+    logFilter.value.namespace = val
     initData()
   }
 }, { immediate: true })
+
+watch(() => logFilter.value, () => {
+  emits('change', logFilter.value)
+}, { deep: true })
+
+watch(() => props.filter, (val) => {
+  logFilter.value = val
+})
 
 </script>
 
 <template lang="pug">
 .record-log-search
   SearchBox(
-    :model-value="filter",
+    v-model="logFilter",
     :properties="properties",
     :action-btns="[{ value: 'reset', type: 'default' }]",
     @reset="reset",
-    @update:model-value="$emit('change', $event)"
     @change-app="changeApp",
     @change-pod="changePod"
   )
