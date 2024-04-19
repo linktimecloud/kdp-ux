@@ -8,7 +8,7 @@
       Details:
 
 ### Related Issue
-- issue [# ]
+- [issue #]
 
 
 ### Detailed Description
