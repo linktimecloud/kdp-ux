@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { isEmpty, get } from 'lodash'
-import i18n from '@/i18n'
 import json2yaml from 'js-yaml'
 
 import { copyToClipboard } from '@/utils/utils'

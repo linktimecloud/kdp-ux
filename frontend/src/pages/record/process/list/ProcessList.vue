@@ -120,15 +120,13 @@ onMounted(() => {
     el-button(@click="fetchDebounce")
       i.mr-0.remix.ri-refresh-line
   FilterBox(
-    :data="filter",
+    v-model="filter",
     @submit="fetchDebounce",
-    @reset="resetFilter",
-    @handle-change="data => filter[data.propName] = data.newValue"
+    @reset="resetFilter"
   )
     DateTimePickeShort(
-      :model-value="filter.timeRange",
-      :shortcut-list="shortcutList",
-      @update:modelValue="value => filter.timeRange = value"
+      v-model="filter.timeRange",
+      :shortcut-list="shortcutList"
     )
   el-table.border-none(v-loading="processing", :data="list", border)
     el-table-column(
@@ -148,9 +146,8 @@ onMounted(() => {
         span(v-else-if="prop === 'createdAt'") {{ timeformat(scope.row.createdAt) }}
         span(v-else) {{ scope.row[prop] }}
   PagerBar(
-    :data="pagination",
+    v-model="pagination"
     :is-mounted-fetch="false",
-    @update:data="pagination = $event",
     @refresh="getProcessList"
   )
 </template>

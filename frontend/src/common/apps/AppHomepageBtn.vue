@@ -1,6 +1,4 @@
 <script setup>
-import i18n from '@/i18n'
-
 import { copyToClipboard } from '@/utils/utils'
 
 defineProps({

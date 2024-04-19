@@ -174,10 +174,9 @@ watch(() => props.id, (val) => {
     span(v-if="titleOpt.text") {{ titleOpt.text }}, {{ i18n.t(`common.${STATUS_MAPPER()[status]}`) }}
     span(v-else) {{ i18n.t('common.loading') }}
   SearchBox.mb-2.p-0.border-0.resource-search-box(
-    :data="filter",
+    v-model="filter",
     :properties="properties",
-    :action-btns="[{ value: 'reset', label: i18n.t('common.reset'), type: 'default' }]",
-    @handle-change="data => filter[data.propName] = data.newValue",
+    :action-btns="[{ value: 'reset', type: 'default' }]",
     @reset="resetFilter"
   )
   ProcessList(:data="list", :keyword="filter.keyword")

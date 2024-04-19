@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import i18n from '@/i18n'
 import { isEmpty, cloneDeep } from 'lodash'
 
 import { copyToClipboard } from '@/utils/utils'

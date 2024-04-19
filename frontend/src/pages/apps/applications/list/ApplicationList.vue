@@ -188,11 +188,9 @@ watch(() => dataSort, () => {
   .application-list-container.shadow-box
     template(v-if="!has(options, 'hiddenSearch')")
       SearchBox.border-0(
-        :data="filter",
+        v-model="filter",
         :properties="properties",
-        :action-btns="[{ value: 'reset', label: $t('common.reset'), type: 'default' }]",
-        theme="light",
-        @handle-change="data => filter[data.propName] = data.newValue",
+        :action-btns="[{ value: 'reset', type: 'default' }]",
         @reset="reset"
       )
     .table-box(v-loading="processing")
@@ -268,5 +266,5 @@ watch(() => dataSort, () => {
                               i.remix.ri-uninstall-line.mr-1
                               span {{ $t('common.uninstall') }}
               span(v-else) {{ scope.row[prop] ?? '-' }}
-      PagerBar(:data="pagination", @update:data="pagination = $event")
+      PagerBar(v-model="pagination")
 </template>

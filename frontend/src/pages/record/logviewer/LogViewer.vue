@@ -219,15 +219,14 @@ export default {
   LogSearchBox(
     v-if="isReadyFilter",
     :filter="filter",
-    @update:filter="filter = $event"
+    @change="val => filter = val"
     @reset="resetFilter"
   )
     DateTimePickeShort(
-      :model-value="timeQuery.range",
+      v-model="timeQuery.range",
       :default-shortcut-lable="defaultShortcutLable",
       :shortcut-list="shortcutList",
-      :hidden-clear-btn="true",
-      @update:modelValue="val => timeQuery.range = val"
+      :hidden-clear-btn="true"
     )
   .dashboard-wrapper(v-loading="processing")
     Logs.logs-container(
