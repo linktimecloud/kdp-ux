@@ -1,5 +1,5 @@
 const { omit } = require('lodash')
-const fetch = require('node-fetch')
+const axios = require('axios')
 const config = require('config')
 
 const { findProxyService, getAuthorizationToken } = require('./proxyTable')
@@ -19,12 +19,9 @@ module.exports = async (ctx, next) => {
   const {
     name,
     headers: proxyHeaders = {},
-    // 请求服务地址
     target,
-    // 请求路径重写
     reqPathRewriter = str => str,
-    // 响应返回数据转换
-    resBodyAdaptor = rsp => ({ data: rsp.data, error: rsp.error, status: rsp.status }),
+    reqBodyRewriter = data => data,
     successStatusCode = global.WEBUI_SUCCESS_CODE
   } = proxyService
 
@@ -55,20 +52,21 @@ module.exports = async (ctx, next) => {
   }
 
   try {
-    rawResponse = await fetch(url, {
+    rawResponse = await axios({
+      url,
       method,
-      body: ['GET', 'HEAD'].includes(method.toUpperCase()) ? undefined : ctx.req,
-      timeout: 300000,
+      data: reqBodyRewriter(ctx, ctx.request.body),
+      timeout: 30000,
       headers
     })
 
     if (rawResponse.headers.get('content-type').includes('text/html')) {
       ctx.set('Content-Type', rawResponse.headers.get('content-type'))
-      ctx.body = rawResponse.body
+      ctx.body = rawResponse.data
       return
     }
 
-    const data = await rawResponse.json()
+    const { data } = rawResponse
 
     if (!data) {
       throw new ApiError(ApiErrorNames.API_INTERNAL_ERROR, {
@@ -91,10 +89,8 @@ module.exports = async (ctx, next) => {
       })
     }
 
-    const message = isSuccess ? 'Success' : (data.message || 'Service Error')
     ctx.body = {
-      ...resBodyAdaptor(data),
-      message,
+      ...data,
       status
     }
   } catch (error) {

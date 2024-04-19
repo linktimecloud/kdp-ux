@@ -1,7 +1,7 @@
 const { omit } = require('lodash')
 
 const router = require('koa-router')()
-const fetch = require('node-fetch')
+const axios = require('axios')
 
 const path = require('path')
 
@@ -68,20 +68,22 @@ router.all('/(.*)', async ctx => {
 
     const form = await formatBody(ctx)
 
-    const raw = await fetch(getReqPath(ctx), {
+    const rawResponse = await axios({
+      url: getReqPath(ctx),
       method,
-      headers,
-      body: method === 'GET' ? null : JSON.stringify(form)
+      data: form,
+      timeout: 30000,
+      headers
     })
+    const { data } = rawResponse
 
-    try {
-      const rsp = await raw.json()
-      if (rsp.status !== 0) {
-        ctx.state.raw = { ...rsp, status: 260000 }
-      }
-      ctx.body = rsp.data || {}
-    } catch (e) {
-      console.log('Parse raw json error', e)
+    const status = data.status === 0
+      ? global.WEBUI_SUCCESS_CODE
+      : '260000'
+
+    ctx.body = {
+      ...data,
+      status
     }
   } catch (e) {
     console.log('Fetch BpaasCoreService error', e)

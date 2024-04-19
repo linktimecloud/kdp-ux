@@ -223,6 +223,9 @@
 }
 
 .el-message-box {
+  .el-message-box__message {
+    max-width: 100%;
+  }
   &.process-message-box {
     width: 60%;
     max-width: 1000px;
@@ -285,5 +288,11 @@
       width: 100%;
       --el-input-width: 100%;
     }
+  }
+}
+
+.el-notification {
+  .el-notification__group {
+    max-width: calc(100% - 40px);
   }
 }

@@ -22,4 +22,4 @@ export CATALOG_MANAGER_DOMAIN=http://localhost:8888
 # CRON SET
 export NIGHTLY_CRON_SET="0 3 * * *"
 
-cd web && npm run dev
+yarn && yarn run dev

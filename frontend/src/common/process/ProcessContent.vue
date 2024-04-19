@@ -124,12 +124,12 @@ const getList = async () => {
         stop()
         break
       case 0:
-        titleOpt.value.icon = 'ri-refresh-line'
-        titleOpt.value.class = 'text-info'
+        titleOpt.value.icon = 'ri-loader-2-line spin'
+        titleOpt.value.class = 'text-primary'
         break
       default:
-        titleOpt.value.icon = 'ri-refresh-line'
-        titleOpt.value.class = 'text-info'
+        titleOpt.value.icon = 'ri-loader-2-line spin'
+        titleOpt.value.class = 'text-primary'
         break
     }
   }).catch(() => {

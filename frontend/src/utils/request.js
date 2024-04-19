@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { toString } from 'lodash'
 import { ElLoading, ElMessageBox } from 'element-plus'
 import { h } from 'vue'
 import i18n from '@/i18n'
@@ -15,14 +16,14 @@ const handleServiceError = (responseData, options) => {
   const { error, message } = responseData
 
   if (options.toast) {
-    const { app, info = {}, type = 'warning' } = error
+    const { app, info = {}, type = 'warning' } = error || {}
 
     const errorMsgs = []
     if (app) {
       errorMsgs.push(`${i18n.t('error.app')}: ${app}`)
     }
-    if (info?.solution) {
-      errorMsgs.push(`${i18n.t('error.solution')}: ${info.solution}`)
+    if (info?.description) {
+      errorMsgs.push(`${i18n.t('error.description')}: ${info.description}`)
     }
 
     const cb = () => {
@@ -36,7 +37,7 @@ const handleServiceError = (responseData, options) => {
       }).then(() => {}).catch(() => {})
     }
     const isValidType = ['success', 'warning', 'error'].includes(type)
-    const title = info?.description || message
+    const title = info?.solution || info?.description || message
     toast.error(
       title,
       errorMsgs,
@@ -76,7 +77,7 @@ instance.interceptors.response.use(
   (response) => {
     if (loadingInstance) loadingInstance.close()
 
-    const status = response.data?.status.toString()
+    const status = toString(response.data?.status)
 
     if (status === '100000') {
       return response.data

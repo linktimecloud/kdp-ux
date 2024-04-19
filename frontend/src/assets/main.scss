@@ -67,6 +67,10 @@ plaintext {
   color: $font_gray;
 }
 
+.text-high {
+  color: $font_high;
+}
+
 .text-primary {
   color: $primary_color;
 }
@@ -78,10 +82,6 @@ plaintext {
       width: 100%;
     }
   }
-}
-
-.text-high {
-  color: $font_high;
 }
 
 .after-line {
@@ -125,4 +125,25 @@ plaintext {
       color: $font_gray !important;
     }
   }
+}
+
+.empty-holder-text {
+  font-size: 18px;
+  color: #8c8c8c;
+  text-align: center;
+  width: 100%;
+  img {
+    width: 200px;
+    margin: auto;
+  }
+}
+
+@keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+.spin {
+  display: inline-flex;
+  animation: spin 3s linear infinite;
+  -webkit-animation: spin 3s linear infinite;
 }

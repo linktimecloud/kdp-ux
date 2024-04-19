@@ -50,7 +50,7 @@ const showItems = computed(() => {
     :key="index"
   )
     .w-32.text-right.mr-2 {{ i18n.t(`error.${item.key}`) }} :
-    .flex-1
+    .flex-1.error-item-value
       a(
         v-if="item.key === 'manual'",
         :href="data.info.manual",
@@ -60,5 +60,13 @@ const showItems = computed(() => {
       .max-h-80.overflow-y-auto(v-else-if="item.key === 'exception'")
         code {{ data.info.exception || data.exception }}
 
-      span(v-else) {{ item.value }}
+      span.text-wrap(v-else) {{ item.value }}
 </template>
+
+<style lang="scss" scoped>
+.api-service-error-detail-popup {
+  .error-item-value {
+    max-width: calc(100% - 136px);
+  }
+}
+</style>

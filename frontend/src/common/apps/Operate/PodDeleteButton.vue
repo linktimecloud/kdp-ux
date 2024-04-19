@@ -5,7 +5,6 @@ import { ElMessageBox } from 'element-plus'
 import i18n from '@/i18n'
 
 import { processRedirect } from '@/utils/process'
-import toast from '@/utils/toast'
 import { deleteAppPodAPI } from '@/api/applications'
 
 import ReasonButton from '@/common/ReasonButton.vue'
@@ -47,13 +46,8 @@ const deletePod = () => {
     id && processRedirect({
       id,
       refresh () {
-        toast.log(
-          i18n.t('common.actionSuccess'),
-          { type: 'success' }
-        )
         emit('refresh')
-      },
-      direct: false
+      }
     })
   })
 }

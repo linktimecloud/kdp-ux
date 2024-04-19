@@ -96,7 +96,6 @@ try {
     compose([
       validate,
       timeout,
-      proxy,
       koaBody({
         formLimit: '1gb',
         multipart: true,
@@ -107,6 +106,7 @@ try {
           maxFileSize: 1000 * 1024 * 1024
         }
       }),
+      proxy,
       formatter('^/api')
     ])
   )
