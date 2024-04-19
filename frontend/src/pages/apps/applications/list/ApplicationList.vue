@@ -191,7 +191,6 @@ watch(() => dataSort, () => {
         v-model="filter",
         :properties="properties",
         :action-btns="[{ value: 'reset', type: 'default' }]",
-        :max-row-num="5",
         @reset="reset"
       )
     .table-box(v-loading="processing")
