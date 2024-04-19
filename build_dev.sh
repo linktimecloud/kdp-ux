@@ -2,7 +2,7 @@
 cd ./frontend && yarn && yarn build
 
 # Build Node App
-cd ../web && npm install
+cd ../web && yarn
 
 # copy frontend build to web public path
 rm -rf ./public

@@ -1,7 +1,6 @@
-FROM node:18-alpine as frontend-build
+FROM node:18-alpine as build
 
 WORKDIR /app
-RUN chown -R 1000:1000 /app
 
 COPY ./frontend/package.json ./frontend/yarn.lock ./
 COPY .yarnrc .
@@ -14,21 +13,20 @@ COPY ./frontend .
 RUN yarn build
 
 # Web
-FROM node:16-alpine as backend
+FROM node:18-alpine as release
 
 WORKDIR /app
 
-COPY ./web/package*.json ./
-COPY ./web/.npmrc ./
-RUN npm set progress=false \
-  && npm config set depth 0 \
-  && npm cache clean --force \
-  && npm install --only=production
+COPY ./web/package.json ./web/yarn.lock ./
+COPY .yarnrc .
+
+RUN yarn
 
 ENV NODE_ENV=production
-COPY --chown=1000:1000 ./web .
+ENV ENV=production
+COPY ./web .
 
-COPY --from=frontend-build /app/dist/ ./public
+COPY --from=build /app/dist public
 
 EXPOSE 3300
 CMD ["npm", "start"]
