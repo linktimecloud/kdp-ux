@@ -1,15 +1,9 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-
 import i18n from '@/i18n'
 import DateTimePicker from '@/common/dateTimePicker/DateTimePicker.vue'
 import CommonTips from '@/common/TipsIcon.vue'
 
 const props = defineProps({
-  maxRowNum: {
-    type: Number,
-    default: 4
-  },
   modelValue: {
     type: Object,
     required: true
@@ -32,24 +26,7 @@ const props = defineProps({
   }
 })
 
-const currentRowNum = ref(0)
-
 const emits = defineEmits(['update:modelValue'])
-
-const boxStyle = computed(() => {
-  const ret = {
-    'grid-template-columns': `repeat(${currentRowNum.value}, minmax(0, 1fr))`
-  }
-  return ret
-})
-
-const actionStyle = computed(() => {
-  const ret = {
-    'grid-column-start': currentRowNum.value,
-    'grid-column-end': currentRowNum.value + 1
-  }
-  return ret
-})
 
 const handleChange = (newValue, propName) => {
   emits('update:modelValue', {
@@ -60,18 +37,11 @@ const handleChange = (newValue, propName) => {
   emits(`change-${propName}`, newValue)
 }
 
-onMounted(() => {
-  // 检测当前屏幕的宽度，如果超出1440，则在 maxRowNum 基础上加 1
-  const screenWidth = window.innerWidth
-  currentRowNum.value = screenWidth > 1440 ? props.maxRowNum + 1 : props.maxRowNum
-})
-
 </script>
 
 <template lang="pug">
 .common-search-box
-  //- .search-container.grid(:class="boxClass")
-  .search-container.grid(:style="boxStyle")
+  .search-container.flex.flex-wrap
     slot(name="beforeLabel")
     .search-item.flex(
       v-for="(property, idx) in properties",
@@ -159,10 +129,7 @@ onMounted(() => {
           @select="property.handleSelect"
         )
     slot(name="searchAfter")
-    .action-btns(
-      ref="actionBtns",
-      :style="actionStyle"
-    )
+    .action-btns.ml-auto
       .flex.items-center.justify-end
         el-button(
           v-for="(item, idx) in actionBtns",
@@ -180,10 +147,12 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+@import '@/assets/root.scss';
+
 .common-search-box {
   padding: 14px 16px;
   background-color: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid $border_gray;
   .search-container {
     column-gap: 12px;
     row-gap: 8px;
@@ -191,8 +160,8 @@ onMounted(() => {
       align-items: start;
       .label.input-prepend {
         &.full-bg {
-          background-color: #fafafa;
-          border: solid 1px #e5e5e5;
+          background-color: $bg_gray_G1;
+          border: solid 1px $line;
           white-space: nowrap;
           padding: 0 12px;
           border-radius: 2px 0 0 2px;
@@ -205,17 +174,8 @@ onMounted(() => {
         }
       }
 
-      > .el-input,
-      > .el-select,
-      > .el-radio-group,
-      > .el-checkbox,
-      > .el-switch,
-      > .el-date-picker,
-      > .el-autocomplete {
-        flex: 1;
-      }
-
-      .el-input__wrapper {
+      .el-input__wrapper,
+      .el-select__wrapper {
         border-radius: 0 2px 2px 0;
       }
     }
