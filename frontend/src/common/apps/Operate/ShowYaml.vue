@@ -1,13 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { isEmpty, get } from 'lodash'
-import { ElNotification } from 'element-plus'
-import i18n from '@/i18n'
-
-import { useClipboard } from '@vueuse/core'
-import { getAppKindResourcesDetailAPI } from '@/api/applications'
-
 import json2yaml from 'js-yaml'
+
+import { copyToClipboard } from '@/utils/utils'
+import { getAppKindResourcesDetailAPI } from '@/api/applications'
 
 const props = defineProps({
   data: {
@@ -55,16 +52,6 @@ const getYaml = async () => {
   })
 }
 
-const copyContent = () => {
-  if (!isEmpty(yamlContent.value)) {
-    useClipboard(yamlContent.value)
-    ElNotification({
-      type: 'success',
-      message: i18n.t('common.copySuccess')
-    })
-  }
-}
-
 const handleOpen = () => {
   // 当类型为'onlyShow'的时候，表示直接通过prop得到的data进行展示，不需要重新发请求去拿数据
   if (props.type === 'onlyShow') {
@@ -95,7 +82,7 @@ const handleOpen = () => {
     @open="handleOpen"
   )
     .drawer-container
-      el-button.mb-2(size="small", :disabled="isEmpty(content)", @click="copyContent")
+      el-button.mb-2(size="small", :disabled="isEmpty(content)", @click="copyToClipboard({ content: yamlContent })")
         i.remix.ri-file-copy-line
         span {{ $t('common.copy') }}
       .content-box(v-loading="processing")

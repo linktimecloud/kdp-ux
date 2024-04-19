@@ -7,8 +7,7 @@ import SchemaForm from '@/components/schemaForm/SchemaForm.vue'
 import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 import JsonTree from '@/components/json/FormatJson.vue'
 
-import { ElNotification } from 'element-plus'
-import { useClipboard } from '@vueuse/core'
+import { copyToClipboard } from '@/utils/utils'
 import { getBdcContextSettingAPI, getBdcContextSettingDefinitionSchemaAPI, getBdcContextSecretAPI, getBdcContextSecretDefinitionSchemaAPI } from '@/api/bdc'
 
 const props = defineProps({
@@ -95,14 +94,8 @@ const openDrawer = () => {
 }
 
 const copyContent = () => {
-  if (!isEmpty(form.value.properties)) {
-    const content = JSON.stringify(form.value.properties)
-    useClipboard(content)
-    ElNotification({
-      type: 'success',
-      message: i18n.t('common.copySuccess')
-    })
-  }
+  const content = JSON.stringify(form.value.properties)
+  copyToClipboard({ content })
 }
 </script>
 

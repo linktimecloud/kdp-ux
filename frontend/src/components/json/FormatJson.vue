@@ -1,13 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { ElNotification } from 'element-plus'
 import { isEmpty } from 'lodash'
 import i18n from '@/i18n'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 import PATTERNS from '@/utils/patterns'
 
-import { useClipboard } from '@vueuse/core'
+import { copyToClipboard } from '@/utils/utils'
 
 const props = defineProps({
   data: {
@@ -41,11 +40,7 @@ const getUrlValue = (val) => {
 }
 
 const handleCopy = () => {
-  useClipboard(JSON.stringify(props.data))
-  ElNotification({
-    type: 'success',
-    message: i18n.t('common.copySuccess')
-  })
+  copyToClipboard({ content: JSON.stringify(props.data) })
 }
 
 </script>

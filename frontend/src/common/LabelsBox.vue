@@ -1,10 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import i18n from '@/i18n'
-
 import { get, isEmpty } from 'lodash'
-import { useClipboard } from '@vueuse/core'
-import { ElMessageBox } from 'element-plus'
+
+import { copyToClipboard } from '@/utils/utils'
 
 const props = defineProps({
   data: Object,
@@ -54,16 +53,6 @@ const labelData = computed(() => {
 const labelLength = computed(() => {
   return labelData.value.length || 0
 })
-
-const copyContent = (label) => {
-  if (label) {
-    useClipboard(label)
-    ElMessageBox({
-      type: 'success',
-      message: i18n.t('common.copySuccess')
-    })
-  }
-}
 </script>
 
 <template lang="pug">
@@ -84,7 +73,7 @@ const copyContent = (label) => {
             :open-delay="200",
             :content="label"
           )
-            .label-value.d-block.text-ellipsis.cursor-pointer(@dblclick="copyContent(label)") {{ label }}
+            .label-value.d-block.text-ellipsis.cursor-pointer(@dblclick="copyToClipboard({ content: label })") {{ label }}
       template(#reference)
         .labels-info-btn.cursor-pointer(v-if="labelLength")
           i.remix.mr-1(:class="options.icon || 'ri-file-info-line'")

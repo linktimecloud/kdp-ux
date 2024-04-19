@@ -298,6 +298,7 @@ export default {
       top: calc(100% + 2px);
       z-index: 9;
       line-height: 12px;
+      margin-top: 0 !important;
     }
   }
 
