@@ -91,3 +91,17 @@ export const getAppPodContainerLogsAPI = ({ appName, podName, containerName, dat
     params: data
   })
 }
+
+export const postTerminalAPI = () => {
+  return request({
+    url: `${base}/terminal`,
+    method: 'post'
+  })
+}
+
+export const postPodContainerTerminalAPI = ({ appName, podName, containerName }) => {
+  return request({
+    url: `${base}/applications/${appName}/pods/${podName}/containers/${containerName}/terminal`,
+    method: 'post'
+  })
+}

@@ -1,15 +1,24 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 
 import NavBar from '@/components/navbar/NavBar.vue'
 import SideBar from '@/components/sidebar/SideBar.vue'
+import WebTerminalContent from '@/components/terminal/WebTerminalContent.vue'
+
 import { useGlobalStore } from '@/stores/modules/global'
 import { useBdcStore } from '@/stores/modules/bdc'
+import { useTerminalStore } from '@/stores/modules/terminal'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const globalStore = useGlobalStore()
 const bdcStore = useBdcStore()
+const terminalStore = useTerminalStore()
 
+const terminalUrl = computed(() => {
+  return terminalStore.getTerminalUrl
+})
 const layoutCollapse = computed(() => globalStore.layoutCollapse)
 const cls = computed(() => {
   return {
@@ -24,13 +33,14 @@ onMounted(() => {
 </script>
 
 <template lang="pug">
-.w-full
+.app.w-full
   header.app-header
     NavBar
   main.main-container.w-full(:class="cls")
     SideBar.app-sidebar
-    .main-in
-      RouterView()
+    .main-in(:class="{ 'is-padding-0': terminalUrl }")
+      RouterView(:class="{ 'main-top-box': terminalUrl }")
+      WebTerminalContent.main-bottom-box(v-if="terminalUrl")
 </template>
 
 <style lang="scss">
@@ -68,6 +78,20 @@ $navbarHeight: 60px;
     margin-left: $expandSidebarWidth;
     padding: 1rem;
     background: $bg_gray_G1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    &.is-padding-0 {
+      padding: 0;
+    }
+    .main-top-box {
+      height: 50%;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .main-bottom-box {
+      flex: 1;
+    }
   }
 
   &.layout-collapse {

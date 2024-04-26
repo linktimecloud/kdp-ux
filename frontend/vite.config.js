@@ -11,6 +11,7 @@ export default ({ mode }) => {
 
   return defineConfig({
     server: {
+      host: '0.0.0.0',
       port: process.env.VITE_PORT || 7777,
       proxy: {
         '/api': process.env.VITE_API_BASE
