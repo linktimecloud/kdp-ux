@@ -62,5 +62,5 @@ const getTerminalUrl = async () => {
       span.text-white
         i.ri-terminal-line(v-if="!processing")
         i.ri-loader-2-line.spin(v-else)
-        span.ml-2 Web Terminal
+        span.ml-2 {{ $t('applications.webTerminal') }}
 </template>

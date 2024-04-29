@@ -285,5 +285,6 @@ export default {
   applicationUsedSettings: '应用使用配置',
   applicationSecret: '应用秘钥',
   global: '系统服务',
-  resourcesTopology: '资源拓扑'
+  resourcesTopology: '资源拓扑',
+  webTerminal: '终端'
 }

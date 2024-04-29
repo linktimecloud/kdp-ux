@@ -285,5 +285,6 @@ export default {
   applicationUsedSettings: 'Application Used Settings',
   applicationSecret: 'Application Secret',
   global: 'System Service',
-  resourcesTopology: 'Resource Topology'
+  resourcesTopology: 'Resource Topology',
+  webTerminal: 'Web Terminal'
 }

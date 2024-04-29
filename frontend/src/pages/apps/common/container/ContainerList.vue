@@ -153,6 +153,6 @@ watch(() => props.refreshFlag, () => {
         span.flex(v-else-if="key === 'operate'")
           ContainerLog.after-line(:pod-data="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :default-container="scope.row.name")
           WebTerminalButton(sign="podContainer", :data="{ appName: route.query?.application, podName: podData.pod, containerName: scope.row.name }")
-            el-button(link) Web Terminal
+            span {{ $t('applications.webTerminal') }}
         span(v-else) {{ scope.row[key]}}
 </template>
