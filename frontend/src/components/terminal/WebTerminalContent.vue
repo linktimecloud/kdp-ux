@@ -16,8 +16,6 @@ const closeTerminal = () => {
 
 <template lang="pug">
 .web-terminal-content.shadow-box
-  a.cursor-pointer.link-button(target="_blank", :href="terminalUrl")
-    i.ri-external-link-line.text-white
   el-button.close-button(link, @click="closeTerminal")
     i.ri-close-circle-fill.text-white
   iframe.w-full.h-full.px-1.py-1(
@@ -32,11 +30,6 @@ const closeTerminal = () => {
 .web-terminal-content {
   background: #fff;
   position: relative;
-  .link-button {
-    position: absolute;
-    top: 6px;
-    right: 34px;
-  }
   .close-button {
     position: absolute;
     top: 6px;

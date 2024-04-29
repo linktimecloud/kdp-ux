@@ -37,7 +37,7 @@ const resource = computed(() => {
   return map[props.sign]
 })
 
-const getTerminalUrl = async () => {
+const getTerminalUrl = async (openNewTab = false) => {
   const apiName = get(resource, 'value.apiName')
   const params = get(resource, 'value.params', {})
 
@@ -47,7 +47,11 @@ const getTerminalUrl = async () => {
     const phase = get(rsp, 'data.phase')
     if (phase === 'Ready') {
       const url = get(rsp, 'data.accessUrl', '')
-      terminalStore.setTerminalUrl(url)
+      if (openNewTab) {
+        window.open(url, '_blank')
+      } else {
+        terminalStore.setTerminalUrl(url)
+      }
     }
   }).finally(() => {
     processing.value = false
@@ -57,10 +61,23 @@ const getTerminalUrl = async () => {
 
 <template lang="pug">
 .web-terminal-button
-  el-button(link, :disabled="processing", @click="getTerminalUrl")
-    slot
-      span.text-white
-        i.ri-terminal-line(v-if="!processing")
-        i.ri-loader-2-line.spin(v-else)
-        span.ml-2 {{ $t('applications.webTerminal') }}
+  el-dropdown(:disabled="processing")
+    el-button(link)
+      slot
+        span.text-white
+          i.ri-terminal-line(v-if="!processing")
+          i.ri-loader-2-line.spin(v-else)
+          span.ml-2 {{ $t('applications.webTerminal') }}
+    template(#dropdown)
+      el-dropdown-menu.dropdown-menu-full-button
+        el-dropdown-item
+          el-button(link, @click="getTerminalUrl(false)")
+            .flex.more-btn
+              i.ri-split-cells-vertical.mr-1
+              span {{ $t('applications.splitDownwards')}}
+        el-dropdown-item
+          el-button(link, @click="getTerminalUrl(true)")
+            .flex.more-btn
+              i.ri-external-link-line.mr-1
+              span {{ $t('manual.externalLink') }}
 </template>

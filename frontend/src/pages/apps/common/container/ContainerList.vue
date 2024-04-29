@@ -150,9 +150,9 @@ watch(() => props.refreshFlag, () => {
           ContainerStatus(:containers="[scope.row]", :show-label="true")
         span(v-else-if="isCapacityUsageProp(key)")
           ResourceColumn(:type="key", :row="scope.row")
-        span.flex(v-else-if="key === 'operate'")
-          ContainerLog.after-line(:pod-data="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :default-container="scope.row.name")
-          WebTerminalButton(sign="podContainer", :data="{ appName: route.query?.application, podName: podData.pod, containerName: scope.row.name }")
+        span.flex.items-center(v-else-if="key === 'operate'")
+          WebTerminalButton.h-full.pt-1.after-line(v-if="get(scope.row, 'status.ready', false)", sign="podContainer", :data="{ appName: route.query?.application, podName: podData.pod, containerName: scope.row.name }")
             span {{ $t('applications.webTerminal') }}
+          ContainerLog(:pod-data="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :default-container="scope.row.name")
         span(v-else) {{ scope.row[key]}}
 </template>

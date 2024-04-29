@@ -29,6 +29,7 @@ const cls = computed(() => {
 onMounted(() => {
   globalStore.setCurrentUser()
   bdcStore.setCurrentBdc()
+  terminalStore.setTerminalUrl('')
 })
 </script>
 
