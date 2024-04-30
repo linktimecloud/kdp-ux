@@ -62,7 +62,7 @@ const getTerminalUrl = async (openNewTab = false) => {
 <template lang="pug">
 .web-terminal-button
   el-dropdown(:disabled="processing")
-    el-button(link)
+    el-button(link, :disabled="processing")
       slot
         span.text-white
           i.ri-terminal-line(v-if="!processing")
