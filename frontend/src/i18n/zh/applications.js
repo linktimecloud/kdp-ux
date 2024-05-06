@@ -287,5 +287,6 @@ export default {
   global: '系统服务',
   resourcesTopology: '资源拓扑',
   webTerminal: '终端',
-  splitDownwards: '向下拆分'
+  splitDownwards: '向下拆分',
+  refreshTerminalTip: '暂无法建立连接，请刷新页面后重试'
 }
