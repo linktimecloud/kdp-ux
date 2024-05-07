@@ -287,6 +287,5 @@ export default {
   global: 'System Service',
   resourcesTopology: 'Resource Topology',
   webTerminal: 'Web Terminal',
-  splitDownwards: 'Split Downwards',
-  refreshTerminalTip: 'Unable to establish a connection at this time, please refresh the page and try again'
+  splitDownwards: 'Split Downwards'
 }

@@ -17,6 +17,10 @@ const props = defineProps({
   sign: {
     type: String,
     default: 'general'
+  },
+  hasIcon: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -63,11 +67,10 @@ const getTerminalUrl = async (openNewTab = false) => {
 .web-terminal-button
   el-dropdown(:disabled="processing")
     el-button(link, :disabled="processing")
-      slot
-        span.text-white
-          i.ri-terminal-line(v-if="!processing")
-          i.ri-loader-2-line.spin(v-else)
-          span.ml-2 {{ $t('applications.webTerminal') }}
+      span(:class="{ 'text-white': hasIcon }")
+        i.ri-terminal-line(v-if="!processing && hasIcon")
+        i.ri-loader-2-line.spin(v-if="processing")
+        span.ml-2 {{ $t('applications.webTerminal') }}
     template(#dropdown)
       el-dropdown-menu.dropdown-menu-full-button
         el-dropdown-item
