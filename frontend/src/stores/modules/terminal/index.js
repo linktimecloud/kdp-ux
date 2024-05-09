@@ -1,17 +1,28 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
+const defaultTerminalProperty = () => ({
+  showTerminal: false,
+  terminalUrl: '',
+  terminalData: {},
+  hiddenIframe: false
+})
+
 export const useTerminalStore = defineStore('terminal', () => {
   // state
-  const terminalUrl = ref('')
+  const terminalProperty = ref({ ...defaultTerminalProperty })
 
   // getters
-  const getTerminalUrl = computed(() => terminalUrl.value)
+  const getTerminalProperty = computed(() => terminalProperty.value)
 
   // actions
-  const setTerminalUrl = (val) => {
-    terminalUrl.value = val
+  const setTerminalProperty = (param, val) => {
+    terminalProperty.value[param] = val
   }
 
-  return { getTerminalUrl, setTerminalUrl }
+  const initTerminalProperty = () => {
+    terminalProperty.value = { ...defaultTerminalProperty }
+  }
+
+  return { getTerminalProperty, setTerminalProperty, initTerminalProperty }
 })

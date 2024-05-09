@@ -151,9 +151,8 @@ watch(() => props.refreshFlag, () => {
         span(v-else-if="isCapacityUsageProp(key)")
           ResourceColumn(:type="key", :row="scope.row")
         span.flex.items-center(v-else-if="key === 'operate'")
-          WebTerminalButton.h-full.pt-1.after-line(
+          WebTerminalButton.h-full.after-line(
             v-if="get(scope.row, 'status.ready', false)",
-            sign="podContainer",
             :data="{ appName: route.query?.application, podName: podData.pod, containerName: scope.row.name }",
             :hasIcon="false"
           )

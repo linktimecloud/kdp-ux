@@ -1,6 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { onMounted, computed, watch } from 'vue'
+import { get } from 'lodash'
 
 import NavBar from '@/components/navbar/NavBar.vue'
 import SideBar from '@/components/sidebar/SideBar.vue'
@@ -16,8 +17,11 @@ const globalStore = useGlobalStore()
 const bdcStore = useBdcStore()
 const terminalStore = useTerminalStore()
 
-const terminalUrl = computed(() => {
-  return terminalStore.getTerminalUrl
+const showTerminal = computed(() => {
+  return get(terminalStore.getTerminalProperty, 'showTerminal')
+})
+const hiddenIframe = computed(() => {
+  return get(terminalStore.getTerminalProperty, 'hiddenIframe')
 })
 const layoutCollapse = computed(() => globalStore.layoutCollapse)
 const cls = computed(() => {
@@ -29,7 +33,7 @@ const cls = computed(() => {
 onMounted(() => {
   globalStore.setCurrentUser()
   bdcStore.setCurrentBdc()
-  terminalStore.setTerminalUrl('')
+  terminalStore.setTerminalProperty('showTerminal',  false)
 })
 </script>
 
@@ -39,9 +43,9 @@ onMounted(() => {
     NavBar
   main.main-container.w-full(:class="cls")
     SideBar.app-sidebar
-    .main-in(:class="{ 'is-padding-0': terminalUrl }")
-      RouterView(:class="{ 'main-top-box': terminalUrl }")
-      WebTerminalContent.main-bottom-box(v-if="terminalUrl")
+    .main-in(:class="{ 'is-padding-0': showTerminal }")
+      RouterView(:class="{ 'main-top-box': showTerminal }")
+      WebTerminalContent.main-bottom-box(v-if="showTerminal", :class="{ 'hidden-iframe': hiddenIframe }")
 </template>
 
 <style lang="scss">
@@ -86,12 +90,15 @@ $navbarHeight: 60px;
       padding: 0;
     }
     .main-top-box {
-      height: 50%;
+      flex: 1;
       overflow-y: auto;
       padding: 1rem;
     }
     .main-bottom-box {
-      flex: 1;
+      height: 60%;
+    }
+    .hidden-iframe {
+      height: 45px !important;
     }
   }
 
