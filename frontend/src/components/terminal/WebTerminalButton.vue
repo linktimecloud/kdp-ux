@@ -1,8 +1,6 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { get, isEmpty } from 'lodash'
-
-import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
 import { postTerminalAPI, postPodContainerTerminalAPI } from '@/api/applications'
 import { useTerminalStore } from '@/stores/modules/terminal'

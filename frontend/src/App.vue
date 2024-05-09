@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { onMounted, computed, watch } from 'vue'
+import { onMounted, computed } from 'vue'
 import { get } from 'lodash'
 
 import NavBar from '@/components/navbar/NavBar.vue'
@@ -10,9 +10,7 @@ import WebTerminalContent from '@/components/terminal/WebTerminalContent.vue'
 import { useGlobalStore } from '@/stores/modules/global'
 import { useBdcStore } from '@/stores/modules/bdc'
 import { useTerminalStore } from '@/stores/modules/terminal'
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
 const globalStore = useGlobalStore()
 const bdcStore = useBdcStore()
 const terminalStore = useTerminalStore()
