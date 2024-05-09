@@ -286,6 +286,5 @@ export default {
   applicationSecret: 'Application Secret',
   global: 'System Service',
   resourcesTopology: 'Resource Topology',
-  webTerminal: 'Web Terminal',
-  splitDownwards: 'Split Downwards'
+  webTerminal: 'Web Terminal'
 }

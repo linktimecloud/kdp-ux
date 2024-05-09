@@ -286,6 +286,5 @@ export default {
   applicationSecret: '应用秘钥',
   global: '系统服务',
   resourcesTopology: '资源拓扑',
-  webTerminal: '终端',
-  splitDownwards: '向下拆分'
+  webTerminal: '终端'
 }
