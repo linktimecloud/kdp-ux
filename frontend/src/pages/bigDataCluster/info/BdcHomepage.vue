@@ -114,7 +114,7 @@ watch(() => currentBdcName, (val) => {
 </script>
 
 <template lang="pug">
-.big-data-cluster-info-detail.px-3
+.big-data-cluster-info-detail
   PageHeader(:data="{ content: title }")
     .action-btn.flex
       el-button.mr-2(
@@ -136,7 +136,7 @@ watch(() => currentBdcName, (val) => {
               v-if="item.tip",
               :name="item.tip"
             )
-  .detail-container.px-3.pb-3
+  .detail-container.pb-3
     component(
       :is="currentComponent.component",
       v-if="currentBdcName",
@@ -152,7 +152,6 @@ watch(() => currentBdcName, (val) => {
 
 <style lang="scss">
 .big-data-cluster-info-detail {
-  margin: 0 -15px;
   .page-header-container {
     padding-bottom: 0 !important;
   }
@@ -168,7 +167,6 @@ watch(() => currentBdcName, (val) => {
   .detail-container {
     height: calc(100vh - 242px);
     overflow-y: auto;
-    margin: 0 -15px;
   }
 }
 </style>

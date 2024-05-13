@@ -36,8 +36,8 @@ export default {
 )
   .col-6.text-center
     img.bg(src="/img/empty_bg.png")
-    p.form-control-plaintext {{ i18n.t('common.nodata') }}
     slot
+      p.form-control-plaintext {{ i18n.t('common.nodata') }}
 </template>
 
 <style lang="scss">

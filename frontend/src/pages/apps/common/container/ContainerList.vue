@@ -7,6 +7,7 @@ import ContainerStatus from '@/pages/apps/common/container/containerStatus.vue'
 import ContainerLog from '@/pages/apps/common/container/containerLog.vue'
 import CommonTips from '@/common/TipsIcon.vue'
 import ResourceColumn from '@/common/dashboard/ResourceColumn.vue'
+import WebTerminalButton from '@/components/terminal/WebTerminalButton.vue'
 
 import { formatPrometheusTableData } from '@/utils/cluster/utils'
 import { getPercentage } from '@/utils/utils'
@@ -57,7 +58,8 @@ const containerListColumns = computed(() => {
     },
     {
       key: 'operate',
-      label: i18n.t('common.operate')
+      label: i18n.t('common.operate'),
+      minWidth: 100
     }
   ]
 })
@@ -131,10 +133,12 @@ watch(() => props.refreshFlag, () => {
 .application-container-list
   el-table(:data="tableList", border)
     el-table-column(
-      v-for="({ key, label }) in containerListColumns",
+      v-for="({ key, label, minWidth }) in containerListColumns",
       :key="key"
       :prop="key",
-      :label="label"
+      :label="label",
+      :min-width="minWidth",
+      :fixed="key === 'operate' ? 'right' : false",
     )
       template(v-if="isCapacityUsageProp(key)", #header)
         .d-block {{ label }}
@@ -146,7 +150,12 @@ watch(() => props.refreshFlag, () => {
           ContainerStatus(:containers="[scope.row]", :show-label="true")
         span(v-else-if="isCapacityUsageProp(key)")
           ResourceColumn(:type="key", :row="scope.row")
-        span(v-else-if="key === 'operate'")
+        span.flex.items-center(v-else-if="key === 'operate'")
+          WebTerminalButton.h-full.after-line(
+            v-if="get(scope.row, 'status.ready', false)",
+            :data="{ appName: route.query?.application, podName: podData.pod, containerName: scope.row.name }",
+            :hasIcon="false"
+          )
           ContainerLog(:pod-data="{ ...podData, podName: podData.pod, containerStatuses: [scope.row] }", :default-container="scope.row.name")
         span(v-else) {{ scope.row[key]}}
 </template>

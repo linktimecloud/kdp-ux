@@ -140,7 +140,6 @@ onMounted(() => {
     .pods-box.mb-4
       .font-bold.text-high.mb-2 {{ $t('applications.container') }}
       ContainerList.shadow-box(
-        v-if="namespace",
         :data="containerList",
         :refresh-flag="timeQuery.time",
         :pod-data="{ ...basicData, appName: routeQuery.application }"

@@ -138,7 +138,7 @@ const handleChange = (newValue, propName) => {
           v-bind="item",
           @click="emits(item.value)"
         )
-          .d-flex.align-items-center
+          .d-flex.items-center
             i.remix(
               v-if="item.icon",
               :class="item.icon"
