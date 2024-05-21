@@ -19,7 +19,7 @@ const props = defineProps({
 })
 
 const icon = computed(() => {
-  return API_BASE + '/img?type=icon&name=' + props.name
+  return API_BASE + '/img?type=icon&name=' + props.name.toLowerCase()
 })
 </script>
 
