@@ -31,7 +31,7 @@ const link = computed(() => {
     path = `${catalog}/readme`
   }
 
-  return `${API_BASE}api/catalogManagerService/api/v1/catalogs/${path}?lang=${lang.value}`
+  return `${API_BASE}/api/catalogManagerService/api/v1/catalogs/${path}?lang=${lang.value}`
 })
 </script>
 

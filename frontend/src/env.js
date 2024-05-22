@@ -13,7 +13,7 @@ export const WS_BASE = getEnv('WS_BASE')
 export const API_SERIES = getEnv('API_SERIES')
 export const API_VERSION = getEnv('API_VERSION')
 export const API_PATH = getEnv('API_PATH', 'api/')
-export const API_BASE = getEnv('API_BASE')
+export const API_BASE = getEnv('API_BASE') === '/' ? '' : getEnv('API_BASE')
 export const URI_BASE = API_BASE + (API_PATH === '/' ? '' : API_PATH)
 export const ACCEPT = `application/json;${API_SERIES}, version=${API_VERSION}`
 export const CONTENT_TYPE = 'application/x-www-form-urlencoded'
