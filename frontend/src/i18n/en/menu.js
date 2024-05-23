@@ -111,7 +111,6 @@ export default {
   keycloak: 'Keycloak',
   kerberos: 'Kerberos',
   zookeeper: 'Zookeeper',
-  airbyte: 'Airbyte',
   airflow: 'Airflow',
   clickHouse: 'ClickHouse',
   hbase: 'HBase',
