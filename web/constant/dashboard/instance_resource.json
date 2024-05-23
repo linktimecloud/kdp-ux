@@ -70,7 +70,7 @@
             "type": "line",
             "symbol": "none"
           },
-          "expr": "sum(container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$pod\"}) by (pod)",
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"$namespace\", pod=~\"$pod\", container!=\"\"}) by (pod)",
           "legendFormat": "variablePod",
           "format": "bytes"
         }
