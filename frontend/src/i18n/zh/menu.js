@@ -89,6 +89,7 @@ export default {
   groupTitle: {
     systemService: '系统服务',
     bigDataComponent: '大数据组件',
+    developmentTools: '开发工具',
     middleware: '中间件'
   },
   catalogs: '组件状态',
@@ -109,6 +110,8 @@ export default {
   keycloak: 'Keycloak',
   kerberos: 'Kerberos',
   zookeeper: 'Zookeeper',
+  airflow: 'Airflow',
+  clickhouse: 'ClickHouse',
   hbase: 'HBase',
   mysql: 'MySql',
   processDetail: '@:menu.process@:common.detail',

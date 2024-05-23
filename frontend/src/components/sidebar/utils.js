@@ -3,7 +3,7 @@ import { getActionPermissions, checkHasPermissions } from '@/utils/permissions'
 // 在未进行任何权限配置的时候，这几个菜单需要设置默认行为
 const getDefaultHiddenList = (isAdmin, isOrgRole, isOrgAdmin) => {
   // 默认隐藏dataops相关的大数据组件： Jira BPAAS-2482
-  const defaultHiddenKeys = ['catalogs', 'airbyte', 'automl', 'mlflow', 'superset', 'ddp', 'flowman', 'dataService', 'daam', 'dataQuality', 'labelingSystem']
+  const defaultHiddenKeys = ['catalogs', 'automl', 'mlflow', 'ddp', 'flowman', 'dataService', 'daam', 'dataQuality', 'labelingSystem']
 
   if (isAdmin) return [...defaultHiddenKeys]
 

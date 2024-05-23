@@ -89,6 +89,7 @@ export default {
   groupTitle: {
     bigDataComponent: 'Big Data Component',
     systemService: 'System Service',
+    developmentTools: 'Development Tools',
     middleware: 'Middleware'
   },
   catalogs: 'Catalogs',
@@ -110,6 +111,8 @@ export default {
   keycloak: 'Keycloak',
   kerberos: 'Kerberos',
   zookeeper: 'Zookeeper',
+  airflow: 'Airflow',
+  clickhouse: 'ClickHouse',
   hbase: 'HBase',
   mysql: 'MySql',
   processDetail: '@:menu.process@:common.detail',

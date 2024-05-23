@@ -19,13 +19,13 @@ const props = defineProps({
 })
 
 const icon = computed(() => {
-  return API_BASE + '/img?type=icon&name=' + props.name
+  return API_BASE + '/img?type=icon&name=' + props.name.toLowerCase()
 })
 </script>
 
 <template lang="pug">
 img.app-icon.img-fluid.mx-auto.d-block(
-  v-if="API_BASE",
+  v-if="name",
   :class="cls",
   :src="icon"
 )
