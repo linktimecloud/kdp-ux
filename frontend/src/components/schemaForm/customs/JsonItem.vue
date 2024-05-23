@@ -1,5 +1,5 @@
 <script>
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 
 import JsonEditor from '@/components/json/JsonEditor.vue'
 import JsonTree from '@/components/json/FormatJson.vue'
@@ -59,7 +59,9 @@ export default {
   },
   methods: {
     onJsonChange (value) {
-      vueUtils.setPathVal(this.rootFormData, this.curNodePath, value)
+      if (isNil(value.srcElement)) {
+        vueUtils.setPathVal(this.rootFormData, this.curNodePath, value)
+      }
       this.jsonError = null
     },
     onHasError (isError) {
