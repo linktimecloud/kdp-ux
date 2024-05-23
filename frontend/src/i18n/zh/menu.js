@@ -111,7 +111,7 @@ export default {
   kerberos: 'Kerberos',
   zookeeper: 'Zookeeper',
   airflow: 'Airflow',
-  clickHouse: 'ClickHouse',
+  clickhouse: 'ClickHouse',
   hbase: 'HBase',
   mysql: 'MySql',
   processDetail: '@:menu.process@:common.detail',
