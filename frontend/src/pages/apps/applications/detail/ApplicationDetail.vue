@@ -14,7 +14,7 @@ import UninstallButton from '@/common/apps/Operate/UninstallButton.vue'
 import ResourceDashboard from './resourceDashboard.vue'
 
 import { getAppAPI, getAppServiceEndpointsAPI } from '@/api/applications'
-import { getCatalogsAppFormsAPI } from '@/api/catalog'
+import { getCatalogsAppFormAPI } from '@/api/catalog'
 
 const route = useRoute()
 const router = useRouter()
@@ -117,7 +117,7 @@ const getGrafanaUrl = () => {
   const catalog = get(route, 'params.name')
   const form = get(rendappsDetail, 'value.appFormName')
   if (!catalog || !form) return
-  getCatalogsAppFormsAPI({ catalog, form }).then(res => {
+  getCatalogsAppFormAPI({ catalog, form }).then(res => {
     grafanaUrl.value = get(res, 'data.dashboardUrl[0].link') || ''
   })
 }
