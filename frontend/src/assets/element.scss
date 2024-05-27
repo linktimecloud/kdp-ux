@@ -241,11 +241,6 @@
     width: 50%;
     max-width: 600px;
   }
-  .el-message-box__btns {
-    .el-button + .el-button {
-      margin-left: 8px;
-    }
-  }
 }
 
 .el-drawer {
@@ -329,4 +324,8 @@
     border-top: 1px solid $border_gray;
     padding: 10px 15px !important;
   }
+}
+
+.el-button + .el-button {
+  margin-left: 8px;
 }

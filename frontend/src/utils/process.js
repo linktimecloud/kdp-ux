@@ -7,7 +7,8 @@ import { isFunction } from 'lodash'
 import ProcessStatus from '@/common/process/ProcessContent.vue'
 
 const toProcess = (id) => {
-  window.location.href = `/#/process?id=${id}`
+  const domain = window.location.origin
+  window.open(`${domain}/#/process?id=${id}`,  '_blank')
 }
 
 export const processRedirect = ({ id, refresh, direct }) => {
@@ -33,7 +34,8 @@ export const processRedirect = ({ id, refresh, direct }) => {
         setupState.stop()
       }
       const { status } = setupState
-      if (status === 1 || status === 3) {
+      console.log('processRedirect close==', status, action, status === 1);
+      if (status === 1) {
         isFunction(refresh) && refresh()
       }
       done()
