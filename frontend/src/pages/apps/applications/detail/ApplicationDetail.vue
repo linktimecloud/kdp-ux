@@ -183,7 +183,7 @@ onMounted(() => {
         el-button
           .flex.items-center
             span {{ $t('common.more') + $t('common.operate') }}
-            i.el-icon-arrow-down
+            i.ri-arrow-down-s-line
         template(#dropdown)
           el-dropdown-menu.dropdown-menu-full-button
             el-dropdown-item(v-if="grafanaUrl && appStatus === 'running'")

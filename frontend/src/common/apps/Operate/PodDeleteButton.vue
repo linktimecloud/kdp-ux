@@ -31,7 +31,8 @@ const reqData = computed(() => {
 const handleConfirm = () => {
   const { podData: { podName: name } } = props
   ElMessageBox.alert(i18n.t('applications.podDeleteConfirm', { name }), i18n.t('common.attention'), {
-    type: 'warning'
+    type: 'warning',
+    showCancelButton: true
   }).then(() => {
     deletePod()
   }).catch(() => {})

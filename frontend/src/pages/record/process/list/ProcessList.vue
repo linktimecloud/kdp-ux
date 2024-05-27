@@ -109,7 +109,6 @@ watch(() => ({ ...filter.value }), (val, old) => {
 const query = get(useRoute(), 'query')
 
 onMounted(() => {
-  getProcessList()
   filter.value = { ...filter.value, ...omit(query, 'p') }
 })
 </script>
