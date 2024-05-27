@@ -1,5 +1,5 @@
 
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import i18n from '@/i18n'
 import { ElMessageBox } from 'element-plus'
 import { isFunction } from 'lodash'
@@ -34,16 +34,22 @@ export const processRedirect = ({ id, refresh, direct }) => {
         setupState.stop()
       }
       const { status } = setupState
-      console.log('processRedirect close==', status, action, status === 1);
+      console.log('processRedirect close==', status, action, instance, status === 1);
+      nextTick(() => {
+        console.log('nextTick processRedirect close==', status, action, instance, status === 1);
+      })
       if (status === 1) {
         isFunction(refresh) && refresh()
       }
       done()
     }
-  }).then((action) => {
+  }).then((action, instance) => {
+      console.log('then instance===', instance);
       if (action === 'confirm') {
         toProcess(id)
       }
     })
-    .catch(() => {})
+    .catch((action, instance) => {
+      console.log('action instance===', instance);
+    })
 }
