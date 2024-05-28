@@ -212,10 +212,10 @@ watch(() => isCatalogLevel.value, (val) => {
   }
 
   .catalog-container {
-    height: calc(100vh - 234px);
+    height: calc(100vh - 205px);
     overflow-y: auto;
     &.app-container {
-      height: calc(100vh - 224px);
+      height: calc(100vh - 195px);
     }
     .catalog-component {
       .component-title {
