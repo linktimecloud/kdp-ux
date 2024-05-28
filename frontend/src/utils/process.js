@@ -34,7 +34,6 @@ export const processRedirect = ({ id, refresh, direct }) => {
         setupState.stop()
       }
       const element = document.getElementById('processLogsContentStatus')
-      console.log('element===', element, element.innerText, typeof element?.innerText, toNumber(element?.innerText) === 1);
     
       if (toNumber(element?.innerText) === 1) {
         isFunction(refresh) && refresh()
