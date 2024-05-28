@@ -90,7 +90,7 @@ const showData = computed(() => {
       .content.text-left
         //- span {{ `[${level.toUpperCase()}] `}}
         span(v-html="showData")
-    el-collapse(v-else, v-model="activeNames")
+    el-collapse.start-arrow(v-else, v-model="activeNames")
       el-collapse-item(:class="`level-${level}`")
         template(#title)
           .flex.h-full.py-1.w-full

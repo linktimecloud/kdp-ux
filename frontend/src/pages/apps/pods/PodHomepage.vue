@@ -59,7 +59,8 @@ const basicData = computed(() => {
     pod,
     catalog: get(route, 'params.name'),
     appForm: get(route, 'query.appForm'),
-    containerStatuses: get(podData, 'value.status.containerStatuses', [])
+    containerStatuses: get(podData, 'value.status.containerStatuses', []),
+    affinity: get(podData, 'value.affinity.podAntiAffinity', {})
   }
 })
 const containerList = computed(() => {
@@ -113,7 +114,7 @@ onMounted(() => {
         el-button(type="default")
           .flex.items-center
             span {{ $t('common.more') }}
-            i.el-icon-arrow-down.mr-0
+            i.ri-arrow-down-s-line.mr-0
         template(#dropdown)
           el-dropdown-menu.dropdown-menu-full-button
             el-dropdown-item

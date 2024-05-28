@@ -2,12 +2,13 @@
 import { h } from 'vue'
 import i18n from '@/i18n'
 import { ElMessageBox } from 'element-plus'
-import { isFunction } from 'lodash'
+import { isFunction, toNumber } from 'lodash'
 
 import ProcessStatus from '@/common/process/ProcessContent.vue'
 
 const toProcess = (id) => {
-  window.location.href = `/#/process?id=${id}`
+  const domain = window.location.origin
+  window.open(`${domain}/#/process?id=${id}`,  '_blank')
 }
 
 export const processRedirect = ({ id, refresh, direct }) => {
@@ -32,8 +33,9 @@ export const processRedirect = ({ id, refresh, direct }) => {
       if (isFunction(setupState.stop)) {
         setupState.stop()
       }
-      const { status } = setupState
-      if (status === 1 || status === 3) {
+      const element = document.getElementById('processLogsContentStatus')
+    
+      if (toNumber(element?.innerText) === 1) {
         isFunction(refresh) && refresh()
       }
       done()

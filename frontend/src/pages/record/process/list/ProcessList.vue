@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { get, debounce, omit } from 'lodash'
+import { get, debounce, omit, isEmpty } from 'lodash'
 import i18n from '@/i18n'
 import { useRoute } from 'vue-router'
 
@@ -109,8 +109,10 @@ watch(() => ({ ...filter.value }), (val, old) => {
 const query = get(useRoute(), 'query')
 
 onMounted(() => {
-  getProcessList()
   filter.value = { ...filter.value, ...omit(query, 'p') }
+  if (isEmpty(query)) {
+    getProcessList()
+  }
 })
 </script>
 
