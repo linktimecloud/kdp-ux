@@ -329,3 +329,19 @@
 .el-button + .el-button {
   margin-left: 8px;
 }
+
+.el-collapse {
+  &.start-arrow {
+    .el-collapse-item__header {
+      position: relative;
+      padding-left: 20px;
+      >.el-collapse-item__arrow {
+        position: absolute;
+        left: 8px;
+      }
+    }
+    .el-collapse-item__content {
+      padding-left: 20px;
+    }
+  }
+}
