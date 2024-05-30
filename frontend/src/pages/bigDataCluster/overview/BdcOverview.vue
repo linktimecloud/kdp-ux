@@ -8,6 +8,7 @@ import Dashboard from '@/common/dashboard/DashboardPanels.vue'
 import CollapseLayout from '@/common/dashboard/collapseLayout/CollapseLayout.vue'
 import PageHeader from '@/components/header/PageHeader.vue'
 import DateTimePickeShort from '@/common/dateTimePicker/ShortTime.vue'
+import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
 import { ONE_DAY_AS_MS, TIME_DURATION_SHORTCUTS } from '@/constant'
 import { useBdcStore } from '@/stores/modules/bdc'
@@ -68,22 +69,28 @@ const getResourceTopTenPods = async () => {
   filter.value.topTenMemoryPodNames = get(rsp, 'data[1].result', []).map(item => item?.metric?.pod).join('|')
 
   isReday.value = true
+  console.log('isReday===', isReday);
 }
 
 onMounted(() => {
   filter.value.namespace = currentBdcNS.value
+  console.log('onMounted===', currentBdcNS.value);
   currentBdcNS.value && getResourceTopTenPods()
 })
 
 watch(() => currentBdcNS, (val) => {
-  filter.value.namespace = val
-  getResourceTopTenPods()
+  if (val) {
+    filter.value.namespace = val
+    getResourceTopTenPods()
+  } else {
+    bdcStore.setCurrentBdc()
+  }
 })
 </script>
 
 <template lang="pug">
 .bdc-resource-overview
-  PageHeader(:data="{ content: $t('menu.bigDataClusterOverview'), subTitle: `${$t('cluster.bdc')} ${currentBdcName}` }")
+  PageHeader(:data="{ content: $t('menu.bigDataClusterOverview'), subTitle: currentBdcName ? `${$t('cluster.bdc')} ${currentBdcName}` : '' }")
     .action-button.flex
       el-button.ml-2(@click="refresh")
         i.remix.ri-refresh-line
@@ -117,6 +124,9 @@ watch(() => currentBdcNS, (val) => {
         :time-query="timeQueryWorkload",
         :default-variables="filter"
       )
+  EmptyHolder(
+    v-else
+  )
 </template>
 
 <style lang="scss">
