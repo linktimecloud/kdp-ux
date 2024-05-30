@@ -93,12 +93,12 @@ export default {
         :to="itemRouteTo",
         target="_blank"
       )
-        .label(v-if="getMetricLabel(item)")
+        .label.flex.justify-center(v-if="getMetricLabel(item)")
           .metric {{ getMetricLabel(item) }}
           CommonTips.ml-1(:name="getLabelTips(item)")
         .value(:style="getTextStyle(item)") {{ getValue(item) }}
       template(v-else)
-        .label(v-if="getMetricLabel(item)")
+        .label.flex.justify-center(v-if="getMetricLabel(item)")
           .metric {{ getMetricLabel(item) }}
           CommonTips.ml-1(:name="getLabelTips(item)")
         .value(:style="getTextStyle(item)") {{ getValue(item) }}

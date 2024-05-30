@@ -78,7 +78,6 @@ const labelLength = computed(() => {
         .labels-info-btn.cursor-pointer(v-if="labelLength")
           i.remix.mr-1(:class="options.icon || 'ri-file-info-line'")
           span {{ options.text || `${i18n.t('common.more')}${i18n.t('common.info')}` }}
-  span(v-else) -
 </template>
 
 <style lang="scss">

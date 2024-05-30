@@ -173,6 +173,7 @@ watch(() => props.id, (val) => {
     i.mr-1(:class="titleOpt.icon")
     span(v-if="titleOpt.text") {{ titleOpt.text }}, {{ i18n.t(`common.${STATUS_MAPPER()[status]}`) }}
     span(v-else) {{ i18n.t('common.loading') }}
+    span#processLogsContentStatus(v-show="false") {{ status }}
   SearchBox.mb-2.p-0.border-0.resource-search-box(
     v-model="filter",
     :properties="properties",

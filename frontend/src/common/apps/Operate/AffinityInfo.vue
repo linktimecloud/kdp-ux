@@ -34,13 +34,12 @@ const content = computed(() => {
 })
 
 const label = computed(() => {
-  const { content } = props
-  return !isEmpty(content) ? Object.keys(content).length : 0
+  return !isEmpty(content.value) ? Object.keys(content.value).length : 0
 })
 
 const copyContent = () => {
-  const content = JSON.stringify(props.content)
-  copyToClipboard({ content })
+  const ret = JSON.stringify(content.value)
+  copyToClipboard({ content: ret })
 }
 </script>
 
@@ -52,15 +51,14 @@ const copyContent = () => {
       i.remix.ri-settings-3-line.mr-1
       span {{ $t('applications.appConfigInfo') }}
   el-dialog(
-    custom-class="application-affinity-info-dialog",
-    :visible="dialogVisible",
+    v-model="dialogVisible",
     :title="`${$t('applications.affinity')}${$t('applications.appConfigInfo')}`",
     :append-to-body="true",
     width="60%",
     :close-on-click-modal="false",
     @close="dialogVisible = false"
   )
-    .drawer-container
+    .drawer-container(v-if="dialogVisible")
       .flex.justify-between.items-center.flex-wrap.mb-2
         span {{ title }}
         el-button(type="default", size="small", :disabled="isEmpty(content)", @click="copyContent")
@@ -76,28 +74,6 @@ const copyContent = () => {
   .affinity-btn {
     &:hover {
       color: $primary_color;
-    }
-  }
-}
-.application-affinity-info-dialog {
-  .el-dialog__header {
-    border: 1px solid $outline;
-    padding: 15px !important;
-    .el-dialog__title {
-      font-weight: bold;
-    }
-    .el-dialog__headerbtn {
-      top: 15px;
-    }
-  }
-  .el-dialog__body {
-    padding: 20px;
-    .content-box {
-      background: $bg_gray_G1;
-      .format-json {
-        max-height: 60vh;
-        overflow: auto;
-      }
     }
   }
 }

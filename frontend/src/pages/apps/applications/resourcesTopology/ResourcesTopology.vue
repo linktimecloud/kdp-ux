@@ -135,7 +135,7 @@ export default {
 <style lang="scss">
 .application-resources-topology {
   position: relative;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 235px);
   .control-box {
     position: absolute;
     top: 20px;
