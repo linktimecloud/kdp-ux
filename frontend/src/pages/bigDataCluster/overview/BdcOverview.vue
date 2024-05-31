@@ -8,6 +8,7 @@ import Dashboard from '@/common/dashboard/DashboardPanels.vue'
 import CollapseLayout from '@/common/dashboard/collapseLayout/CollapseLayout.vue'
 import PageHeader from '@/components/header/PageHeader.vue'
 import DateTimePickeShort from '@/common/dateTimePicker/ShortTime.vue'
+import EmptyHolder from '@/components/empty/EmptyHolder.vue'
 
 import { ONE_DAY_AS_MS, TIME_DURATION_SHORTCUTS } from '@/constant'
 import { useBdcStore } from '@/stores/modules/bdc'
@@ -38,6 +39,10 @@ const filter = ref({
 const isReday = ref(false)
 
 const refresh = async () => {
+  if (!filter.value?.namespace) {
+    bdcStore.setCurrentBdc()
+    return
+  }
   await getResourceTopTenPods()
   const time = Date.now()
   timeQueryOverview.value.time = time
@@ -75,15 +80,17 @@ onMounted(() => {
   currentBdcNS.value && getResourceTopTenPods()
 })
 
-watch(() => currentBdcNS, (val) => {
-  filter.value.namespace = val
-  getResourceTopTenPods()
+watch(() => currentBdcNS.value, (val) => {
+  if (val) {
+    filter.value.namespace = val
+    getResourceTopTenPods()
+  }
 })
 </script>
 
 <template lang="pug">
 .bdc-resource-overview
-  PageHeader(:data="{ content: $t('menu.bigDataClusterOverview'), subTitle: `${$t('cluster.bdc')} ${currentBdcName}` }")
+  PageHeader(:data="{ content: $t('menu.bigDataClusterOverview'), subTitle: currentBdcName ? `${$t('cluster.bdc')} ${currentBdcName}` : '' }")
     .action-button.flex
       el-button.ml-2(@click="refresh")
         i.remix.ri-refresh-line
@@ -117,6 +124,9 @@ watch(() => currentBdcNS, (val) => {
         :time-query="timeQueryWorkload",
         :default-variables="filter"
       )
+  EmptyHolder(
+    v-else
+  )
 </template>
 
 <style lang="scss">
