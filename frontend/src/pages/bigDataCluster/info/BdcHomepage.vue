@@ -26,7 +26,7 @@ const userOrgName = computed(() => {
   return globalStore.userOrgName
 })
 const currentBdcName = computed(() => {
-  return bdcStore.currentBdcName 
+  return bdcStore.currentBdcName
 })
 const bigDataClusterBasicData = computed(() => {
   return {
