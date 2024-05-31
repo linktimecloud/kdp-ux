@@ -26,7 +26,7 @@ const userOrgName = computed(() => {
   return globalStore.userOrgName
 })
 const currentBdcName = computed(() => {
-  return bdcStore.currentBdcName
+  return bdcStore.currentBdcName 
 })
 const bigDataClusterBasicData = computed(() => {
   return {
@@ -35,7 +35,7 @@ const bigDataClusterBasicData = computed(() => {
   }
 })
 const title = computed(() => {
-  return `${i18n.t('menu.bigDataCluster')}: ${currentBdcName.value}`
+  return `${i18n.t('menu.bigDataCluster')}: ${currentBdcName.value || i18n.t('common.noData')}`
 })
 const tabs = computed(() => {
   const org = userOrgName.value

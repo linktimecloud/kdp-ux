@@ -39,7 +39,6 @@ const filter = ref({
 const isReday = ref(false)
 
 const refresh = async () => {
-  console.log('refresh===', JSON.stringify(filter.value));
   if (!filter.value?.namespace) {
     bdcStore.setCurrentBdc()
     return
@@ -74,20 +73,15 @@ const getResourceTopTenPods = async () => {
   filter.value.topTenMemoryPodNames = get(rsp, 'data[1].result', []).map(item => item?.metric?.pod).join('|')
 
   isReday.value = true
-  console.log('isReday===', isReday);
 }
 
 onMounted(() => {
   filter.value.namespace = currentBdcNS.value
-  console.log('onMounted currentBdcNS===', currentBdcNS.value);
-  console.log('onMounted filter===', JSON.stringify(filter.value));
   currentBdcNS.value && getResourceTopTenPods()
 })
 
 watch(() => currentBdcNS.value, (val) => {
-  console.log('watch currentBdcNS==', val);
   if (val) {
-    console.log('watch filter===', JSON.stringify(filter.value));
     filter.value.namespace = val
     getResourceTopTenPods()
   }
