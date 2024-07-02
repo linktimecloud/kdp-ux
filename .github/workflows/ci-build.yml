@@ -44,8 +44,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags:
-            -${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
-            -${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}-${{ steps.slug.outputs.SHA_VALUE }}
+            ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}-${{ steps.slug.outputs.SHA_VALUE }}
 
       - name: Build successful
         run: echo "Docker image name is ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}-${{ steps.slug.outputs.SHA_VALUE }}"
