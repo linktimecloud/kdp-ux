@@ -143,7 +143,7 @@ export const CORE_COMPONENT_MAP = () => ({
   systemService: ['operator'],
   bigDataComponent: ['hdfs', 'hive', 'spark', 'kafka', 'flink', 'zookeeper'],
   developmentTools: ['airbyte', 'airflow', 'hue', 'superset'],
-  middleware: ['minio', 'mysql', 'clickhouse']
+  middleware: ['minio', 'mysql', 'clickhouse', 'milvus']
 })
 
 export const POD_STATUS_MAP = ['Running', 'Pending', 'Succeeded', 'Failed', 'Unknown']
