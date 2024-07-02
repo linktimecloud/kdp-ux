@@ -113,6 +113,7 @@ export default {
   airflow: 'Airflow',
   clickhouse: 'ClickHouse',
   milvus: 'Milvus',
+  juicefs: 'JuiceFS',
   hbase: 'HBase',
   mysql: 'MySql',
   processDetail: '@:menu.process@:common.detail',
