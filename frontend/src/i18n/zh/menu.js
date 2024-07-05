@@ -112,6 +112,8 @@ export default {
   zookeeper: 'Zookeeper',
   airflow: 'Airflow',
   clickhouse: 'ClickHouse',
+  ollama: 'Ollama',
+  jupyter: 'Jupyter',
   milvus: 'Milvus',
   juicefs: 'JuiceFS',
   hbase: 'HBase',

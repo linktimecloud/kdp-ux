@@ -142,8 +142,8 @@ export const CATALOGS_APP_STATUS = () => ([
 export const CORE_COMPONENT_MAP = () => ({
   systemService: ['operator'],
   bigDataComponent: ['hdfs', 'hive', 'spark', 'kafka', 'flink', 'zookeeper'],
-  developmentTools: ['airbyte', 'airflow', 'hue', 'superset'],
-  middleware: ['minio', 'mysql', 'clickhouse', 'milvus', 'juicefs']
+  developmentTools: ['airbyte', 'airflow', 'hue', 'superset', 'jupyter'],
+  middleware: ['minio', 'mysql', 'clickhouse', 'milvus', 'juicefs', 'ollama']
 })
 
 export const POD_STATUS_MAP = ['Running', 'Pending', 'Succeeded', 'Failed', 'Unknown']
