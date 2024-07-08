@@ -110,7 +110,8 @@
           },
           "expr": "sum(irate(container_network_receive_bytes_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", pod=~\"$pod\"}[$__interval])) by (pod)",
           "legendFormat": "variablePod",
-          "format": "bytes"
+          "format": "bytes",
+          "interval": "5m"
         }
       ]
     },
@@ -148,7 +149,8 @@
           },
           "expr": "sum(irate(container_network_transmit_bytes_total{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$namespace\", pod=~\"$pod\"}[$__interval])) by (pod)",
           "legendFormat": "variablePod",
-          "format": "bytes"
+          "format": "bytes",
+          "interval": "5m"
         }
       ]
     }
