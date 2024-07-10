@@ -345,3 +345,12 @@
     }
   }
 }
+
+.el-select-dropdown {
+  max-width: 40vw;
+}
+.el-select-dropdown__item {
+  word-wrap: break-word;
+  white-space: normal;
+  height: auto;
+}

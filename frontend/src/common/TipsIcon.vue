@@ -137,6 +137,7 @@ span.common-tips.small(v-if="name || content")
       font-size: 12px;
     }
   }
+  max-width: 30vw;
 }
 
 .common-tips-msgbox {
