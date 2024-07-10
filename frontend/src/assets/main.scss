@@ -75,15 +75,6 @@ plaintext {
   color: $primary_color;
 }
 
-.has-input-confirm-box {
-  .el-message-box__input {
-    padding-left: 34px;
-    .el-input {
-      width: 100%;
-    }
-  }
-}
-
 .after-line {
   &::after {
     content: '|';

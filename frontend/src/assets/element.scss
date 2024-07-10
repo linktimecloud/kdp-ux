@@ -354,3 +354,10 @@
   white-space: normal;
   height: auto;
 }
+
+.has-input-confirm-box {
+  .el-input {
+    width: 100%;
+    padding-left: 20px;
+  }
+}
