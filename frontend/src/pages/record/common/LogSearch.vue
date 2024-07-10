@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['change', 'reset'])
+const emits = defineEmits(['change', 'reset', 'changeLoading'])
 const logFilter = ref({ ...props.filter })
 
 const propertiesOptions = ref({ apps: [], pods: [], containers: [] })
@@ -61,10 +61,11 @@ const getApps = () => {
 
 const getPods = () => {
   propertiesOptions.value.pods = []
+  logFilter.value.podNames = ''
   const appName = logFilter.value.app
 
   if (!appName) return
-
+  emits('changeLoading', true)
   return getAppPodsAPI({
     appName
   }).then(rsp => {
@@ -81,6 +82,8 @@ const getPods = () => {
     if (pods.every(item => item.value !== logFilter.value.pod)) {
       logFilter.value.pod = '.+'
     }
+  }).finally(() => {
+    emits('changeLoading', false)
   })
 }
 
@@ -107,10 +110,10 @@ const getContainers = () => {
   })
 }
 
-const changeApp = () => {
+const changeApp = async () => {
   logFilter.value.pod = '.+'
   logFilter.value.podNames = ''
-  getPods()
+  await getPods()
 }
 
 const changePod = () => {
@@ -118,17 +121,17 @@ const changePod = () => {
   getContainers()
 }
 
-const reset = () => {
+const reset = async () => {
   const defaultApp = propertiesOptions.value.apps[0]?.value
+  if (logFilter.value.app !== defaultApp) {
+    logFilter.value.app = defaultApp
+    await changeApp()
+  }
   emits('reset', {
     namespace: currentBdcNS.value,
     app: defaultApp,
     podNames: logFilter.value.podNames
   })
-  if (logFilter.value.app !== defaultApp) {
-    logFilter.value.app = defaultApp
-    changeApp()
-  }
   propertiesOptions.value.containers = []
 }
 
