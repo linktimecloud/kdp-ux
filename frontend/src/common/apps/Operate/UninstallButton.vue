@@ -1,9 +1,8 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { get } from 'lodash'
 import i18n from '@/i18n'
 
-import { ElMessageBox } from 'element-plus'
 import { processRedirect } from '@/utils/process'
 import { deleteAppAPI } from '@/api/applications'
 
@@ -20,6 +19,9 @@ const props = defineProps({
   }
 })
 
+const visibleDialog = ref(false)
+const name = ref('')
+
 const reqData = computed(() => {
   const name = get(props, 'data.appName')
   return {
@@ -32,20 +34,10 @@ const reqData = computed(() => {
   }
 })
 
-const handleConfirm = () => {
-  const { data: { appName: name, bdc } } = props
-
-  ElMessageBox.prompt(i18n.t('applications.uninstallConfirm', { name, bdc }), i18n.t('common.attention'), {
-    type: 'warning',
-    inputPattern: new RegExp('^' + name + '$'),
-    inputErrorMessage: i18n.t('applications.inputAppNameError'),
-    customClass: 'has-input-confirm-box'
-  }).then(({ value }) => {
-    if (value === name) {
-      uninstallApp()
-    }
-  }).catch(() => {})
-}
+const submitReason = computed(() => {
+  const originName = get(props, 'data.appName')
+  return originName !== name.value ? i18n.t('applications.inputAppNameError') : ''
+})
 
 const emit = defineEmits(['refresh'])
 const uninstallApp = () => {
@@ -60,6 +52,11 @@ const uninstallApp = () => {
     })
   })
 }
+
+const open = () => {
+  name.value = ''
+  visibleDialog.value = true
+}
 </script>
 
 <template lang="pug">
@@ -67,8 +64,30 @@ const uninstallApp = () => {
   ReasonButton(
     :cls="['text-danger']",
     :btn-options="btnOptions",
-    @click="handleConfirm"
+    @click="open"
   )
     slot
       span {{ $t('common.uninstall') }}
+  el-dialog(
+    v-model="visibleDialog",
+    modal-class="has-input-confirm-box",
+    :title="$t('common.attention')",
+    width="40%",
+    :close-on-click-modal="false",
+    :append-to-body="true",
+    @close="visibleDialog = false"
+  )
+    .app-uninstall-container(v-if="visibleDialog")
+      .flex.mb-4
+        i.remix.ri-information-fill.mr-2.text-warning
+        span {{ $t('applications.uninstallConfirm', { name: data.appName, bdc: data.bdc }) }}
+      el-input(v-model="name")
+    template(#footer)
+      .flex.justify-end.items-center
+        el-button.mr-2(@click="visibleDialog = false") {{ $t('common.cancel') }}
+        ReasonButton(
+          type="primary",
+          :reason="submitReason"
+          @click="uninstallApp"
+        ) {{ $t('common.confirm') }}
 </template>

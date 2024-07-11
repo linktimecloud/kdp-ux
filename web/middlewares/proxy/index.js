@@ -21,7 +21,6 @@ module.exports = async (ctx, next) => {
     headers: proxyHeaders = {},
     target,
     reqPathRewriter = str => str,
-    reqBodyRewriter = data => data,
     successStatusCode = global.WEBUI_SUCCESS_CODE
   } = proxyService
 
@@ -55,7 +54,7 @@ module.exports = async (ctx, next) => {
     rawResponse = await axios({
       url,
       method,
-      data: reqBodyRewriter(ctx, ctx.request.body),
+      data: ctx.request.body,
       timeout: 30000,
       headers
     })
