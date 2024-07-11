@@ -8,7 +8,7 @@ on:
       - release-*
 
 env:
-  VERSION: "v1.1.0"
+  VERSION: "v1.2.0"
   APP_NAME: "linktimecloud/kdp-ux"
   DOCKER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
   DOCKER_USERNAME: ${{ secrets.REG_USER }}
@@ -39,14 +39,6 @@ jobs:
           context: ./
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.VERSION }}
-          platforms: linux/amd64,linux/arm64
-
-      - name: Build and push Docker :latest version image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./
-          push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:latest
           platforms: linux/amd64,linux/arm64
 
       - name: Build successful
