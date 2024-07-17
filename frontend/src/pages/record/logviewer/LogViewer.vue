@@ -44,7 +44,8 @@ export default {
       processing: false,
       showTipBox: true,
       refreshDateTimeFlag: Date.now(),
-      isReadyFilter: false
+      isReadyFilter: false,
+      loading: false
     }
   },
   computed: {
@@ -220,7 +221,8 @@ export default {
     v-if="isReadyFilter",
     :filter="filter",
     @change="val => filter = val"
-    @reset="resetFilter"
+    @reset="resetFilter",
+    @change-loading="val => loading = val"
   )
     DateTimePickeShort(
       v-model="timeQuery.range",
@@ -228,7 +230,7 @@ export default {
       :shortcut-list="shortcutList",
       :hidden-clear-btn="true"
     )
-  .dashboard-wrapper(v-loading="processing")
+  .dashboard-wrapper(v-loading="processing || loading")
     Logs.logs-container(
       :data="dataResults",
       :keyword="filter.keyword",
