@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { cloneDeep, get, some, isEmpty } from 'lodash'
+import { cloneDeep, get, some, isEmpty, set } from 'lodash'
 import i18n from '@/i18n'
 
 import { BIG_DATA_CLUSTER_STATUS } from '@/constant/cluster'
@@ -130,6 +130,7 @@ const getSchema = async () => {
     defType
   }).then(rsp => {
     schema.value = cloneDeep(get(rsp, 'data')) || {}
+    set(schema.value, 'JSONSchema.properties.kerberos.properties.enabled.default', 'false')
   }).finally(() => {
     processing.value.schema = false
   })
